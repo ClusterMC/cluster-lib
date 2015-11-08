@@ -1,10 +1,9 @@
 package org.theclustermc.lib.data.mutable
 
-import org.theclustermc.lib.data.immutable.ImmutableDataValueImpl
 
 sealed class PermissionData
 (private val _identifier: Option[Symbol] = None, private val _has: Option[Boolean] = None)
-    extends ImmutableDataValueImpl[Boolean, Symbol](_has, _identifier) with MutableDataValue[Boolean] {
+    extends MutableDataValue[Boolean](_has, classOf[Boolean]) {
 
     def permission = _identifier match {
         case Some(s) => s
@@ -18,7 +17,6 @@ sealed class PermissionData
       * @return has permission or not
       */
     def has = {
-
         if(_identifier.isEmpty || _identifier.get.equals(Symbol(""))) {
             true
         } else {

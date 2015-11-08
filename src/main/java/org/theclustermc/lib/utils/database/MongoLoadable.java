@@ -1,7 +1,7 @@
 package org.theclustermc.lib.utils.database;
 
 import org.bson.Document;
-import org.theclustermc.hub.exceptions.InvalidMongoDocException;
+import org.theclustermc.lib.exceptions.InvalidMongoDocException;
 
 public interface MongoLoadable {
 

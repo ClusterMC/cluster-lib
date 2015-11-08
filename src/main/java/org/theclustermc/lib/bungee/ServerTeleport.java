@@ -10,7 +10,7 @@ package org.theclustermc.lib.bungee;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.theclustermc.hub.Hub;
+import org.bukkit.plugin.Plugin;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -25,8 +25,8 @@ public class ServerTeleport {
      * @param server server to go to
      * @return was it successful?
      */
-    public static boolean tpToServer(final Player p, String server){
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Hub.instance(), () -> {
+    public static boolean tpToServer(final Plugin plugin, final Player p, String server){
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             if (p != null) {
                 ByteArrayOutputStream b = new ByteArrayOutputStream();
                 DataOutputStream out = new DataOutputStream(b);
@@ -34,7 +34,7 @@ public class ServerTeleport {
                     out.writeUTF("Connect");
                     out.writeUTF(server);
                 } catch (IOException e) {e.printStackTrace(); }
-                p.sendPluginMessage(Hub.instance(), "BungeeCord", b.toByteArray());
+                p.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
             }
         }, 2);
         return true;

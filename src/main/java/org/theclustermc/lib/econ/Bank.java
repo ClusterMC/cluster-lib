@@ -10,10 +10,10 @@ package org.theclustermc.lib.econ;
 
 import lombok.Getter;
 import org.bson.Document;
-import org.theclustermc.hub.econ.currencies.ClusterWallet;
-import org.theclustermc.hub.econ.currencies.ShardWallet;
-import org.theclustermc.hub.exceptions.InvalidMongoDocException;
-import org.theclustermc.hub.utils.database.MongoLoadable;
+import org.theclustermc.lib.econ.currencies.ClusterWallet;
+import org.theclustermc.lib.econ.currencies.ShardWallet;
+import org.theclustermc.lib.exceptions.InvalidMongoDocException;
+import org.theclustermc.lib.utils.database.MongoLoadable;
 
 public class Bank implements MongoLoadable {
 

@@ -8,7 +8,7 @@ package org.theclustermc.lib.econ.currencies;
  * permission of the aforementioned owner.
  */
 
-import org.theclustermc.hub.econ.Wallet;
+import org.theclustermc.lib.econ.Wallet;
 
 public class ClusterWallet extends Wallet<Cluster> {
 

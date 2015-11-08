@@ -9,8 +9,7 @@ package org.theclustermc.lib.utils.database;
  */
 
 import com.mongodb.client.model.UpdateOptions;
-import org.theclustermc.hub.Hub;
-import org.theclustermc.hub.exceptions.FailedSaveException;
+import org.theclustermc.lib.exceptions.FailedSaveException;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -20,8 +19,8 @@ public interface MongoObject extends MongoLoadable {
      *
      * save toDocument() to the database
      */
-    default void save() throws FailedSaveException {
-        Hub.instance().database().getPlayerdata().getCollection(getCollection()).updateOne(
+    default void save(final MongoDB database) throws FailedSaveException {
+        database.getPlayerdata().getCollection(getCollection()).updateOne(
                 eq(getIndex(), getID()),
                 toDocument(),
                 new UpdateOptions().upsert(true)

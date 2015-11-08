@@ -8,7 +8,7 @@ package org.theclustermc.lib.econ.currencies;
  * permission of the aforementioned owner.
  */
 
-import org.theclustermc.hub.econ.Currency;
+import org.theclustermc.lib.econ.Currency;
 
 public class Shard implements Currency {
     @Override

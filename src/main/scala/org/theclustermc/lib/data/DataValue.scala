@@ -42,3 +42,15 @@ trait DataValue[T] extends MongoObject {
         println(toDocument.toJson)
     }
 }
+
+class DataValueImpl[T](private[this] val value: Option[T], val innerClass: Class[T])
+    extends DataValue[T] {
+
+    override def load(doc: Document) = {
+        val o = doc.get(name)
+        o.getClass match {
+            case `innerClass` => _value = Option.apply(innerClass.cast(o))
+            case _ => _value = None
+        }
+    }
+}
