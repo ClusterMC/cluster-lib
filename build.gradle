@@ -1,9 +1,10 @@
 group 'org.theclustermc.core'
-version '0.0.1'
+version '1.0.0'
 
 apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'idea'
+apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
