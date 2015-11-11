@@ -9,7 +9,7 @@ trait DataValue[T] {
 
     def value = _value
 
-    def load(o: _)
+    def load(o: Any)
 
     def deserialize(t: String) = ???
 
@@ -32,7 +32,7 @@ trait DataValue[T] {
 class DataValueImpl[T](private[this] val value: Option[T], val innerClass: Class[T])
     extends DataValue[T] {
 
-    override def load(o: _) = {
+    override def load(o: Any) = {
         o.getClass match {
             case `innerClass` => _value = Option(innerClass.cast(o))
             case _ => _value = None
