@@ -25,6 +25,11 @@ public class ItemFactory {
 		return itemStack.getItemMeta();
 	}
 
+    public ItemFactory setMeta(ItemMeta meta){
+        itemStack.setItemMeta(meta);
+        return this;
+    }
+
 	public ItemFactory setLore(List<String> lore){
 		if(lore == null) return this;
 		ItemMeta meta = getMeta();

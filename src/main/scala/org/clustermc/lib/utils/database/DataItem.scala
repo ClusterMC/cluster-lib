@@ -11,4 +11,4 @@ import java.util.UUID
  * permission of the aforementioned owner.
  */
 
-abstract class DataItem(itemId: UUID)
+abstract class DataItem(val itemId: UUID)

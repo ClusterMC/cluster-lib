@@ -16,7 +16,7 @@ import org.bukkit.Bukkit
 abstract class PlayerWrapper(playerId: UUID) extends DataItem(playerId) with MongoLoadable{
 
   def bukkitPlayer = Bukkit.getPlayer(playerId)
-
+  
   def offlineBukkitPlayer = Bukkit.getOfflinePlayer(playerId)
 
 }
