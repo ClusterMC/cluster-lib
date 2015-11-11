@@ -1,7 +1,7 @@
 package org.theclustermc.lib.data
 
 import org.bson.Document
-import org.theclustermc.lib.utils.ClosureImplicits._
+import scala.collection.JavaConverters._
 
 trait ListDataValue[T] extends DataValue[List[Option[T]]]
 
@@ -13,11 +13,11 @@ class ListDataValueImpl[T](private[this] val value: Option[List[Option[T]]], val
         val o = doc.get(name)
         var list: List[Option[T]] = List()
         o match {
-            case l: java.util.List => l.forEach(consumer(v => {
+            case l: java.util.List[_] => l.asScala.foreach(v => {
                 v.getClass match {
                     case `innerClass` => list = Option(innerClass.cast(o)) :: list
                 }
-            }))
+            })
         }
         _value = Option(list)
     }

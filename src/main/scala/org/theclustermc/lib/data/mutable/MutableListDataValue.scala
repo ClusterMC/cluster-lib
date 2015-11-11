@@ -2,8 +2,8 @@ package org.theclustermc.lib.data.mutable
 
 import org.bson.Document
 import org.theclustermc.lib.data.DataValue
-import org.theclustermc.lib.utils.ClosureImplicits._
 
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
@@ -18,11 +18,11 @@ class MutableListDataValueImpl[T](private[this] val value: Option[mutable.ArrayB
         val o = doc.get(name)
         val list: ArrayBuffer[Option[T]] = ArrayBuffer()
         o match {
-            case l: java.util.List => l.forEach(consumer(v => {
+            case l: java.util.List[_] => l.asScala.foreach(v => {
                 v.getClass match {
                     case `innerClass` => list.append(Option(innerClass.cast(o)))
                 }
-            }))
+            })
         }
         _value = Option(list)
     }
