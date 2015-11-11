@@ -1,4 +1,4 @@
-group 'org.theclustermc.core'
+group 'org.clustermc.lib'
 version '1.0.0'
 
 apply plugin: 'java'
