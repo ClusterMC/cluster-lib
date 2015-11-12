@@ -5,11 +5,12 @@ import org.clustermc.lib.utils.GenericOps
 
 import scala.reflect.ClassTag
 
-sealed class SettingData[T](private val d: Option[T], private val v: Option[T] = None,
+sealed class SettingData[T](private val default: Option[T],
+                            override val value: Option[T] = None,
                             override val innerClass: Class[T])
-    extends MutableDataValue[T](v, innerClass) with DefaultDataValue[T] {
+    extends MutableDataValue[T](value, innerClass) with DefaultDataValue[T] {
 
-    override val _default = d
+    override val _default = default
 }
 
 object SettingData {
@@ -20,13 +21,17 @@ object SettingData {
     }
 }
 
-sealed class BooleanSetting(private val v: Option[Boolean] = None)
-    extends SettingData[Boolean](Option(false), v, classOf[Boolean])
+sealed class BooleanSetting(val default: Option[Boolean],
+                            override val value: Option[Boolean] = Option(false))
+    extends SettingData[Boolean](default, value, classOf[Boolean])
 
 object BooleanSetting {
-    import GenericOps.option
 
-    def apply[T: ClassTag](default: T, value: T = None) = {
-        new SettingData(option(default), option(value), classOf[Boolean])
+    def apply(default: Boolean, value: Boolean = false): BooleanSetting = {
+        apply(Option(default), Option(value))
+    }
+
+    def apply(default: Option[Boolean], value: Option[Boolean]) = {
+        new BooleanSetting(default, value)
     }
 }

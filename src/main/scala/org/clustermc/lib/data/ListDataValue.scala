@@ -4,7 +4,8 @@ import scala.collection.JavaConverters._
 
 trait ListDataValue[T] extends DataValue[List[Option[T]]]
 
-class ListDataValueImpl[T](private[this] val value: Option[List[Option[T]]], val innerClass: Class[T])
+class ListDataValueImpl[T](private[this] val value: Option[List[Option[T]]],
+                           val innerClass: Class[T])
     extends ListDataValue[T] {
     _value = value
 
