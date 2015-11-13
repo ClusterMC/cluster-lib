@@ -6,7 +6,7 @@ package org.clustermc.lib.utils;
  * 
  * GuildsCore can not be copied and/or distributed without the express
  * permission of the aforementioned owner.
-        */
+ */
 import java.util.HashMap;
 
 public abstract class Coordinator<K, V, L> {
