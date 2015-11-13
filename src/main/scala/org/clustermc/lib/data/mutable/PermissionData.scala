@@ -1,7 +1,5 @@
 package org.clustermc.lib.data.mutable
 
-import org.clustermc.lib.utils.GenericOps
-
 sealed class PermissionData
 (private val _identifier: Option[Symbol] = None, private val _has: Option[Boolean] = None)
     extends MutableDataValue[Boolean](_has, classOf[Boolean]) {
@@ -32,9 +30,8 @@ sealed class PermissionData
 }
 
 object PermissionData {
-    import GenericOps.option
 
-    def apply(identifier: Symbol, has: Boolean): PermissionData = apply(option(identifier), option(has))
+    def apply(identifier: Symbol, has: Boolean): PermissionData = apply(Option(identifier), Option(has))
 
     def apply(identifier: Option[Symbol], has: Option[Boolean]) = new PermissionData(identifier, has)
 }

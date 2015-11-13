@@ -7,11 +7,11 @@ class ImmutableDataValue[T](private[this] val value: Option[T], override val inn
     extends DataValueImpl[T](value, innerClass)
 
 object ImmutableDataValue {
-    import GenericOps.option
+    import GenericOps.AsOpt
 
     import scala.reflect.ClassTag
 
     def apply[T: ClassTag](value: T)(implicit clazz: Class[T]) = {
-        new ImmutableDataValue(option(value), clazz)
+        new ImmutableDataValue(value.asOpt, clazz)
     }
 }

@@ -4,10 +4,11 @@ import scala.reflect.ClassTag
 
 object GenericOps {
 
-    def option[A: ClassTag](x: A): Option[A] = x match {
-        case Some(a: A) => Some(a)
-        case a: A => Some(a)
-        case _ => None
+    implicit class AsOpt[A](val a: A) extends AnyVal {
+        def asOpt[B <: A : ClassTag]: Option[B] = a match {
+            case b: B => Some(b)
+            case _    => None
+        }
     }
 }
 
