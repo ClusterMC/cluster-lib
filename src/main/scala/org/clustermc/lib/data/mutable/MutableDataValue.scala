@@ -7,6 +7,8 @@ class MutableDataValue[T](private[this] override var value: Option[T], override 
     extends DataValueImpl[T](value, innerClass) {
 
     def value_=(value: T) = _value = value.asOpt
+
+    def value_=(value: Option[T]) = _value = value
 }
 
 object MutableDataValue {

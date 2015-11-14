@@ -12,6 +12,6 @@ object ImmutableDataValue {
     import scala.reflect.ClassTag
 
     def apply[T: ClassTag](value: T, c: Class[T]) = {
-        new ImmutableDataValue(value.asOpt, c)
+        new ImmutableDataValue(value.asOpt[T], c)
     }
 }
