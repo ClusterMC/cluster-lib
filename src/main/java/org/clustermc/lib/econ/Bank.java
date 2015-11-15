@@ -9,13 +9,10 @@ package org.clustermc.lib.econ;
  */
 
 import lombok.Getter;
-import org.bson.Document;
-import org.clustermc.lib.econ.currencies.ShardWallet;
-import org.clustermc.lib.exceptions.InvalidMongoDocException;
 import org.clustermc.lib.econ.currencies.ClusterWallet;
-import org.clustermc.lib.utils.database.MongoLoadable;
+import org.clustermc.lib.econ.currencies.ShardWallet;
 
-public class Bank implements MongoLoadable {
+public class Bank {
 
     @Getter private ShardWallet shardWallet;
     @Getter private ClusterWallet clusterWallet;
@@ -34,15 +31,5 @@ public class Bank implements MongoLoadable {
     public Bank(){
         this.shardWallet = new ShardWallet();
         this.clusterWallet = new ClusterWallet();
-    }
-
-    @Override
-    public Document toDocument() {
-        return null;
-    }
-
-    @Override
-    public void load(Document doc) throws InvalidMongoDocException {
-
     }
 }
