@@ -21,10 +21,7 @@ public class Bank implements MongoLoadable {
     @Getter private ClusterWallet clusterWallet;
 
     public String serialize(){
-        return new StringBuilder().append(shardWallet.getAmount())
-                .append(";")
-                .append(clusterWallet.getAmount())
-                .toString();
+        return shardWallet.getAmount() + ";" + clusterWallet.getAmount();
     }
 
     public Bank(String string){
