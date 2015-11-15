@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class MongoDB {
 	private MongoClient client;
-	private MongoDatabase playerdata;
+	private MongoDatabase collections;
 	
 	private int port;
 	private String host;
@@ -26,10 +26,10 @@ public class MongoDB {
 	public void open() {
 		String path = "mongodb://" + user + ":" + password + "@" + host + ":" + port;
 		client = new MongoClient(new MongoClientURI(path));
-		playerdata = client.getDatabase(database);
+		collections = client.getDatabase(database);
 	}
 
     public MongoClient getClient() {return this.client;}
 
-    public MongoDatabase getPlayerdata() {return this.playerdata;}
+    public MongoDatabase getCollections() {return this.collections;}
 }
