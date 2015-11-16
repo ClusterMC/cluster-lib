@@ -61,8 +61,8 @@ abstract class Wallet<C extends Currency> {
      * @param amount The amount.
      * @return False if the amount is not allowed, and true otherwise.
      */
-    public boolean withdraw(double amount){
-        return setAmount(getAmount()-amount);
+    public boolean withdraw(double amount) {
+        return getAmount() - amount >= 0 && setAmount(getAmount() - amount);
     }
 
     /**
