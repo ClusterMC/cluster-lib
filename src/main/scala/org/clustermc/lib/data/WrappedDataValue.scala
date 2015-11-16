@@ -22,8 +22,6 @@ class WrappedDataValueImpl[U, W[V >: U]](private[this] var _wrapped: Option[W[U]
 
     def wrapped_=(newWrapped: Option[W[U]]) = _wrapped = newWrapped
 
-    override def value = ???
-
     override def load(o: Any) = {
         //still gotta do
     }
