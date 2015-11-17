@@ -1,85 +1,189 @@
 package org.clustermc.lib.region
 
-import java.lang.Math._
+import org.bukkit.block.Block
+import org.bukkit.{Bukkit, Location, World}
+import org.clustermc.lib.utils.{Vector2D, Vector3D}
 
-import org.bukkit.Location
-
-class Cuboid(private var _x1: Double = 0D,
-             private var _x2: Double = 0D,
-             private var _y1: Double = 0D,
-             private var _y2: Double = 0D,
-             private var _z1: Double = 0D,
-             private var _z2: Double = 0D) {
+class Cuboid(private[this] val coords: ((Double, Double, Double), (Double, Double, Double)),
+             private var _world: Option[World] = Option(Bukkit.getWorlds.get(0))) {
 
     balanceCoord('all)
 
+    def this(t1: (Double, Double, Double), t2: (Double, Double, Double)) = this((t1, t2))
+
+    def this(v1: Vector3D, v2: Vector3D) = this((v1.x, v1.y, v1.z), (v2.x, v2.y, v2.z))
+
     def this(loc1: Location, loc2: Location) = {
-        this(loc1.getX, loc2.getX, loc1.getY, loc2.getY, loc1.getZ, loc2.getZ)
+        this((loc1.getX, loc1.getY, loc1.getZ), (loc2.getX, loc2.getY, loc2.getZ))
+    }
+
+    def this(x1: Double = 0D, x2: Double = 0D,
+             y1: Double = 0D, y2: Double = 0D,
+             z1: Double = 0D, z2: Double = 0D) = {
+        this((x1, y1, z1), (x2, y2, z2))
     }
 
     def this(c: Cuboid) = {
-        this(c._x1, c._x2, c._y1, c._y2, c._z1, c._z2)
+        this(c.minPoint, c.maxPoint)
+    }
+
+    private var _minPoint: Vector3D = Vector3D(coords._1)
+    private var _maxPoint: Vector3D = Vector3D(coords._2)
+
+    def minPoint = _minPoint
+
+    def maxPoint = _maxPoint
+
+    def minPoint_=(min: Vector3D) = _minPoint = min
+
+    def maxPoint_=(max: Vector3D) = _maxPoint = max
+
+    def world: Option[World] = _world
+
+    def world_=(world: World): Unit = {
+        val oWorld = Option(world)
+        if(oWorld.isEmpty) return
+        _world = oWorld
     }
 
     override def clone = new Cuboid(this)
 
-    def x1 = _x1
+    def xDiff = _maxPoint.x - _minPoint.x
 
-    def x2 = _x2
+    def yDiff = _maxPoint.y - _minPoint.y
 
-    def y1 = _y1
-
-    def y2 = _y2
-
-    def z1 = _z1
-
-    def z2 = _z2
-
-    def xDiff = max(_x1, _x2) - min(_x1, _x2)
-
-    def yDiff = max(_y1, _y2) - min(_y1, _y2)
-
-    def zDiff = max(_z1, _z2) - min(_z1, _z2)
+    def zDiff = _maxPoint.z - _minPoint.z
 
     def area = xDiff * zDiff
 
     def volume = area * yDiff
 
-    def expand(x: Double = 0, y: Double = 0, z: Double = 0) = {
-        _x2 += x
-        _y2 += y
-        _z2 += z
-        balanceCoord('all)
+    def edgeLocations: List[Location] = {
+        edgeBlocks map { b: Block => b.getLocation }
     }
 
-    def shrink(x: Double = 0, y: Double = 0, z: Double = 0) = {
-        _x2 -= x
-        _y2 -= y
-        _z2 -= z
-        balanceCoord('all)
+    /**
+      * This is disgusting.
+      * @return list of blocks on cuboid edges
+      */
+    def edgeBlocks: List[Block] = {
+        var list = List[Block]()
+        if(_world.isEmpty) return list
+
+        val w = _world.get
+
+        (_minPoint.xInt to _maxPoint.xInt) foreach {
+            x => (_minPoint.zInt to _maxPoint.zInt) foreach {
+                z => {
+                    if(isOnEdge(Vector2D(x, z))) {
+                        val b1 = w.getBlockAt(x, _minPoint.yInt, z)
+                        val b2 = w.getBlockAt(x, _maxPoint.yInt, z)
+                        list = b1 :: b2 :: list
+                    }
+                }
+            }
+        }
+        (_minPoint.yInt + 1 until _maxPoint.yInt) foreach {
+            y => {
+                list = w.getBlockAt(_minPoint.xInt, y, _minPoint.zInt) :: list
+                list = w.getBlockAt(_minPoint.xInt, y, _maxPoint.zInt) :: list
+                list = w.getBlockAt(_maxPoint.xInt, y, _minPoint.zInt) :: list
+                list = w.getBlockAt(_maxPoint.xInt, y, _maxPoint.zInt) :: list
+            }
+        }
+        list
     }
 
-    def scale(x: Double = 0, y: Double = 0, z: Double = 0) = {
-        _x2 *= x
-        _y2 *= y
-        _z2 *= z
-        balanceCoord('all)
+    def faceLocations: List[Location] = {
+        faceBlocks map { b: Block => b.getLocation }
+    }
+
+    def faceBlocks: List[Block] = {
+        var list = List[Block]()
+        if(_world.isEmpty) return list
+
+        val w = _world.get
+
+        (_minPoint.xInt to _maxPoint.xInt) foreach {
+            x => (_minPoint.zInt to _maxPoint.zInt) foreach {
+                z => {
+                    (_minPoint.yInt to _maxPoint.yInt) foreach {
+                        y => {
+                            if(isOnFace(Vector3D(x, y, z))) {
+                                val b = w.getBlockAt(x, y, z)
+                                list = b :: list
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        list
+    }
+
+    private def isOnFace(i: Int): Boolean = {
+        i match {
+            case `_minPoint`.xInt |
+                 `_minPoint`.yInt |
+                 `_minPoint`.zInt |
+                 `_maxPoint`.xInt |
+                 `_maxPoint`.yInt |
+                 `_maxPoint`.zInt => true
+            case _ => false
+        }
+    }
+
+    private def isOnEdge(vec: Vector2D): Boolean = {
+        vec.toInt match {
+            case Vector2D(`_minPoint`.xInt, `_minPoint`.zInt) => true
+            case _ => false
+        }
+    }
+
+    private def isOnFace(vec: Vector3D): Boolean = {
+        vec.toInt match {
+            case Vector3D(`_minPoint`.xInt, _, _) |
+                 Vector3D(_, _, `_minPoint`.zInt) |
+                 Vector3D(_, `_minPoint`.yInt, _) => true
+            case _ => false
+        }
+    }
+
+    private def isOnEdge(vec: Vector3D): Boolean = {
+        vec.toInt match {
+            case Vector3D(`_minPoint`.xInt, `_minPoint`.yInt, _) |
+                 Vector3D(`_minPoint`.xInt, _, `_minPoint`.zInt) |
+                 Vector3D(_, `_minPoint`.yInt, `_minPoint`.zInt) |
+                 Vector3D(`_maxPoint`.xInt, `_maxPoint`.yInt, _) |
+                 Vector3D(`_maxPoint`.xInt, _, `_maxPoint`.zInt) |
+                 Vector3D(_, `_maxPoint`.yInt, `_maxPoint`.zInt) => true
+            case _ => false
+        }
+    }
+
+    private def isOnEdge(loc: Location): Boolean = {
+        isOnEdge { Vector3D(loc.getBlockX, loc.getBlockY, loc.getBlockZ) }
+    }
+
+
+    private def isOnEdge(block: Block): Boolean = {
+        isOnEdge { Vector3D(block.getX, block.getY, block.getZ) }
     }
 
     private def balanceCoord(s: Symbol): Unit = {
         s match {
-            case 'x if _x2 < _x1 =>
-                val temp = _x1
-                _x1 = _x2
-                _x2 = temp
-            case 'y if _y2 < _y1 =>
-                val temp = _y1
-                _y1 = _y2
-                _y2 = temp
-            case 'z if _z2 < _z1 =>
-                val temp = _z1
-                _z1 = _z2
-                _z2 = temp
+            case 'x if _maxPoint.x < _minPoint.x =>
+                val temp = _minPoint.x
+                _minPoint.x = _maxPoint.x
+                _maxPoint.x = temp
+            case 'y if _maxPoint.z < _minPoint.y =>
+                val temp = _minPoint.y
+                _minPoint.y = _maxPoint.y
+                _maxPoint.y = temp
+            case 'z if _maxPoint.z < _minPoint.z =>
+                val temp = _minPoint.z
+                _minPoint.z = _maxPoint.z
+                _maxPoint.z = temp
             case 'all =>
                 balanceCoord('x)
                 balanceCoord('y)
