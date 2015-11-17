@@ -8,7 +8,7 @@ case class Vector2D(var x: Double, var z: Double) {
 }
 
 object Vector2D {
-    def apply(tuple: (Double, Double)) = {
+    def apply(tuple: (Double, Double)): Vector2D = {
         Vector2D(tuple._1, tuple._2)
     }
 }

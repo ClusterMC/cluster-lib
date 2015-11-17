@@ -5,38 +5,75 @@ import org.bukkit.{Bukkit, Location, World}
 import org.clustermc.lib.utils.{Vector2D, Vector3D}
 
 class Cuboid(private[this] val coords: ((Double, Double, Double), (Double, Double, Double)),
-             private var _world: Option[World] = Option(Bukkit.getWorlds.get(0))) {
+             private var _world: Option[World]) {
 
+    if(_world.isEmpty) {
+        world = Bukkit.getWorlds.get(0)
+    }
     balanceCoord('all)
 
-    def this(t1: (Double, Double, Double), t2: (Double, Double, Double)) = this((t1, t2))
+    def this(v1: Vector3D, v2: Vector3D) = {
+        this(((v1.x, v1.y, v1.z), (v2.x, v2.y, v2.z)),
+            None)
+    }
 
-    def this(v1: Vector3D, v2: Vector3D) = this((v1.x, v1.y, v1.z), (v2.x, v2.y, v2.z))
+    def this(v1: Vector3D, v2: Vector3D, w: Option[World]) = {
+        this(((v1.x, v1.y, v1.z), (v2.x, v2.y, v2.z)),
+            w)
+    }
 
     def this(loc1: Location, loc2: Location) = {
-        this((loc1.getX, loc1.getY, loc1.getZ), (loc2.getX, loc2.getY, loc2.getZ))
+        this(((loc1.getX, loc1.getY, loc1.getZ), (loc2.getX, loc2.getY, loc2.getZ)),
+            Option(loc1.getWorld))
     }
 
     def this(x1: Double = 0D, x2: Double = 0D,
              y1: Double = 0D, y2: Double = 0D,
              z1: Double = 0D, z2: Double = 0D) = {
-        this((x1, y1, z1), (x2, y2, z2))
+        this(((x1, y1, z1), (x2, y2, z2)),
+            None)
     }
 
     def this(c: Cuboid) = {
-        this(c.minPoint, c.maxPoint)
+        this(c.minPoint, c.maxPoint, c._world)
     }
 
     private var _minPoint: Vector3D = Vector3D(coords._1)
     private var _maxPoint: Vector3D = Vector3D(coords._2)
+    private var _minLoc: Location = _minPoint.toLocation(_world)
+    private var _maxLoc: Location = _maxPoint.toLocation(_world)
 
     def minPoint = _minPoint
 
     def maxPoint = _maxPoint
 
-    def minPoint_=(min: Vector3D) = _minPoint = min
+    def minLocation = _minLoc
 
-    def maxPoint_=(max: Vector3D) = _maxPoint = max
+    def maxLocation = _maxLoc
+
+    def minPoint_=(min: Vector3D) = {
+        _minPoint = min
+        balanceCoord('all)
+        _minLoc = _minPoint.toLocation(_world)
+    }
+
+    def maxPoint_=(max: Vector3D) = {
+        _maxPoint = max
+        balanceCoord('all)
+        _maxLoc = _maxPoint.toLocation(_world)
+    }
+
+    def minLocation_=(loc: Location) = {
+        _world = Option(loc.getWorld)
+        _minPoint = Vector3D(loc.getX, loc.getY, loc.getZ)
+        balanceCoord('all)
+    }
+
+    def maxLocation_=(loc: Location) = {
+        _world = Option(loc.getWorld)
+        _maxPoint = Vector3D(loc.getX, loc.getY, loc.getZ)
+        balanceCoord('all)
+    }
 
     def world: Option[World] = _world
 
@@ -48,11 +85,20 @@ class Cuboid(private[this] val coords: ((Double, Double, Double), (Double, Doubl
 
     override def clone = new Cuboid(this)
 
-    def xDiff = _maxPoint.x - _minPoint.x
+    def xDiff = {
+        balanceCoord('x)
+        _maxPoint.x - _minPoint.x
+    }
 
-    def yDiff = _maxPoint.y - _minPoint.y
+    def yDiff = {
+        balanceCoord('y)
+        _maxPoint.y - _minPoint.y
+    }
 
-    def zDiff = _maxPoint.z - _minPoint.z
+    def zDiff = {
+        balanceCoord('z)
+        _maxPoint.z - _minPoint.z
+    }
 
     def area = xDiff * zDiff
 
@@ -122,41 +168,53 @@ class Cuboid(private[this] val coords: ((Double, Double, Double), (Double, Doubl
     }
 
     private def isOnFace(i: Int): Boolean = {
+        val __minPoint = _minPoint
+        val __maxPoint = _maxPoint
         i match {
-            case `_minPoint`.xInt |
-                 `_minPoint`.yInt |
-                 `_minPoint`.zInt |
-                 `_maxPoint`.xInt |
-                 `_maxPoint`.yInt |
-                 `_maxPoint`.zInt => true
+            case `__minPoint`.xInt |
+                 `__minPoint`.yInt |
+                 `__minPoint`.zInt |
+                 `__maxPoint`.xInt |
+                 `__maxPoint`.yInt |
+                 `__maxPoint`.zInt => true
             case _ => false
         }
     }
 
     private def isOnEdge(vec: Vector2D): Boolean = {
+        val __minPoint = _minPoint
+        val __maxPoint = _maxPoint
         vec.toInt match {
-            case Vector2D(`_minPoint`.xInt, `_minPoint`.zInt) => true
+            case Vector2D(`__minPoint`.xInt, `__minPoint`.zInt) |
+                 Vector2D(`__maxPoint`.xInt, `__maxPoint`.zInt) => true
             case _ => false
         }
     }
 
     private def isOnFace(vec: Vector3D): Boolean = {
+        val __minPoint = _minPoint
+        val __maxPoint = _maxPoint
         vec.toInt match {
-            case Vector3D(`_minPoint`.xInt, _, _) |
-                 Vector3D(_, _, `_minPoint`.zInt) |
-                 Vector3D(_, `_minPoint`.yInt, _) => true
+            case Vector3D(`__minPoint`.xInt, _, _) |
+                 Vector3D(_, _, `__minPoint`.zInt) |
+                 Vector3D(_, `__minPoint`.yInt, _) |
+                 Vector3D(`__maxPoint`.xInt, _, _) |
+                 Vector3D(_, _, `__maxPoint`.zInt) |
+                 Vector3D(_, `__maxPoint`.yInt, _) => true
             case _ => false
         }
     }
 
     private def isOnEdge(vec: Vector3D): Boolean = {
+        val __minPoint = _minPoint
+        val __maxPoint = _maxPoint
         vec.toInt match {
-            case Vector3D(`_minPoint`.xInt, `_minPoint`.yInt, _) |
-                 Vector3D(`_minPoint`.xInt, _, `_minPoint`.zInt) |
-                 Vector3D(_, `_minPoint`.yInt, `_minPoint`.zInt) |
-                 Vector3D(`_maxPoint`.xInt, `_maxPoint`.yInt, _) |
-                 Vector3D(`_maxPoint`.xInt, _, `_maxPoint`.zInt) |
-                 Vector3D(_, `_maxPoint`.yInt, `_maxPoint`.zInt) => true
+            case Vector3D(`__minPoint`.xInt, `__minPoint`.yInt, _) |
+                 Vector3D(`__minPoint`.xInt, _, `__minPoint`.zInt) |
+                 Vector3D(_, `__minPoint`.yInt, `__minPoint`.zInt) |
+                 Vector3D(`__maxPoint`.xInt, `__maxPoint`.yInt, _) |
+                 Vector3D(`__maxPoint`.xInt, _, `__maxPoint`.zInt) |
+                 Vector3D(_, `__maxPoint`.yInt, `__maxPoint`.zInt) => true
             case _ => false
         }
     }
@@ -185,10 +243,25 @@ class Cuboid(private[this] val coords: ((Double, Double, Double), (Double, Doubl
                 _minPoint.z = _maxPoint.z
                 _maxPoint.z = temp
             case 'all =>
-                balanceCoord('x)
-                balanceCoord('y)
-                balanceCoord('z)
+                if(_maxPoint.x < _minPoint.x) {
+                    val temp = _minPoint.x
+                    _minPoint.x = _maxPoint.x
+                    _maxPoint.x = temp
+                }
+                if(_maxPoint.z < _minPoint.y) {
+                    val temp = _minPoint.y
+                    _minPoint.y = _maxPoint.y
+                    _maxPoint.y = temp
+                }
+                if(_maxPoint.z < _minPoint.z) {
+                    val temp = _minPoint.z
+                    _minPoint.z = _maxPoint.z
+                    _maxPoint.z = temp
+                }
+            case _ => return
         }
+        _minLoc = _minPoint.toLocation(_world)
+        _maxLoc = _maxPoint.toLocation(_world)
     }
 }
 
