@@ -8,14 +8,13 @@ package org.clustermc.lib.econ;
  * permission of the aforementioned owner.
  */
 
-import lombok.Getter;
 import org.clustermc.lib.econ.currencies.ClusterWallet;
 import org.clustermc.lib.econ.currencies.ShardWallet;
 
 public class Bank {
 
-    @Getter private ShardWallet shardWallet;
-    @Getter private ClusterWallet clusterWallet;
+    private ShardWallet shardWallet;
+    private ClusterWallet clusterWallet;
 
     public String serialize(){
         return shardWallet.getAmount() + ";" + clusterWallet.getAmount();
@@ -32,4 +31,8 @@ public class Bank {
         this.shardWallet = new ShardWallet();
         this.clusterWallet = new ClusterWallet();
     }
+
+    public ShardWallet getShardWallet() {return this.shardWallet;}
+
+    public ClusterWallet getClusterWallet() {return this.clusterWallet;}
 }

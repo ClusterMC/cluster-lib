@@ -1,7 +1,5 @@
 package org.clustermc.lib.utils;
 
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
@@ -13,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class WeightedRandomCollection<E> {
     private final NavigableMap<Double, E> map = new TreeMap<>();
-    @Getter private double total = 0;
+    private double total = 0;
 
     public void add(double weight, E result) {
         if (weight <= 0) return;
@@ -29,4 +27,6 @@ public class WeightedRandomCollection<E> {
         double value = ThreadLocalRandom.current().nextDouble() * total;
         return map.ceilingEntry(value).getValue();
     }
+
+    public double getTotal() {return this.total;}
 }
