@@ -1,7 +1,7 @@
 package org.clustermc.lib.data.mutable
 
 import org.clustermc.lib.data.DataValueImpl
-import org.clustermc.lib.utils.GenericOps.AsOpt
+import org.clustermc.lib.utils.implicits.GenericImplicits.AsOpt
 
 class MutableDataValue[T](private[this] override var value: Option[T], override val innerClass: Class[T])
     extends DataValueImpl[T](value, innerClass) {

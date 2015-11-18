@@ -1,4 +1,4 @@
-package org.clustermc.lib.utils
+package org.clustermc.lib.utils.math
 
 import org.bukkit.{Location, World}
 

@@ -2,9 +2,9 @@ package org.clustermc.lib.data
 
 import scala.language.higherKinds
 
-trait WrappedDataValue[U, W[V >: U]] extends DataValue[U]
+trait WrappedDataValue[U, W[V <: U]] extends DataValue[U]
 
-class WrappedDataValueImpl[U, W[V >: U]](private[this] var _wrapped: Option[W[U]],
+class WrappedDataValueImpl[U, W[V <: U]](private[this] var _wrapped: Option[W[U]],
                                          val innerClass: Class[U],
                                          val wrappedClass: Class[W[U]])
     extends WrappedDataValue[U, W] {

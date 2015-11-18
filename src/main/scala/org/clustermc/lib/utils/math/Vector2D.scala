@@ -1,4 +1,4 @@
-package org.clustermc.lib.utils
+package org.clustermc.lib.utils.math
 
 case class Vector2D(var x: Double, var z: Double) {
     def xInt = x.toInt

@@ -1,7 +1,7 @@
 package org.clustermc.lib.data.mutable
 
 import org.clustermc.lib.data.DefaultDataValue
-import org.clustermc.lib.utils.GenericOps
+import org.clustermc.lib.utils.implicits.GenericImplicits
 
 sealed class SettingData[T](private val default: Option[T],
                             private[this] val _value: Option[T] = None,
@@ -12,7 +12,7 @@ sealed class SettingData[T](private val default: Option[T],
 }
 
 object SettingData {
-    import GenericOps.AsOpt
+    import GenericImplicits.AsOpt
 
     def apply[T](default: T, value: T = None, c: Class[T]) = {
         new SettingData[T](value.asOpt, value.asOpt, c)

@@ -1,4 +1,4 @@
-package org.clustermc.lib.utils
+package org.clustermc.lib.utils.implicits
 
 import java.util.function.Consumer
 
@@ -17,7 +17,7 @@ object ClosureImplicits {
       * @tparam B Type lower bounded by A
       * @return java Consumer[B]
       */
-    implicit def consumer[A, B >: A](f: (B) => Unit): Consumer[B] = new Consumer[B] {
+    implicit def consumer[A, B <: A](f: (B) => Unit): Consumer[B] = new Consumer[B] {
         override def accept(t: B): Unit = f.apply(t)
     }
 }
