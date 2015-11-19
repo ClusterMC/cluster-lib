@@ -1,4 +1,4 @@
-package org.clustermc.lib.data.mutable
+package org.clustermc.lib.data.values.mutable
 
 import java.util
 

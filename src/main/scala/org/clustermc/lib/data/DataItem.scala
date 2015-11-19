@@ -1,4 +1,4 @@
-package org.clustermc.lib.utils.database
+package org.clustermc.lib.data
 
 import java.util.UUID
 

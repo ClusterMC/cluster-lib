@@ -1,6 +1,6 @@
-package org.clustermc.lib.data.mutable
+package org.clustermc.lib.data.values.mutable
 
-import org.clustermc.lib.data.WrappedDataValueImpl
+import org.clustermc.lib.data.values.WrappedDataValueImpl
 
 import scala.collection.mutable.ArrayBuffer
 import scala.language.reflectiveCalls

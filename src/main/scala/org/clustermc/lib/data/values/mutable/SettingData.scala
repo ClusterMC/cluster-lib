@@ -1,6 +1,6 @@
-package org.clustermc.lib.data.mutable
+package org.clustermc.lib.data.values.mutable
 
-import org.clustermc.lib.data.DefaultDataValue
+import org.clustermc.lib.data.values.DefaultDataValue
 import org.clustermc.lib.utils.implicits.GenericImplicits
 
 sealed class SettingData[T](private val default: Option[T],

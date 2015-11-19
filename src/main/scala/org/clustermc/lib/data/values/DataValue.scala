@@ -1,4 +1,4 @@
-package org.clustermc.lib.data
+package org.clustermc.lib.data.values
 
 import org.bson.Document
 

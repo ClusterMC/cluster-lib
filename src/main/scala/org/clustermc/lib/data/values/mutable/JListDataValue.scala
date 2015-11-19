@@ -1,8 +1,8 @@
-package org.clustermc.lib.data.mutable
+package org.clustermc.lib.data.values.mutable
 
 import java.util
 
-import org.clustermc.lib.data.WrappedDataValueImpl
+import org.clustermc.lib.data.values.WrappedDataValueImpl
 
 import scala.language.reflectiveCalls
 

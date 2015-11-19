@@ -1,8 +1,10 @@
-package org.clustermc.lib.utils.database
+package org.clustermc.lib.player
 
 import java.util.UUID
 
 import org.bukkit.Bukkit
+import org.clustermc.lib.data.DataItem
+import org.clustermc.lib.utils.database.MongoLoadable
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>

@@ -1,6 +1,6 @@
-package org.clustermc.lib.data.immutable
+package org.clustermc.lib.data.values.immutable
 
-import org.clustermc.lib.data.WrappedDataValueImpl
+import org.clustermc.lib.data.values.WrappedDataValueImpl
 
 import scala.language.reflectiveCalls
 

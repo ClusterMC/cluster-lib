@@ -1,6 +1,6 @@
-package org.clustermc.lib.data.immutable
+package org.clustermc.lib.data.values.immutable
 
-import org.clustermc.lib.data.DataValueImpl
+import org.clustermc.lib.data.values.DataValueImpl
 import org.clustermc.lib.utils.implicits.GenericImplicits
 
 class ImmutableDataValue[T](private[this] val value: Option[T], override val innerClass: Class[T])

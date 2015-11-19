@@ -1,4 +1,4 @@
-package org.clustermc.lib.data.mutable
+package org.clustermc.lib.data.values.mutable
 
 sealed class PermissionData
 (private val _identifier: Option[Symbol] = None, private val _has: Option[Boolean] = None)

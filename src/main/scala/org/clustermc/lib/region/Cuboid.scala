@@ -2,7 +2,7 @@ package org.clustermc.lib.region
 
 import org.bukkit.block.Block
 import org.bukkit.{Bukkit, Location, World}
-import org.clustermc.lib.utils.math.{Vector3D, Vector2D}
+import org.clustermc.lib.utils.math.{Vector2D, Vector3D}
 
 class Cuboid(private[this] val coords: ((Double, Double, Double), (Double, Double, Double)),
              private var _world: Option[World]) {
