@@ -2,6 +2,7 @@ package org.clustermc.lib.chat.announcer
 
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.utils.CustomConfig
+import scala.collection.JavaConverters._
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -13,13 +14,13 @@ import org.clustermc.lib.utils.CustomConfig
  */
 
 object Announcer {
-  var announcements: Array[Announcement] = {
-    val config = new CustomConfig(ClusterLib.instance.getDataFolder, "announcements").getConfigurationSection("messages")
-    config.getKeys(false).forEach(string => new Announcement(config.getStringList(string)) :: announcements)
-  }
+    var announcements: List[Announcement] = {
+        val config = new CustomConfig(ClusterLib.instance.getDataFolder, "announcements").getConfigurationSection("messages")
+        config.getKeys(false).asScala map { s => Announcement(config.getStringList(s)) } toList
+    }
 
-  def start(): Unit ={
-    //start the cooldown shit
-  }
+    def start(): Unit = {
+        //start the cooldown shit
+    }
 
 }

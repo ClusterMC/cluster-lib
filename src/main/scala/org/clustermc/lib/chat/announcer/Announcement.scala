@@ -1,7 +1,11 @@
 package org.clustermc.lib.chat.announcer
 
+import java.util
+
 import org.bukkit.Bukkit
 import org.clustermc.lib.utils.StringUtil
+
+import scala.collection.JavaConverters._
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -12,8 +16,11 @@ import org.clustermc.lib.utils.StringUtil
  * permission of the aforementioned owner.
  */
 
-class Announcement(messages: List[String]) {
-  def send(): Unit ={
-    messages.foreach(msg => Bukkit.getServer.broadcastMessage(StringUtil.colorString(msg)))
-  }
+case class Announcement(messages: List[String]) {
+
+    def send() = messages.foreach(msg => Bukkit.getServer.broadcastMessage(StringUtil.colorString(msg)))
+}
+
+object Announcement {
+    def apply(msgs: util.List[String]) = Announcement(msgs.asScala.toList)
 }

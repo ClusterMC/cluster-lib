@@ -20,6 +20,8 @@ import scala.collection.JavaConverters._
  * permission of the aforementioned owner.
  */
 
+//TODO: Fix
+
 class Channel(val name: String, val isPublic: Boolean = false,
               val format: String = "", val prefix: String = "",
               val color: String = s"${ChatColor.GOLD }")

@@ -194,6 +194,7 @@ class Cuboid(private[this] val coords: ((Double, Double, Double), (Double, Doubl
     private def isOnFace(vec: Vector3D): Boolean = {
         val __minPoint = _minPoint
         val __maxPoint = _maxPoint
+        vec.isOnFace(_minPoint, _maxPoint)
         vec.toInt match {
             case Vector3D(`__minPoint`.xInt, _, _) |
                  Vector3D(_, _, `__minPoint`.zInt) |
