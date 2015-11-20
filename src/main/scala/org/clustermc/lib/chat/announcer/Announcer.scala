@@ -16,7 +16,7 @@ import scala.collection.JavaConverters._
 object Announcer {
     var announcements: List[Announcement] = {
         val config = new CustomConfig(ClusterLib.instance.getDataFolder, "announcements").getConfigurationSection("messages")
-        config.getKeys(false).asScala.map(s => Announcement(config.getStringList(s))).toList
+        config.getKeys(false).asScala.toList.map(s => Announcement(config.getStringList(s)))
     }
 
     def start(): Unit = {
