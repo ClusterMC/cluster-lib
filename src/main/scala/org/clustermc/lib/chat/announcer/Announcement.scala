@@ -17,7 +17,6 @@ import scala.collection.JavaConverters._
  */
 
 case class Announcement(messages: List[String]) {
-
     def send() = messages.foreach(msg => Bukkit.getServer.broadcastMessage(StringUtil.colorString(msg)))
 }
 
