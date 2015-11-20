@@ -3,6 +3,7 @@ package org.clustermc.lib.chat.announcer
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.utils.CustomConfig
 import scala.collection.JavaConverters._
+import scala.language.postfixOps
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
