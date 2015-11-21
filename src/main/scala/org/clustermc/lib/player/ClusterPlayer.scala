@@ -8,6 +8,7 @@ import org.clustermc.lib.data.KeyLoadingCoordinator
 import org.clustermc.lib.data.values.mutable.BooleanSetting
 import org.clustermc.lib.econ.Bank
 import org.clustermc.lib.player.storage.ChannelStorage
+import org.clustermc.lib.punishment.data.{BanData, MuteData}
 import org.clustermc.lib.utils.database.MongoObject
 
 /*
@@ -24,6 +25,18 @@ abstract class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid) with MongoO
   val chatMention, showPlayers, receiveMessages = BooleanSetting(true, true)
   val channelStorage = new ChannelStorage(this.bukkitPlayer)
   val bank: Bank = new Bank()
+
+  //TODO static data
+
+  def muted(): Option[MuteData] = {
+
+  }
+
+  def banned(): Option[BanData] = {
+
+  }
+
+  //TODO turn this into a functioning playerobject that can have its handler overriden
 
 }
 

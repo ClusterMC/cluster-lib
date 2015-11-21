@@ -21,4 +21,6 @@ abstract class PlayerWrapper(playerId: UUID) extends DataItem(playerId) with Mon
   
   def offlineBukkitPlayer = Bukkit.getOfflinePlayer(playerId)
 
+  def message(string: String): Unit = bukkitPlayer.sendMessage(string)
+
 }
