@@ -3,10 +3,10 @@ package org.clustermc.lib.chat.listener
 import org.bukkit.ChatColor
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
-import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.player.PlayerCoordinator
 import org.clustermc.lib.utils.StringUtil
+import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -23,7 +23,9 @@ class ChatListener(coordinator: PlayerCoordinator) extends Listener {
     def asyncChat(event: AsyncPlayerChatEvent): Unit = {
         val pplayer = coordinator(event.getPlayer.getUniqueId)
         if(pplayer.muted().isDefined){
-            pplayer.message(ClusterLib.instance.msg.get())
+            pplayer.message(Messages("punishment.youremuted", MsgVar("[TIME]", pplayer.muted()))) //TODO
+            event.setCancelled(true)
+            return
         }
         val chatData = pplayer.channelStorage
         val focused = chatData.focusedChannel
@@ -31,7 +33,7 @@ class ChatListener(coordinator: PlayerCoordinator) extends Listener {
         if(focused.isEmpty || !focused.get.canSend(event.getPlayer)) {
             chatData.setFocusedChannel(Channel.get("general"))
         }
-        if(focused.isEmpty || !focused.get.canSend(player)) {
+        if(focused.isEmpty || !focused.get.canSend(event.getPlayer)) {
             event.setFormat(s"${event.getFormat.replace("{channel)}", "") }")
             return
         }
