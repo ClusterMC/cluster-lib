@@ -22,41 +22,42 @@ import org.clustermc.lib.utils.database.MongoObject
 
 abstract class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid) with MongoObject {
 
-  val chatMention, showPlayers, receiveMessages = BooleanSetting(true, true)
-  val channelStorage = new ChannelStorage(this.bukkitPlayer)
-  val bank: Bank = new Bank()
-  var _mute, _ban: Option[ObjectId] = None
+    val chatMention, showPlayers, receiveMessages = BooleanSetting(true, true)
+    val channelStorage = new ChannelStorage(this.bukkitPlayer)
+    val bank: Bank = new Bank()
+    var _mute, _ban: Option[ObjectId] = None
 
-  def muted: Boolean = _mute.isDefined
-  def banned: Boolean = _ban.isDefined
+    def muted: Boolean = _mute.isDefined
 
-  //TODO turn this into a functioning playerobject that can have its handler overriden
+    def banned: Boolean = _ban.isDefined
+
+    //TODO turn this into a functioning playerobject that can have its handler overriden
 
 }
 
 //apply(key) = this(key) = get(key) = PlayerCoordinator(key)
 trait PlayerCoordinator[T <: ClusterPlayer] extends KeyLoadingCoordinator[UUID, T] {
-  val index = "uuid"
-  val collection = "playerdata"
+    val index = "uuid"
+    val collection = "playerdata"
 
-  override def unload(key: UUID): Unit = {
-    if(has(key)) {
-      apply(key).channelStorage.subscribedChannels.foreach(c => c.leave(key))
-      apply(key).save(ClusterLib.instance.database)
-      remove(key)
+    override def unload(key: UUID): Unit = {
+        if(has(key)) {
+            apply(key).channelStorage.subscribedChannels.foreach(c => c.leave(key))
+            apply(key).save(ClusterLib.instance.database)
+            remove(key)
+        }
     }
-  }
 
-  override def unloadAll(): Unit = coordinatorMap.keysIterator.foreach(unload)
+    override def unloadAll(): Unit = coordinatorMap.keysIterator.foreach(unload)
 
-  override def load(uuid: UUID): Unit = {
-    if(!has(uuid)) {
-      val player: ClusterPlayer = new T(uuid)
-      player.load(
-        ClusterLib.instance.database.getDatabase("data").getCollection(collection)
-          .find(new Document(index, uuid.toString))
-          .first())
-      player.channelStorage.setFocusedChannel(None)
+    override def load(uuid: UUID): Unit = {
+        if(!has(uuid)) {
+            val player: ClusterPlayer = new T(uuid)
+            player.load(
+                           ClusterLib.instance.database.getDatabase("data").getCollection(collection)
+                           .find(new Document(index, uuid.toString))
+                           .first())
+            player.channelStorage.setFocusedChannel(None)
+        }
     }
-  }
 }
