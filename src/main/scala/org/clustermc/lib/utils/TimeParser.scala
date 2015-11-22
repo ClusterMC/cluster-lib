@@ -15,7 +15,7 @@ import java.util.regex.{Matcher, Pattern}
 
 object TimeParser {
 
-  val pattern: Pattern = Pattern.compile("(\\d+[wdhms])", Pattern.CASE_INSENSITIVE)
+  val pattern: Pattern = Pattern.compile("(\\d+[wdhm])", Pattern.CASE_INSENSITIVE)
 
   @throws[NumberFormatException]
   def apply(input: String): Duration = {
