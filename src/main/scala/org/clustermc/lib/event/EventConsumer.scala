@@ -2,7 +2,7 @@ package org.clustermc.lib.event
 
 import org.bukkit.event.{Event, EventPriority}
 
-case class EventConsumer[E <: Event](val eventClass: Class[E], val handler: (E) => Unit) {
+case class EventConsumer[E <: Event](eventClass: Class[E], handler: (E) => Unit) {
 
     private var _priority: EventPriority = EventPriority.NORMAL
 
