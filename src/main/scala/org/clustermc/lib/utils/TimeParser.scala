@@ -1,4 +1,4 @@
-package org.clustermc.lib.utils.math
+package org.clustermc.lib.utils
 
 import java.time.Duration
 import java.time.temporal.ChronoUnit
