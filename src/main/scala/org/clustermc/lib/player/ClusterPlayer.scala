@@ -20,7 +20,7 @@ import org.clustermc.lib.utils.database.MongoObject
  * permission of the aforementioned owner.
  */
 
-abstract class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid) with MongoObject{
+abstract class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid) with MongoObject {
 
   val chatMention, showPlayers, receiveMessages = BooleanSetting(true, true)
   val channelStorage = new ChannelStorage(this.bukkitPlayer)

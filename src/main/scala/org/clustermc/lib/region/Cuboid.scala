@@ -124,17 +124,18 @@ class Cuboid(private[this] val coords: ((Double, Double, Double), (Double, Doubl
                     if(isOnEdge(Vector2D(x, z))) {
                         val b1 = w.getBlockAt(x, _minPoint.yInt, z)
                         val b2 = w.getBlockAt(x, _maxPoint.yInt, z)
-                        list = b1 :: b2 :: list
+                        list ::= b1
+                        list ::= b2
                     }
                 }
             }
         }
         (_minPoint.yInt + 1 until _maxPoint.yInt) foreach {
             y => {
-                list = w.getBlockAt(_minPoint.xInt, y, _minPoint.zInt) :: list
-                list = w.getBlockAt(_minPoint.xInt, y, _maxPoint.zInt) :: list
-                list = w.getBlockAt(_maxPoint.xInt, y, _minPoint.zInt) :: list
-                list = w.getBlockAt(_maxPoint.xInt, y, _maxPoint.zInt) :: list
+                list ::= w.getBlockAt(_minPoint.xInt, y, _minPoint.zInt)
+                list ::= w.getBlockAt(_minPoint.xInt, y, _maxPoint.zInt)
+                list ::= w.getBlockAt(_maxPoint.xInt, y, _minPoint.zInt)
+                list ::= w.getBlockAt(_maxPoint.xInt, y, _maxPoint.zInt)
             }
         }
         list
@@ -157,7 +158,7 @@ class Cuboid(private[this] val coords: ((Double, Double, Double), (Double, Doubl
                         y => {
                             if(isOnFace(Vector3D(x, y, z))) {
                                 val b = w.getBlockAt(x, y, z)
-                                list = b :: list
+                                list ::= b
                             }
                         }
                     }
