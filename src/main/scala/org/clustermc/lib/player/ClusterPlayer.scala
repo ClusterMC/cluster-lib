@@ -3,12 +3,12 @@ package org.clustermc.lib.player
 import java.util.UUID
 
 import org.bson.Document
+import org.bson.types.ObjectId
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.data.KeyLoadingCoordinator
 import org.clustermc.lib.data.values.mutable.BooleanSetting
 import org.clustermc.lib.econ.Bank
 import org.clustermc.lib.player.storage.ChannelStorage
-import org.clustermc.lib.punishment.data.{BanData, MuteData}
 import org.clustermc.lib.utils.database.MongoObject
 
 /*
@@ -25,16 +25,10 @@ abstract class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid) with MongoO
   val chatMention, showPlayers, receiveMessages = BooleanSetting(true, true)
   val channelStorage = new ChannelStorage(this.bukkitPlayer)
   val bank: Bank = new Bank()
+  var _mute, _ban: Option[ObjectId] = None
 
-  //TODO static data
-
-  def muted(): Option[MuteData] = {
-
-  }
-
-  def banned(): Option[BanData] = {
-
-  }
+  def muted: Boolean = _mute.isDefined
+  def banned: Boolean = _ban.isDefined
 
   //TODO turn this into a functioning playerobject that can have its handler overriden
 
@@ -59,7 +53,7 @@ trait PlayerCoordinator[T <: ClusterPlayer] extends KeyLoadingCoordinator[UUID, 
     if(!has(uuid)) {
       val player: ClusterPlayer = new T(uuid)
       player.load(
-        ClusterLib.instance.database.getCollections.getCollection(collection)
+        ClusterLib.instance.database.getDatabase("data").getCollection(collection)
           .find(new Document(index, uuid.toString))
           .first())
       player.channelStorage.setFocusedChannel(None)

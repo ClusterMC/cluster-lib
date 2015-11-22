@@ -22,8 +22,8 @@ class ChatListener(coordinator: PlayerCoordinator) extends Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     def asyncChat(event: AsyncPlayerChatEvent): Unit = {
         val pplayer = coordinator(event.getPlayer.getUniqueId)
-        if(pplayer.muted().isDefined){
-            pplayer.message(Messages("punishment.youremuted", MsgVar("[TIME]", pplayer.muted()))) //TODO
+        if(pplayer.muted){
+            pplayer.message(Messages("punishment.youremuted", MsgVar("[TIME]", pplayer.muted))) //TODO
             event.setCancelled(true)
             return
         }

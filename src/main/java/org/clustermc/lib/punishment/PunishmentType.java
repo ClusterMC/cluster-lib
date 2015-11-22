@@ -1,3 +1,4 @@
+package org.clustermc.lib.punishment;
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
  * 
@@ -7,4 +8,13 @@
  * permission of the aforementioned owner.
  */
 
-package org.clustermc.lib.punishment;
+public enum PunishmentType {
+    BAN,
+    TEMPBAN,
+    UNBAN,
+    MUTE,
+    TEMPMUTE,
+    UNMUTE,
+    KICK,
+    WARN
+}

@@ -19,8 +19,8 @@ public interface MongoObject extends MongoLoadable {
      *
      * save toDocument() to the database
      */
-    default void save(final MongoDB database) throws FailedSaveException {
-        database.getCollections().getCollection(getCollection()).updateOne(
+    default void save(final Mongo database) throws FailedSaveException {
+        database.getDatabase("data").getCollection(getCollection()).updateOne(
                 eq(getIndex(), getID()),
                 toDocument(),
                 new UpdateOptions().upsert(true)

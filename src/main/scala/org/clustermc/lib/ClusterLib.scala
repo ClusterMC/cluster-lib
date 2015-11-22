@@ -4,7 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
 import org.clustermc.lib.utils.CustomConfig
 import org.clustermc.lib.utils.cooldown.CooldownHandler
-import org.clustermc.lib.utils.database.MongoDB
+import org.clustermc.lib.utils.database.Mongo
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -17,7 +17,7 @@ import org.clustermc.lib.utils.database.MongoDB
 
 class ClusterLib extends JavaPlugin{
 
-  private var _mongoDB: MongoDB = null
+  private var _mongoDB: Mongo = null
   private var _cooldowns: CooldownHandler = null
 
   private var cooldownTask: BukkitTask = null
@@ -29,7 +29,7 @@ class ClusterLib extends JavaPlugin{
     ClusterLib._instance = this
     _cooldowns = new CooldownHandler
 
-    _mongoDB = new MongoDB(new CustomConfig(this.getDataFolder, "db").getConfig)
+    _mongoDB = new Mongo(new CustomConfig(this.getDataFolder, "db").getConfig)
     _mongoDB.open()
 
     cooldownTask = getServer.getScheduler.runTaskTimerAsynchronously(this, new Runnable {
