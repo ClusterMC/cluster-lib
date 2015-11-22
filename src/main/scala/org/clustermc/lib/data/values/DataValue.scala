@@ -9,6 +9,13 @@ trait DataValue[T] {
 
     def value = _value
 
+    def valueOr(t: T): T = {
+        _value match {
+            case Some(v) => v
+            case None => t
+        }
+    }
+
     def load(o: Any)
 
     def deserialize(t: String) = ???
