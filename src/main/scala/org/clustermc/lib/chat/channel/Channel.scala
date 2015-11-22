@@ -26,8 +26,7 @@ class Channel(val name: String, val isPublic: Boolean = false,
               val format: String = "", val prefix: String = "",
               val color: String = s"${ChatColor.GOLD }")
     extends Ordered[Channel] {
-
-    @transient val receivePermission = new Permission(s"social.channel.${name.toLowerCase }.receive")
+    
     @transient val sendPermission = new Permission(s"social.channel.${name.toLowerCase }.send")
     @transient val joinPermission = new Permission(s"social.channel.${name.toLowerCase }.join")
 
@@ -40,16 +39,16 @@ class Channel(val name: String, val isPublic: Boolean = false,
         }
     }
 
+    def canFocus(player: Player) = canSend(player)
     def canSend(player: Player): Boolean = isPublic || player.hasPermission(sendPermission)
 
-    def canReceive(player: Player): Boolean = isPublic || player.hasPermission(receivePermission)
+    def canSubscribe(player: Player) = canJoin(player)
+    def canJoin(player: Player): Boolean = isPublic || player.hasPermission(joinPermission)
 
     def join(player: Player) = {
-        if(canJoin(player) && !members.contains(player.getUniqueId))
+        if(canSubscribe(player) && !members.contains(player.getUniqueId))
             members.add(player.getUniqueId)
     }
-
-    def canJoin(player: Player): Boolean = isPublic || player.hasPermission(joinPermission)
 
     def leave(uuid: UUID) = {
         if(members.contains(uuid)) members.remove(uuid)
@@ -102,5 +101,5 @@ object Channel {
 
     def unregister(c: Channel): Unit = this.unregister(c.name.toLowerCase)
 
-    def unregister(name: String) = if(channels.contains(name)) channels.remove(name)
+    def unregister(name: String) = if(channels.contains(name.toLowerCase)) channels.remove(name.toLowerCase)
 }

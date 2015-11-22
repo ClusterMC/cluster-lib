@@ -18,8 +18,8 @@ class ChannelStorage(val player: Player) {
     private var _focusedChannel: Option[Channel] = Option.empty
 
     def isSubscribed(channel: Channel): Boolean = {
-        (subscribedChannels.contains(channel) && channel.canReceive(player)) ||
-            (_focusedChannel.isDefined && _focusedChannel.get.canReceive(player))
+        (subscribedChannels.contains(channel) && channel.canSubscribe(player)) ||
+            (_focusedChannel.isDefined && _focusedChannel.get.canSubscribe(player))
     }
 
     def subscribe(cObject: Option[_ >: String with Channel]): Unit = {
@@ -35,12 +35,18 @@ class ChannelStorage(val player: Player) {
         }
     }
 
+    def focus(channel: Channel) = {
+        _focusedChannel = Option(channel)
+        if(!isSubscribed(channel)) {
+            subscribe(channel)
+        }
+    }
+
     def subscribe(channel: Channel) = {
         if(!subscribedChannels.contains(channel)) {
             subscribedChannels.add(channel)
         }
         channel.join(player)
-        setFocusedChannel(channel)
     }
 
     def unsubscribe(cObject: Option[_ >: String with Channel]): Unit = {
@@ -59,33 +65,17 @@ class ChannelStorage(val player: Player) {
     def unsubscribe(channel: Channel) = {
         if(subscribedChannels.contains(channel)) {
             subscribedChannels.remove(channel)
-        }
-        channel.leave(player.getUniqueId)
-        if(subscribedChannels.isEmpty) {
-            setFocusedChannel(None)
-        } else {
-            setFocusedChannel(subscribedChannels.head)
-        }
-    }
-
-    def setFocusedChannel(channel: Channel): Unit = {
-        setFocusedChannel(Option.apply(channel))
-    }
-
-    def setFocusedChannel(channel: Option[Channel]): Unit = {
-        if(channel.isDefined) {
-            _focusedChannel = channel
-            if(!isSubscribed(channel.get)) {
-                subscribe(channel.get)
+            if(subscribedChannels.isEmpty){
+                subscribe(Channel.get("general").get)
             }
-        } else {
-            _focusedChannel = Channel.get("general")
+        }
+        if(focusedChannel.name == channel.name) {
+            focus(subscribedChannels.head)
         }
     }
 
-    def displayChannel() = {
-
+    def focusedChannel = {
+        if(_focusedChannel.isEmpty) _focusedChannel = Channel.get("general")
+        _focusedChannel.get
     }
-
-    def focusedChannel = _focusedChannel
 }

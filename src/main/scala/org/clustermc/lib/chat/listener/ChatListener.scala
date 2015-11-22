@@ -16,12 +16,12 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
  * Hub can not be copied and/or distributed without the express
  * permission of the aforementioned owner.
  */
-class ChatListener(coordinator: PlayerCoordinator) extends Listener {
+class ChatListener extends Listener {
 
     @throws[RuntimeException]
     @EventHandler(priority = EventPriority.HIGHEST)
     def asyncChat(event: AsyncPlayerChatEvent): Unit = {
-        val pplayer = coordinator(event.getPlayer.getUniqueId)
+        val pplayer = PlayerCoordinator(event.getPlayer.getUniqueId)
         if(pplayer.muted){
             pplayer.message(Messages("punishment.youremuted", MsgVar("[TIME]", pplayer.muted))) //TODO
             event.setCancelled(true)
@@ -30,28 +30,25 @@ class ChatListener(coordinator: PlayerCoordinator) extends Listener {
         val chatData = pplayer.channelStorage
         val focused = chatData.focusedChannel
 
-        if(focused.isEmpty || !focused.get.canSend(event.getPlayer)) {
-            chatData.setFocusedChannel(Channel.get("general"))
-        }
-        if(focused.isEmpty || !focused.get.canSend(event.getPlayer)) {
-            event.setFormat(s"${event.getFormat.replace("{channel)}", "") }")
+        if(!focused.canSend(event.getPlayer)) {
+            chatData.focus(Channel.get("general").get)
+            event.setFormat(s"${event.getFormat.replace("{NAME)}", "") }")
             return
         }
 
-        val _focused = focused.get
         event.getFormat match {
-            case s: String if s.contains("{channel}") =>
-                val format = s"${StringUtil.colorString(_focused.color) }${_focused.prefixOrName }${ChatColor.RESET }"
-                event.setFormat(event.getFormat.replace("{channel}", format))
-            case _ => event.setFormat(s"${ChatColor.GOLD }${_focused.name }${ChatColor.RESET }${event.getFormat }")
+            case s: String if s.contains("{NAME}") =>
+                val format = s"${StringUtil.colorString(focused.color) }${focused.prefixOrName }${ChatColor.RESET }"
+                event.setFormat(event.getFormat.replace("{NAME}", format))
+            case _ => event.setFormat(s"${ChatColor.GOLD }${focused.name }${ChatColor.RESET }${event.getFormat }")
         }
 
         //strip players
         val iter = event.getRecipients.iterator()
         while(iter.hasNext) {
             val p = iter.next()
-            val data = coordinator(p.getUniqueId).channelStorage
-            if(!data.isSubscribed(_focused)) {
+            val data = PlayerCoordinator(p.getUniqueId).channelStorage
+            if(!data.isSubscribed(focused)) {
                 iter.remove()
             }
         }
