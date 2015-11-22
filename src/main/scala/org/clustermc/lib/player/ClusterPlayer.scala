@@ -36,7 +36,7 @@ abstract class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid) with MongoO
 }
 
 //apply(key) = this(key) = get(key) = PlayerCoordinator(key)
-trait PlayerCoordinator[T <: ClusterPlayer] extends KeyLoadingCoordinator[UUID, T] {
+object PlayerCoordinator extends KeyLoadingCoordinator[UUID, ClusterPlayer] {
     val index = "uuid"
     val collection = "playerdata"
 
