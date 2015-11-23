@@ -12,6 +12,7 @@ import org.clustermc.lib.chat.channel.Channel
  * Hub can not be copied and/or distributed without the express
  * permission of the aforementioned owner.
  */
+//TODO: Fix the generic typing
 class ChannelStorage(val player: Player) {
 
     val subscribedChannels = new collection.mutable.TreeSet[Channel]()
