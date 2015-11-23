@@ -53,9 +53,6 @@ class PunishmentData(val ptype: PunishmentType, val punisher: UUID, val punished
 object Punishment{
   def create(ptype: PunishmentType, punisher: UUID,  punished: UUID,  reason: String, duration: Duration): PunishmentAct ={
     new PunishmentAct(ptype, punisher, punished, reason, duration)
-    ptype match {
-      //TODO
-    }
   }
 
   def create(ptype: PunishmentType, punisher: UUID,  punished: UUID,  reason: String): PunishmentAct ={
@@ -72,6 +69,23 @@ object Punishment{
       Instant.parse(doc.getString("time.start")),
       Instant.parse(doc.getString("time.end")),
       doc.getObjectId("_id"))
+  }
+
+  def timeLeft(objectId: ObjectId): Duration = {
+    val doc = ClusterLib.instance.database.getDatabase("punishment")
+      .getCollection("log").find(Filters.eq("_id", objectId)).first()
+    val end = doc.getString("time.end")
+    val start = doc.getString("time.start")
+    if(end == start){
+      Duration.ZERO
+    }else{
+      val endI = Instant.parse(end)
+      if(Instant.now().isAfter(endI)){
+        Duration.ZERO
+      }else{
+        Duration.between(Instant.now(), endI)
+      }
+    }
   }
 
   def reason(objectId: ObjectId): String = {

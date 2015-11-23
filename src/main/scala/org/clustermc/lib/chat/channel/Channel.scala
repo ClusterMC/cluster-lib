@@ -2,12 +2,12 @@ package org.clustermc.lib.chat.channel
 
 import java.util.UUID
 
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.player.AsyncPlayerChatEvent
-import org.bukkit.permissions.Permission
-import org.bukkit.{Bukkit, ChatColor}
-import org.clustermc.lib.ClusterLib
+import org.clustermc.lib.player.storage.PlayerCoordinator
 import org.clustermc.lib.utils.StringUtil
+import org.clustermc.lib.{ClusterLib, PermGroup}
 
 import scala.collection.JavaConverters._
 
@@ -22,28 +22,16 @@ import scala.collection.JavaConverters._
 
 //TODO: Fix
 
-class Channel(val name: String, val isPublic: Boolean = false,
-              val format: String = "", val prefix: String = "",
-              val color: String = s"${ChatColor.GOLD }")
+class Channel(val name: String, val format: String = "", val sendPerm: PermGroup, val receivePerm: PermGroup)
     extends Ordered[Channel] {
-    
-    @transient val sendPermission = new Permission(s"social.channel.${name.toLowerCase }.send")
-    @transient val joinPermission = new Permission(s"social.channel.${name.toLowerCase }.join")
 
     @transient val members = new collection.mutable.LinkedHashSet[UUID]()
 
-    def prefixOrName = {
-        prefix match {
-            case "" => name
-            case _ => prefix
-        }
-    }
-
     def canFocus(player: Player) = canSend(player)
-    def canSend(player: Player): Boolean = isPublic || player.hasPermission(sendPermission)
+    def canSend(player: Player): Boolean = PlayerCoordinator(player.getUniqueId).hasRank(sendPerm)
 
-    def canSubscribe(player: Player) = canJoin(player)
-    def canJoin(player: Player): Boolean = isPublic || player.hasPermission(joinPermission)
+    def canSubscribe(player: Player) = canReceive(player)
+    def canReceive(player: Player): Boolean = PlayerCoordinator(player.getUniqueId).hasRank(receivePerm)
 
     def join(player: Player) = {
         if(canSubscribe(player) && !members.contains(player.getUniqueId))
@@ -81,12 +69,7 @@ object Channel {
     def get(name: String): Option[Channel] = {
         val cOption = channels.get(name.toLowerCase)
         if(cOption.isDefined) cOption
-        else {
-            for(c <- channels.values)
-                if(name.equalsIgnoreCase(c.prefix)) return Option.apply(c)
-
-            None
-        }
+        else None
     }
 
     //TODO

@@ -2,6 +2,7 @@ package org.clustermc.lib
 
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
+import org.clustermc.lib.chat.announcer.Announcer
 import org.clustermc.lib.utils.CustomConfig
 import org.clustermc.lib.utils.cooldown.CooldownHandler
 import org.clustermc.lib.utils.database.Mongo
@@ -36,11 +37,13 @@ class ClusterLib extends JavaPlugin {
         cooldownTask = getServer.getScheduler.runTaskTimerAsynchronously(this, new Runnable {
             override def run(): Unit = _cooldowns.handleCooldowns()
         }, 20L, 5L)
+        Announcer.start()
     }
 
     override def onDisable(): Unit = {
         //TODO Need to unload players in other plugin... should we store in this plugin?
         //HubPlayer.unloadAll()
+        Announcer.end()
         ClusterLib._instance = null
         _mongoDB.getClient.close()
         cooldownTask.cancel()

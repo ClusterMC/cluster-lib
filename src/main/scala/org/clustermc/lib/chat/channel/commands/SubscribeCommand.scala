@@ -2,7 +2,7 @@ package org.clustermc.lib.chat.channel.commands
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.chat.channel.Channel
-import org.clustermc.lib.player.PlayerCoordinator
+import org.clustermc.lib.player.storage.PlayerCoordinator
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 
 /*
