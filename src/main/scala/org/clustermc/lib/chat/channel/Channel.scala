@@ -75,8 +75,12 @@ object Channel {
         else None
     }
 
-    def alert(message: String): Unit ={
-        //TODO ADD WARNINGS
+    def serverAlert(message: String): Unit ={
+        //TODO ADD SERVER-WIDE ALERTS
+    }
+
+    def networkAlert(message: String): Unit ={
+        //TODO ADD NETWORK-WIDE ALERTS
     }
 
     //TODO allowed groups
