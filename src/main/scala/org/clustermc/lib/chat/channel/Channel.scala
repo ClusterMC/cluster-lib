@@ -75,6 +75,7 @@ object Channel {
         else None
     }
 
+    //TODO allowed groups
     def loadChannels(): Unit = {
         val config = new CustomConfig(ClusterLib.instance.getDataFolder, "channels")
                             .getConfig.getConfigurationSection("channels")
