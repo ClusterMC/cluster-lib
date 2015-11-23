@@ -2,7 +2,7 @@ package org.clustermc.lib.chat
 
 import java.util.regex.Pattern
 
-import org.bukkit.entity.Player
+import org.clustermc.lib.PermGroup
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -30,20 +30,18 @@ object ColorFilter {
     val REPLACE_FORMAT_PATTERN = Pattern.compile("(?<!&)&([l-orL-OR])")
     val REPLACE_PATTERN = Pattern.compile("&&(?=[0-9a-fk-orA-FK-OR])")
 
-    val permBase = "social.chat"
-
-    def filter(player: Player, input: String): String = {
+    def filter(group: PermGroup, input: String): String = {
         if(input == null) return ""
         var message: String = input
-        if(player.hasPermission(s"$permBase.color"))
+        if(group.ordinal() >= PermGroup.EPIC.ordinal())
             message = replaceColor(input, REPLACE_COLOR_PATTERN)
         else
             message = stripColor(message, VANILLA_COLOR_PATTERN)
-        if(player.hasPermission(s"$permBase.magic"))
+        if(group.ordinal() >= PermGroup.NETADMIN.ordinal())
             message = replaceColor(message, REPLACE_MAGIC_PATTERN)
         else
             message = stripColor(message, VANILLA_MAGIC_PATTERN)
-        if(player.hasPermission(s"$permBase.format"))
+        if(group.ordinal() >= PermGroup.ADMIN.ordinal())
             message = replaceColor(message, REPLACE_FORMAT_PATTERN)
         else
             message = stripColor(message, VANILLA_MAGIC_PATTERN)

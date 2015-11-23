@@ -6,7 +6,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.clustermc.lib.player.storage.PlayerCoordinator
-import org.clustermc.lib.utils.StringUtil
+import org.clustermc.lib.utils.{CustomConfig, StringUtil}
 import org.clustermc.lib.{ClusterLib, PermGroup}
 
 import scala.collection.JavaConverters._
@@ -22,7 +22,7 @@ import scala.collection.JavaConverters._
 
 //TODO: Fix
 
-class Channel(val name: String, val format: String = "", val sendPerm: PermGroup, val receivePerm: PermGroup)
+class Channel(val name: String, val format: String, val sendPerm: PermGroup, val receivePerm: PermGroup)
     extends Ordered[Channel] {
 
     @transient val members = new collection.mutable.LinkedHashSet[UUID]()
@@ -66,17 +66,35 @@ class Channel(val name: String, val format: String = "", val sendPerm: PermGroup
 object Channel {
     val channels = new collection.mutable.HashMap[String, Channel]()
 
+    //Load the channels, this is a constructor method
+    loadChannels()
+
     def get(name: String): Option[Channel] = {
         val cOption = channels.get(name.toLowerCase)
         if(cOption.isDefined) cOption
         else None
     }
 
-    //TODO
-    def loadChannels(plugin: ClusterLib): Unit = {
-        val loaded: Array[Channel] = new ChannelsFile(plugin, "channels").load()
-        for(c <- loaded) {
-            register(c)
+    def serverAlert(message: String): Unit ={
+        //TODO ADD SERVER-WIDE ALERTS
+    }
+
+    def networkAlert(message: String): Unit ={
+        //TODO ADD NETWORK-WIDE ALERTS
+    }
+
+    //TODO allowed groups
+    def loadChannels(): Unit = {
+        val config = new CustomConfig(ClusterLib.instance.getDataFolder, "channels")
+                            .getConfig.getConfigurationSection("channels")
+        config.getKeys(false).asScala.foreach{key =>
+            val section = config.getConfigurationSection(key)
+            register(new Channel(
+                key.toLowerCase,
+                section.getString("format"),
+                PermGroup.valueOf(section.getString("send")),
+                PermGroup.valueOf(section.getString("receive")))
+                )
         }
     }
 

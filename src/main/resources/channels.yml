@@ -1,0 +1,26 @@
+channels:
+  global:
+    send: MEMBER
+    receive: MEMBER
+    format: "{PREFIX}&r {PLAYER_COLOR}{PLAYER} {SUFFIX}>&r {MESSAGE_COLOR}{MESSAGE}"
+  donator:
+    send: SAGA
+    receive: SAGA
+    format: "&5&l[D]&r{PREFIX}&r &7{PLAYER} &5&l>&r &5{MESSAGE}"
+  admin:
+    send: ADMIN
+    receive: ADMIN
+    format: "&4&l[A]&r{PREFIX}&r &7{PLAYER} &4&l> &c{MESSAGE}"
+  helper:
+    send: HELPER
+    receive: HELPER
+    format: "&a&l[*]&r{PREFIX}&r &7{PLAYER} &a&l> &2{MESSAGE}"
+  help:
+    send: MEMBER
+    receive: MEMBER
+    format: "&d&l[?]&r{PREFIX}&r &7{PLAYER} &d&l> &f{MESSAGE}"
+  mod:
+    send: MOD
+    receive: MOD
+    format: "&b&l[M]&r{PREFIX}&r &7{PLAYER} &b&l> &3{MESSAGE}"
+
