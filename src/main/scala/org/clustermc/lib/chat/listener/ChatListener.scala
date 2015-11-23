@@ -1,12 +1,11 @@
 package org.clustermc.lib.chat.listener
 
-import org.bukkit.ChatColor
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
+import org.clustermc.lib.chat.ColorFilter
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.player.storage.PlayerCoordinator
 import org.clustermc.lib.punishment.data.Punishment
-import org.clustermc.lib.utils.StringUtil
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 
 /*
@@ -19,41 +18,45 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
  */
 class ChatListener extends Listener {
 
-    @throws[RuntimeException]
     @EventHandler(priority = EventPriority.HIGHEST)
     def asyncChat(event: AsyncPlayerChatEvent): Unit = {
         val pplayer = PlayerCoordinator(event.getPlayer.getUniqueId)
         if(pplayer.muted){
             pplayer.message(Messages("punishment.youremuted",
-                MsgVar("[TIME]", Punishment.timeLeft(pplayer.punishments._mute.get))))
+                MsgVar("{TIME}", Punishment.timeLeft(pplayer.punishments._mute.get))))
             event.setCancelled(true)
             return
         }
+
         val chatData = pplayer.channelStorage
         val focused = chatData.focusedChannel
 
         if(!focused.canSend(event.getPlayer)) {
+            event.getPlayer.sendMessage(Messages("channel.error.access.noLongerFocus", MsgVar("{NAME}", focused.name)))
+            event.setCancelled(true)
+            if(!focused.canSubscribe(event.getPlayer)){
+                event.getPlayer.sendMessage(Messages("channel.error.access.noLongerSubscribe", MsgVar("{NAME}", focused.name)))
+                chatData.unsubscribe(focused)
+            }
             chatData.focus(Channel.get("general").get)
-            event.setFormat(s"${event.getFormat.replace("{NAME)}", "") }")
             return
         }
 
-        //TODO
-        event.getFormat match {
-            case s: String if s.contains("{NAME}") =>
-                val format = s"${StringUtil.colorString(focused.color) }${focused.prefixOrName }${ChatColor.RESET }"
-                event.setFormat(event.getFormat.replace("{NAME}", format))
-            case _ => event.setFormat(s"${ChatColor.GOLD }${focused.name }${ChatColor.RESET }${event.getFormat }")
-        }
+      event.setMessage(ColorFilter.filter(pplayer.group, event.getMessage))
+
+        event.setFormat(focused.format
+          .replace("{PLAYER}", "%1$s")
+          .replace("{PLAYER_COLOR}", pplayer.group.player)
+          .replace("{PREFIX}", pplayer.group.prefix)
+          .replace("{SUFFIX}", pplayer.group.suffix)
+          .replace("{MESSAGE_COLOR}", pplayer.group.chat)
+          .replace("{MESSSAGE}", "%2$s"))
 
         //strip players
         val iter = event.getRecipients.iterator()
-        while(iter.hasNext) {
-            val p = iter.next()
-            val data = PlayerCoordinator(p.getUniqueId).channelStorage
-            if(!data.isSubscribed(focused)) {
-                iter.remove()
-            }
-        }
+        while(iter.hasNext)
+          if(!PlayerCoordinator(iter.next().getUniqueId).channelStorage.isSubscribed(focused)){
+            iter.remove()
+          }
     }
 }
