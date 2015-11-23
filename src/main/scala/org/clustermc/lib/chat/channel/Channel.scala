@@ -75,6 +75,10 @@ object Channel {
         else None
     }
 
+    def alert(message: String): Unit ={
+        //TODO ADD WARNINGS
+    }
+
     //TODO allowed groups
     def loadChannels(): Unit = {
         val config = new CustomConfig(ClusterLib.instance.getDataFolder, "channels")
