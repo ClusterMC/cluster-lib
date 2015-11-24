@@ -18,6 +18,8 @@ trait DataValue[T] {
 
     def load(o: Any)
 
+    def deserialize(s: String): Unit = _value = None
+
     def serialize = if(_value.isDefined) Some(_value.toString) else None
 
     def appendTo(document: Document) = {

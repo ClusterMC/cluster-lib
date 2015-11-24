@@ -1,4 +1,6 @@
-package org.clustermc.lib.data.values.mutable
+package org.clustermc.lib.data.values.mutable.impl
+
+import org.clustermc.lib.data.values.mutable.SettingData
 
 object SettingDataValues {
 
@@ -12,6 +14,8 @@ object SettingDataValues {
         }
 
         override def isDefault: Boolean = _value == _default
+
+        override def deserialize(s: String) = value = s.toBoolean
     }
 
     object BooleanSetting {
