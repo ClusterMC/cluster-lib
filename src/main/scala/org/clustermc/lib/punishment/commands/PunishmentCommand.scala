@@ -39,14 +39,16 @@ abstract class PunishmentCommand {
     if(pplayer.hasRank(permRequired)){
       val punished: Player = Bukkit.getPlayer(context.args(0))
       if(punished != null){
-        act(PlayerCoordinator(punished.getUniqueId), pplayer, context.sender, reason)
+        act(PlayerCoordinator(punished.getUniqueId), pplayer, context.sender)
+        punish(PlayerCoordinator(punished.getUniqueId), pplayer, context.sender, punished, reason, online = true, context.args)
       }else if(needsOnline){
         context.sender.sendMessage(Messages(msgPrefix + "error.notOnline"))
       }else{
         try{
           val uuid = UUIDFetcher.getUUIDOf(context.args(0))
           if(uuid != null && existsInDatabase(uuid)){
-            act(PlayerCoordinator(uuid), pplayer, context.sender, reason)
+            act(PlayerCoordinator(uuid), pplayer, context.sender)
+            punish(PlayerCoordinator(uuid), pplayer, context.sender, punished, reason, online = false, context.args)
           }else context.sender.sendMessage(Messages(msgPrefix + "error.noExist", playerVar))
         }catch{
           case e: Exception =>
@@ -66,7 +68,7 @@ abstract class PunishmentCommand {
     amount == 1
   }
 
-  def act(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, reason: String): Unit ={
+  def act(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player): Unit ={
     if(ppunished.hasRank(PermGroup.MOD) && !pplayer.hasRank(PermGroup.NETADMIN)) {
       punisher.sendMessage(Messages(msgPrefix + "error.cantBeBanned"))
       return
@@ -79,9 +81,9 @@ abstract class PunishmentCommand {
       }
     }
     ClusterLib.instance.cooldowns.add(ppunished.itemId, "punished", 10)
-    punish(ppunished, pplayer, punisher, reason)
   }
 
-  def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, reason: String): Unit
+  def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player,
+             punished: Player, reason: String, online: Boolean, args: Array[String]): Unit
 
 }

@@ -17,13 +17,12 @@ object TimeParser {
 
   val pattern: Pattern = Pattern.compile("(\\d+[wdhm])", Pattern.CASE_INSENSITIVE)
 
-  @throws[NumberFormatException]
   def apply(input: String): Duration = {
     var duration: Duration = Duration.ZERO
     val matcher: Matcher = pattern.matcher(input)
 
     if(!input.matches(pattern.pattern())){
-      throw new NumberFormatException
+      return Duration.ZERO
     }
 
     while (matcher.find()) {
