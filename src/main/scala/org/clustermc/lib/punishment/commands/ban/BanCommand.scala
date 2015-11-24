@@ -1,5 +1,13 @@
 package org.clustermc.lib.punishment.commands.ban
 
+import org.bukkit.entity.Player
+import org.clustermc.lib.PermGroup
+import org.clustermc.lib.player.storage.ClusterPlayer
+import org.clustermc.lib.punishment.PunishmentType
+import org.clustermc.lib.punishment.commands.PunishmentCommand
+import org.clustermc.lib.punishment.data.Punishment
+import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
  * 
@@ -9,20 +17,25 @@ package org.clustermc.lib.punishment.commands.ban
  * permission of the aforementioned owner.
  */
 
-object BanCommand {
+object BanCommand extends PunishmentCommand{
 
-  /**
-   *           punished.kickPlayer(Messages("punishment.ban.gotPermBanned",
-            MsgVar("{PUNISHER}", context.sender.getName),
-            MsgVar("{REASON}", context.args.drop(1).mkString(" "))))
-   */
-  /**
-   *         ppunished.punishments._ban = Option(
-          Punishment.create(
-            PunishmentType.BAN, context.sender.getUniqueId, ppunished.itemId, reason
-          ).objectId)
-        context.sender.sendMessage(Messages("punishment.ban.youPermBanned",
-          MsgVar("{REASON}", reason),
-          MsgVar("{PUNISHED}", ppunished.latestName)))
-   */
+  override val minArgLength: Int = 2
+
+  override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
+    ppunished.punishments._ban = Option(
+      Punishment.create(PunishmentType.BAN, punished.getUniqueId, punished.getUniqueId, reason)
+        .objectId)
+    if(online){
+      punished.kickPlayer(Messages(msgPrefix + "gotPermBanned",
+        MsgVar("{PUNISHER}", punisher.getName),
+        MsgVar("{REASON}", reason)))
+    }
+    punisher.sendMessage(Messages(msgPrefix + "youPermBanned",
+      MsgVar("{REASON}", reason),
+      MsgVar("{PUNISHED}", ppunished.latestName)))
+  }
+
+  override val permRequired: PermGroup = PermGroup.NETADMIN
+  override val name: String = "ban"
+  override val needsOnline: Boolean = false
 }
