@@ -6,7 +6,7 @@ import com.mongodb.client.model.CountOptions
 import org.bson.Document
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.data.KeyLoadingCoordinator
-import org.clustermc.lib.data.values.mutable.BooleanSetting
+import org.clustermc.lib.data.values.mutable.SettingDataValues.BooleanSetting
 import org.clustermc.lib.econ.Bank
 import org.clustermc.lib.player.PlayerWrapper
 import org.clustermc.lib.utils.database.MongoObject

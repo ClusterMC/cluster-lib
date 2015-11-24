@@ -1,6 +1,6 @@
 package org.clustermc.lib.data.values.mutable
 
-sealed class PermissionData
+class PermissionData
 (private val _identifier: Option[Symbol] = None, private val _has: Option[Boolean] = None)
     extends MutableDataValue[Boolean](_has, classOf[Boolean]) {
 
