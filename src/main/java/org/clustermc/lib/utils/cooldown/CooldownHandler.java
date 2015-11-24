@@ -38,6 +38,10 @@ public class CooldownHandler {
         cooldownPlayers.get(player).add(ability.toLowerCase(), seconds);
     }
 
+    public Coolection get(UUID uuid){
+        return cooldownPlayers.getOrDefault(uuid, null);
+    }
+
     public boolean isCooling(UUID player, String ability) {
         Coolection cool = cooldownPlayers.get(player);
         return cool != null && cool.isCooling(ability);

@@ -2,6 +2,7 @@ package org.clustermc.lib.player.storage
 
 import java.util.UUID
 
+import com.mongodb.client.model.CountOptions
 import org.bson.Document
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.data.KeyLoadingCoordinator
@@ -21,10 +22,10 @@ import org.clustermc.lib.{ClusterLib, PermGroup}
  */
 
 abstract class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid) with MongoObject {
-
   //----------MISC----------
   val showPlayers = BooleanSetting(true, true)
   lazy val latestName: String = offlineBukkitPlayer.getName
+  var _new = true
 
   //----------PERMISSIONS----------
   var group: PermGroup = PermGroup.MEMBER
@@ -51,7 +52,7 @@ object PlayerCoordinator extends KeyLoadingCoordinator[UUID, ClusterPlayer] {
   val collection = "playerdata"
 
   override def unload(key: UUID): Unit = {
-    if (has(key)) {
+    if (loaded(key)) {
       apply(key).channelStorage.subscribedChannels.foreach(c => c.leave(key))
       apply(key).save(ClusterLib.instance.database)
       remove(key)
@@ -60,14 +61,28 @@ object PlayerCoordinator extends KeyLoadingCoordinator[UUID, ClusterPlayer] {
 
   override def unloadAll(): Unit = coordinatorMap.keysIterator.foreach(unload)
 
-  override def load(uuid: UUID): Unit = {
-    if (!has(uuid)) {
-      val player: ClusterPlayer = new T(uuid)
-      player.load(
-        ClusterLib.instance.database.getDatabase("data").getCollection(collection)
-          .find(new Document(index, uuid.toString))
-          .first())
-      player.channelStorage.focus(Channel.get("general").get)
+  override def load(uuid: UUID): Boolean = {
+    if (!loaded(uuid)) {
+      val player: ClusterPlayer = new T(uuid) //TODO
+      val db = ClusterLib.instance.database.getDatabase("data").getCollection(collection)
+      if(db.count(new Document(index, uuid.toString), new CountOptions().limit(1)) == 1){
+        player.load(db.find(new Document(index, uuid.toString)).first())
+        player.channelStorage.focus(Channel.get("general").get)
+        player._new = false
+      }
+      set(uuid, player)
     }
   }
+
+  /**
+   * ONLY USE AFTER CHECKING IF THE PLAYER IS LOADED CURRENTLY
+   */
+  def load(uuid: UUID, key: String): Option[String] = {
+    val responce: String = ClusterLib.instance.database.
+      getDatabase("data").getCollection(collection)
+      .find(new Document(index, uuid.toString)).first()
+      .getString(key)
+    if(responce == null) None else Option(responce)
+  }
+
 }

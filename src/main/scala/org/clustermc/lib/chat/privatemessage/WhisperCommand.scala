@@ -1,6 +1,7 @@
 package org.clustermc.lib.chat.privatemessage
 
 import org.bukkit.Bukkit
+import org.clustermc.lib.chat.ColorFilter
 import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.player.storage.PlayerCoordinator
 import org.clustermc.lib.punishment.data.Punishment
@@ -25,8 +26,13 @@ object WhisperCommand {
       if (player != null) {
         if (pplayer.receiveMessages.value.get) {
           if (PlayerCoordinator(player.getUniqueId).receiveMessages.value.get) {
-            context.sender.sendMessage(Messages("message.format.sender", MsgVar("{PLAYER}", player.getName)))
-            player.sendMessage(Messages("message.format.receiver", MsgVar("{PLAYER", context.sender.getName)))
+            val sentence = ColorFilter.filter(pplayer.group, context.args.drop(0).mkString(" "))
+            player.sendMessage(Messages("message.format.sender",
+              MsgVar("{PLAYER", context.sender.getName),
+              MsgVar("{MESSAGE}", sentence)))
+            player.sendMessage(Messages("message.format.receiver",
+              MsgVar("{PLAYER", context.sender.getName),
+              MsgVar("{MESSAGE}", sentence)))
           } else context.sender.sendMessage(Messages("message.error.messagesTurnedOffOther"))
         } else context.sender.sendMessage(Messages("message.error.messagesTurnedOffSelf"))
       } else context.sender.sendMessage(Messages("player.error.noExist", MsgVar("{PLAYER}", context.args(0))))

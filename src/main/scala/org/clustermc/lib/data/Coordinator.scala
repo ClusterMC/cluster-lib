@@ -16,13 +16,13 @@ trait Coordinator[K, V, L] {
 
     def apply(key: K): V = coordinatorMap.get(key).get
 
-    def has(key: K): Boolean = coordinatorMap.contains(key)
+    def loaded(key: K): Boolean = coordinatorMap.contains(key)
 
     def set(key: K, value: V) = coordinatorMap.put(key, value)
 
-    def remove(key: K) = if(has(key)) coordinatorMap.remove(key)
+    def remove(key: K) = if(loaded(key)) coordinatorMap.remove(key)
 
-    def load(load: L)
+    def load(load: L): Boolean
 
     def unloadAll(): Unit
 
@@ -31,7 +31,7 @@ trait Coordinator[K, V, L] {
 
 trait KeyLoadingCoordinator[K, V] extends Coordinator[K, V, K] {
     override def apply(key: K): V = {
-        if(!has(key)) load(key)
+        if(!loaded(key)) load(key)
         coordinatorMap.get(key).get
     }
 }

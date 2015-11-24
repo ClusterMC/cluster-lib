@@ -52,7 +52,9 @@ class PunishmentData(val ptype: PunishmentType, val punisher: UUID, val punished
 
 object Punishment{
   def create(ptype: PunishmentType, punisher: UUID,  punished: UUID,  reason: String, duration: Duration): PunishmentAct ={
-    new PunishmentAct(ptype, punisher, punished, reason, duration)
+    val punishment = new PunishmentAct(ptype, punisher, punished, reason, duration)
+    punishment.save()
+    punishment
   }
 
   def create(ptype: PunishmentType, punisher: UUID,  punished: UUID,  reason: String): PunishmentAct ={
