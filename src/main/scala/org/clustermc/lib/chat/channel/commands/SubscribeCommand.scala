@@ -33,7 +33,7 @@ object SubscribeCommand {
       }else{
         if(channel.get.canSubscribe(player)){
           player.sendMessage(Messages("channel.sub.success", MsgVar("{NAME}", name.toLowerCase)))
-          stuff.subscribe(channel)
+          stuff.subscribe(channel.get)
         }else player.sendMessage(Messages("channel.sub.error.noPermission", MsgVar("{NAME}", name.toLowerCase)))
       }
     }else player.sendMessage(Messages("channel.sub.error.noExist", MsgVar("{NAME}", name.toLowerCase)))

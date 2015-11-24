@@ -1,6 +1,5 @@
 package org.clustermc.lib.player.storage
 
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.clustermc.lib.chat.channel.Channel
 
@@ -23,19 +22,6 @@ class ChannelStorage(val player: Player) {
             (_focusedChannel.isDefined && _focusedChannel.get.canSubscribe(player))
     }
 
-    def subscribe(cObject: Option[_ >: String with Channel]): Unit = {
-        if(cObject.isDefined) {
-            cObject.get match {
-                case s: String =>
-                    val cOption = Channel.get(s)
-                    if(cOption.isDefined) subscribe(cOption.get)
-                    else player.sendMessage(s"${ChatColor.GOLD }$s ${ChatColor.RED }does not exist.")
-                case c: Channel => subscribe(c)
-                case _ => player.sendMessage(s"${ChatColor.RED }You cannot subscribe to a channel that doesn't exist.")
-            }
-        }
-    }
-
     def focus(channel: Channel) = {
         _focusedChannel = Option(channel)
         if(!isSubscribed(channel)) {
@@ -48,19 +34,6 @@ class ChannelStorage(val player: Player) {
             subscribedChannels.add(channel)
         }
         channel.join(player)
-    }
-
-    def unsubscribe(cObject: Option[_ >: String with Channel]): Unit = {
-        if(cObject.isDefined) {
-            cObject.get match {
-                case s: String =>
-                    val channel = Channel.get(s)
-                    if(channel.isDefined) unsubscribe(channel.get)
-                    else player.sendMessage(s"${ChatColor.GOLD }$s ${ChatColor.RED }does not exist.")
-                case c: Channel => unsubscribe(c)
-                case _ => player.sendMessage(s"${ChatColor.RED }You cannot leave to a channel that doesn't exist.")
-            }
-        }
     }
 
     def unsubscribe(channel: Channel) = {
