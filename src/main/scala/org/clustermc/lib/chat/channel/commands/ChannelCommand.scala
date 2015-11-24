@@ -37,7 +37,7 @@ class ChannelCommand {
       case "help" | "h" | "?" | "what" | "how" | "idk" | "halp" | "que" => ChannelHelpCommand(context.sender)
       case name => if(Channel.channels.contains(name.toLowerCase)){
         if(length == 2) FocusCommand(context.sender, context.args(0))
-        else if(length >= 3) SendCommand(context.sender, context.args(0), context.args.drop(0))
+        else if(length >= 3) SendCommand(context.sender, context.args(0), context.args.drop(1))
         else ChannelHelpCommand(context.sender)
       }
     }

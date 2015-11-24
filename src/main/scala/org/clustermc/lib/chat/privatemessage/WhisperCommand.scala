@@ -26,7 +26,7 @@ object WhisperCommand {
       if (player != null) {
         if (pplayer.receiveMessages.value.get) {
           if (PlayerCoordinator(player.getUniqueId).receiveMessages.value.get) {
-            val sentence = ColorFilter.filter(pplayer.group, context.args.drop(0).mkString(" "))
+            val sentence = ColorFilter.filter(pplayer.group, context.args.drop(1).mkString(" "))
             player.sendMessage(Messages("message.format.sender",
               MsgVar("{PLAYER", context.sender.getName),
               MsgVar("{MESSAGE}", sentence)))
