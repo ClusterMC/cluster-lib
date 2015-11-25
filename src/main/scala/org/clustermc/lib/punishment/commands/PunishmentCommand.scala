@@ -7,7 +7,7 @@ import org.bson.Document
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.clustermc.lib.command.CommandContext
-import org.clustermc.lib.player.storage.{ClusterPlayer, PlayerCoordinator}
+import org.clustermc.lib.player.storage.ClusterPlayer
 import org.clustermc.lib.utils.UUIDFetcher
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 import org.clustermc.lib.{ClusterLib, PermGroup}
@@ -34,21 +34,21 @@ abstract class PunishmentCommand {
       return
     }
     val playerVar = MsgVar("{PLAYER}", context.args(0))
-    val pplayer = PlayerCoordinator(context.sender.getUniqueId)
+    val pplayer = ClusterPlayer(context.sender.getUniqueId)
     val reason = context.args.drop(minArgLength - 1).mkString(" ")
     if(pplayer.hasRank(permRequired)){
       val punished: Player = Bukkit.getPlayer(context.args(0))
       if(punished != null){
-        act(PlayerCoordinator(punished.getUniqueId), pplayer, context.sender)
-        punish(PlayerCoordinator(punished.getUniqueId), pplayer, context.sender, punished, reason, online = true, context.args)
+        act(ClusterPlayer(punished.getUniqueId), pplayer, context.sender)
+        punish(ClusterPlayer(punished.getUniqueId), pplayer, context.sender, punished, reason, online = true, context.args)
       }else if(needsOnline){
         context.sender.sendMessage(Messages(msgPrefix + "error.notOnline"))
       }else{
         try{
           val uuid = UUIDFetcher.getUUIDOf(context.args(0))
           if(uuid != null && existsInDatabase(uuid)){
-            act(PlayerCoordinator(uuid), pplayer, context.sender)
-            punish(PlayerCoordinator(uuid), pplayer, context.sender, punished, reason, online = false, context.args)
+            act(ClusterPlayer(uuid), pplayer, context.sender)
+            punish(ClusterPlayer(uuid), pplayer, context.sender, punished, reason, online = false, context.args)
           }else context.sender.sendMessage(Messages(msgPrefix + "error.noExist", playerVar))
         }catch{
           case e: Exception =>
@@ -60,11 +60,9 @@ abstract class PunishmentCommand {
   }
 
   def existsInDatabase(uuid: UUID): Boolean ={
-    val amount = ClusterLib.instance.database
-      .getDatabase("data").getCollection(PlayerCoordinator.collection)
-      .count(new Document(
-        PlayerCoordinator.index, uuid.toString),
-        new CountOptions().limit(1))
+    val amount = ClusterPlayer.collection().count(
+      new Document(ClusterPlayer.index, uuid.toString),
+      new CountOptions().limit(1))
     amount == 1
   }
 

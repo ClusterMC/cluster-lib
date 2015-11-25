@@ -4,7 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.event.player.{AsyncPlayerPreLoginEvent, PlayerKickEvent, PlayerLoginEvent, PlayerQuitEvent}
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
 import org.bukkit.plugin.java.JavaPlugin
-import org.clustermc.lib.player.storage.PlayerCoordinator
+import org.clustermc.lib.player.storage.ClusterPlayer
 import org.clustermc.lib.punishment.data.Punishment
 
 /*
@@ -22,20 +22,20 @@ abstract class PlayerIO extends Listener {
 
   @EventHandler(priority = EventPriority.LOWEST)
   def prelogin(event: AsyncPlayerPreLoginEvent): Unit ={
-    val player = PlayerCoordinator(event.getUniqueId)
+    val player = ClusterPlayer(event.getUniqueId)
     if(player.banned){
       event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, Punishment.reason(player.punishments._ban.get))
-      PlayerCoordinator.unload(event.getUniqueId)
+      ClusterPlayer.unload(event.getUniqueId)
     }
   }
 
   @EventHandler def login(event: PlayerLoginEvent): Unit = {
-    if(!PlayerCoordinator.has(event.getPlayer.getUniqueId)) PlayerCoordinator(event.getPlayer.getUniqueId)
+    if(!ClusterPlayer.loaded(event.getPlayer.getUniqueId)) ClusterPlayer(event.getPlayer.getUniqueId)
   }
 
   @EventHandler def kicked(event: PlayerKickEvent): Unit =
-    PlayerCoordinator.unload(event.getPlayer.getUniqueId)
+    ClusterPlayer.unload(event.getPlayer.getUniqueId)
 
   @EventHandler def disconnected(event: PlayerQuitEvent): Unit =
-    PlayerCoordinator.unload(event.getPlayer.getUniqueId)
+    ClusterPlayer.unload(event.getPlayer.getUniqueId)
 }

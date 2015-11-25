@@ -1,12 +1,11 @@
 package org.clustermc.lib
 
-import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
 import org.clustermc.lib.chat.announcer.Announcer
-import org.clustermc.lib.player.storage.{ClusterPlayer, PlayerCoordinator}
-import org.clustermc.lib.utils.CustomConfig
+import org.clustermc.lib.player.storage.ClusterPlayer
 import org.clustermc.lib.utils.cooldown.CooldownHandler
 import org.clustermc.lib.utils.database.Mongo
+import org.clustermc.lib.utils.{ClusterServerPlugin, CustomConfig}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -17,14 +16,12 @@ import org.clustermc.lib.utils.database.Mongo
  * permission of the aforementioned owner.
  */
 
-class ClusterLib extends JavaPlugin {
+class ClusterLib extends ClusterServerPlugin("lib"){
 
     private var _mongoDB: Mongo = null
     private var _cooldowns: CooldownHandler = null
 
     private var cooldownTask: BukkitTask = null
-
-    var smthing: T
 
     def database = _mongoDB
 
@@ -44,22 +41,15 @@ class ClusterLib extends JavaPlugin {
     }
 
     override def onDisable(): Unit = {
-        //TODO Need to unload players in other plugin... should we store in this plugin?
-        //HubPlayer.unloadAll()
+        ClusterPlayer.unloadAll()
         Announcer.end()
         ClusterLib._instance = null
         _mongoDB.getClient.close()
         cooldownTask.cancel()
     }
-
-    def assign[T >: ClusterPlayer](): Unit ={
-        PlayerCoordinator.init[T]()
-    }
-
 }
 
 object ClusterLib {
     private var _instance: ClusterLib = null
-
     def instance: ClusterLib = _instance
 }

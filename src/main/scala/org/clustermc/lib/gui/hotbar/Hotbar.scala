@@ -35,14 +35,13 @@ abstract class Hotbar(val items: Array[HotbarItem]) {
     }
 
 }
-//TODO Create a register method for registering hotbars to here
-object Hotbar {
 
-    private final val hotbars: Map[String, Hotbar] = TreeMap(
-        MainHubHotbar.getClass.getSimpleName -> MainHubHotbar,
-        PvPHotbar.getClass.getSimpleName -> PvPHotbar
-    )(CaseInsensitiveOrdered)
+object Hotbar {
+    private var hotbars: Map[String, Hotbar] = TreeMap()(CaseInsensitiveOrdered)
+
+    def register(name: String, hotbar: Hotbar): Unit ={
+        hotbars = hotbars + (name -> hotbar)
+    }
 
     def get(name: String): Hotbar = hotbars.get(name).get
-
 }

@@ -2,7 +2,7 @@ package org.clustermc.lib.chat.channel.commands
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.chat.channel.Channel
-import org.clustermc.lib.player.storage.PlayerCoordinator
+import org.clustermc.lib.player.storage.ClusterPlayer
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 
 /*
@@ -19,7 +19,7 @@ object LeaveCommand {
   //leave|exit|x|quit|q|ex -- leaves currently focused channel and switches to global
   //<channel> -- leaves channel
   def apply(player: Player): Unit ={
-    val storage = PlayerCoordinator(player.getUniqueId).channelStorage
+    val storage = ClusterPlayer(player.getUniqueId).channelStorage
     if(storage.focusedChannel.name.equalsIgnoreCase("general")){
       player.sendMessage(Messages("channel.leave.error.cantLeaveGeneralWhenFocused"))
     }else{
@@ -33,7 +33,7 @@ object LeaveCommand {
   def apply(player: Player, name: String): Unit ={
     val channel = Channel.get(name)
     if(channel.isDefined) {
-      val storage = PlayerCoordinator(player.getUniqueId).channelStorage
+      val storage = ClusterPlayer(player.getUniqueId).channelStorage
       if(storage.isSubscribed(channel.get)){
         storage.unsubscribe(channel.get)
         player.sendMessage(Messages("channel.leave.success",

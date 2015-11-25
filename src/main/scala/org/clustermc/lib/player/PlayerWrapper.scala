@@ -4,7 +4,7 @@ import java.util.UUID
 
 import org.bukkit.Bukkit
 import org.clustermc.lib.data.DataItem
-import org.clustermc.lib.utils.database.MongoLoadable
+import org.clustermc.lib.utils.database.MongoObject
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -15,7 +15,7 @@ import org.clustermc.lib.utils.database.MongoLoadable
  * permission of the aforementioned owner.
  */
 
-abstract class PlayerWrapper(playerId: UUID) extends DataItem(playerId) with MongoLoadable{
+abstract class PlayerWrapper(playerId: UUID) extends DataItem(playerId) with MongoObject{
 
   def bukkitPlayer = Bukkit.getPlayer(playerId)
   

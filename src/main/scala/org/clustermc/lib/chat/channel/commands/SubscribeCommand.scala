@@ -2,7 +2,7 @@ package org.clustermc.lib.chat.channel.commands
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.chat.channel.Channel
-import org.clustermc.lib.player.storage.PlayerCoordinator
+import org.clustermc.lib.player.storage.ClusterPlayer
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 
 /*
@@ -20,14 +20,14 @@ object SubscribeCommand {
   //<channel> -- subscribes to that channel
   def apply(player: Player): Unit ={
     player.sendMessage(Messages("channel.sub.list.header"))
-    PlayerCoordinator(player.getUniqueId).channelStorage.subscribedChannels
+    ClusterPlayer(player.getUniqueId).channelStorage.subscribedChannels
       .foreach(chan => player.sendMessage(Messages("channel.sub.list.item", MsgVar("{NAME}", chan.name))))
   }
 
   def apply(player: Player, name: String): Unit ={
     val channel = Channel.get(name)
     if(channel.isDefined){
-      val stuff = PlayerCoordinator(player.getUniqueId).channelStorage
+      val stuff = ClusterPlayer(player.getUniqueId).channelStorage
       if(stuff.isSubscribed(channel.get)){
         player.sendMessage(Messages("channel.sub.error.alreadySubscribed", MsgVar("{NAME}", name.toLowerCase)))
       }else{

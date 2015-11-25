@@ -2,7 +2,7 @@ package org.clustermc.lib.chat.channel.commands
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.chat.channel.Channel
-import org.clustermc.lib.player.storage.PlayerCoordinator
+import org.clustermc.lib.player.storage.ClusterPlayer
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 
 /*
@@ -20,13 +20,13 @@ object FocusCommand {
   //<channel> -- subscribes to and focuses on channel
   def apply(player: Player): Unit ={
       player.sendMessage(Messages("channel.focus.current",
-        MsgVar("{NAME}", PlayerCoordinator(player.getUniqueId).channelStorage.focusedChannel.name)))
+        MsgVar("{NAME}", ClusterPlayer(player.getUniqueId).channelStorage.focusedChannel.name)))
   }
 
   def apply(player: Player, name: String): Unit ={
     val channel = Channel.get(name)
     if(channel.isDefined){
-      val storage = PlayerCoordinator(player.getUniqueId).channelStorage
+      val storage = ClusterPlayer(player.getUniqueId).channelStorage
       if(storage.focusedChannel.name == name.toLowerCase){
         player.sendMessage(Messages("channel.focus.error.alreadyFocused", MsgVar("{NAME}", name.toLowerCase)))
       }else{

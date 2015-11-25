@@ -4,7 +4,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
 import org.clustermc.lib.chat.ColorFilter
 import org.clustermc.lib.chat.channel.Channel
-import org.clustermc.lib.player.storage.PlayerCoordinator
+import org.clustermc.lib.player.storage.ClusterPlayer
 import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 
@@ -20,7 +20,7 @@ class ChatListener extends Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     def asyncChat(event: AsyncPlayerChatEvent): Unit = {
-        val pplayer = PlayerCoordinator(event.getPlayer.getUniqueId)
+        val pplayer = ClusterPlayer(event.getPlayer.getUniqueId)
         if(pplayer.muted){
             pplayer.message(Messages("punishment.youremuted",
                 MsgVar("{TIME}", Punishment.timeLeft(pplayer.punishments._mute.get))))
@@ -55,7 +55,7 @@ class ChatListener extends Listener {
         //strip players
         val iter = event.getRecipients.iterator()
         while(iter.hasNext)
-          if(!PlayerCoordinator(iter.next().getUniqueId).channelStorage.isSubscribed(focused)){
+          if(!ClusterPlayer(iter.next().getUniqueId).channelStorage.isSubscribed(focused)){
             iter.remove()
           }
     }
