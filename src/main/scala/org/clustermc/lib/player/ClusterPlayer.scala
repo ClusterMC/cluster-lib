@@ -17,7 +17,7 @@ import org.clustermc.lib.player.storage.{ChannelStorage, PunishmentStorage}
  * permission of the aforementioned owner.
  */
 
-abstract class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
+class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
   //----------MISC----------
   val showPlayers = BooleanSetting(default = true, value = true)
   lazy val latestName: String = offlineBukkitPlayer.getName
