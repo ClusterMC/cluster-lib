@@ -26,11 +26,11 @@ object BanCommand extends PunishmentCommand{
       Punishment.create(PunishmentType.BAN, punished.getUniqueId, punished.getUniqueId, reason)
         .objectId)
     if(online){
-      punished.kickPlayer(Messages(msgPrefix + "gotPermBanned",
+      punished.kickPlayer(Messages(msgPrefix + "permBanned",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason)))
     }
-    punisher.sendMessage(Messages(msgPrefix + "youPermBanned",
+    punisher.sendMessage(Messages(msgPrefix + "permBanner",
       MsgVar("{REASON}", reason),
       MsgVar("{PUNISHED}", ppunished.latestName)))
   }

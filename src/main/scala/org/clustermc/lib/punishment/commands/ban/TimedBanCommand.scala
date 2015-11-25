@@ -34,16 +34,16 @@ object TimedBanCommand extends PunishmentCommand{
       Punishment.create(PunishmentType.TEMPBAN, punished.getUniqueId, punished.getUniqueId, reason, duration)
         .objectId)
     if(online){
-      punished.kickPlayer(Messages(msgPrefix + "gotTempBanned",
+      punished.kickPlayer(Messages(msgPrefix + "tempBanned",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason)))
     }
-    punisher.sendMessage(Messages(msgPrefix + "youTempBanned",
+    punisher.sendMessage(Messages(msgPrefix + "tempBanner",
       MsgVar("{REASON}", reason),
       MsgVar("{PUNISHED}", ppunished.latestName)))
   }
 
   override val permRequired: PermissionRank = PermissionRank.ADMIN
-  override val name: String = "tban"
+  override val name: String = "ban"
   override val needsOnline: Boolean = false
 }
