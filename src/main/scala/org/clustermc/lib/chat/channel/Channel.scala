@@ -4,7 +4,6 @@ import java.util.UUID
 
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.clustermc.lib.player.storage.ClusterPlayer
 import org.clustermc.lib.utils.{CustomConfig, StringUtil}
 import org.clustermc.lib.{ClusterLib, PermGroup}
@@ -42,22 +41,14 @@ class Channel(val name: String, val format: String, val sendPerm: PermGroup, val
         if(members.contains(uuid)) members.remove(uuid)
     }
 
-    def commandMessage(player: Player, message: String) = {
-        members.foreach((uuid: UUID) => {
+    def message(message: String) = {
+        val iter = members.iterator
+        while(iter.hasNext){
+            val uuid = iter.next()
             val p = Bukkit.getPlayer(uuid)
-            if(p != null && p.isOnline) {
-                p.sendMessage(StringUtil.colorString(message))
-            }
-        })
-    }
-
-    def eventMessage(event: AsyncPlayerChatEvent) = {
-        event.getRecipients.clear()
-        event.getRecipients.addAll(members.flatMap((u: UUID) =>
-            Option.apply(Bukkit.getPlayer(u)) match {
-                case p: Some[Player] if p.get.isOnline => p
-                case _ => None
-            }).asJava)
+            if(p != null && p.isOnline) p.sendMessage(StringUtil.colorString(message))
+            else members.remove(uuid)
+        }
     }
 
     override def compare(that: Channel): Int = name.compare(that.name)
