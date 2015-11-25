@@ -1,4 +1,4 @@
-package org.clustermc.lib.player.storage.coordinator
+package org.clustermc.lib.player
 
 import java.util.UUID
 
@@ -8,7 +8,6 @@ import org.bson.Document
 import org.bukkit.plugin.java.JavaPlugin
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.data.KeyLoadingCoordinator
-import org.clustermc.lib.player.PlayerWrapper
 import org.clustermc.lib.utils.ClusterServerPlugin
 
 /*

@@ -1,13 +1,12 @@
-package org.clustermc.lib.player.storage
+package org.clustermc.lib.player
 
 import java.util.UUID
 
-import org.clustermc.lib.PermGroup
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.data.values.mutable.impl.SettingDataValues.BooleanSetting
 import org.clustermc.lib.econ.Bank
-import org.clustermc.lib.player.PlayerWrapper
-import org.clustermc.lib.player.storage.coordinator.PlayerCoordinator
+import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
+import org.clustermc.lib.player.storage.{ChannelStorage, PunishmentStorage}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -24,8 +23,14 @@ abstract class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
   lazy val latestName: String = offlineBukkitPlayer.getName
 
   //----------PERMISSIONS----------
-  var group: PermGroup = PermGroup.MEMBER
-  def hasRank(permGroup: PermGroup): Boolean = group.ordinal() >= permGroup.ordinal()
+  var group: PermissionRank = PermissionRank.MEMBER
+  var donator: DonatorRank = DonatorRank.NONE
+  def hasRank(permGroup: PermissionRank): Boolean = group.ordinal() >= permGroup.ordinal()
+  def hasDonatorRank(permGroup: DonatorRank): Boolean = donator.ordinal() >= permGroup.ordinal()
+  def chatRank = {
+    if(hasDonatorRank(DonatorRank.SAGA) && !hasRank(PermissionRank.MOD)) donator.strings
+    else group.strings
+  }
 
   //----------ECONOMY----------
   val bank: Bank = new Bank()

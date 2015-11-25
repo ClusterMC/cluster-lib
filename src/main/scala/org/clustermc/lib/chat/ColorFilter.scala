@@ -2,19 +2,11 @@ package org.clustermc.lib.chat
 
 import java.util.regex.Pattern
 
-import org.clustermc.lib.PermGroup
-
-/*
- * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
- * 
- * This file is part of Hub.
- * 
- * Hub can not be copied and/or distributed without the express
- * permission of the aforementioned owner.
- */
+import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
+import org.clustermc.lib.player.ClusterPlayer
 
 /**
-  * Pretty positive that this class is from essentials.  so giving credit there
+  * Used from Essentials
   */
 object ColorFilter {
 
@@ -30,21 +22,20 @@ object ColorFilter {
     val REPLACE_FORMAT_PATTERN = Pattern.compile("(?<!&)&([l-orL-OR])")
     val REPLACE_PATTERN = Pattern.compile("&&(?=[0-9a-fk-orA-FK-OR])")
 
-    def filter(group: PermGroup, input: String): String = {
+    def filter(player: ClusterPlayer, input: String): String = {
         if(input == null) return ""
         var message: String = input
-        if(group.ordinal() >= PermGroup.EPIC.ordinal())
+
+        if(player.hasRank(PermissionRank.ADMIN) || player.hasDonatorRank(DonatorRank.EPIC))
             message = replaceColor(input, REPLACE_COLOR_PATTERN)
-        else
-            message = stripColor(message, VANILLA_COLOR_PATTERN)
-        if(group.ordinal() >= PermGroup.NETADMIN.ordinal())
+        else message = stripColor(message, VANILLA_COLOR_PATTERN)
+        if(player.hasRank(PermissionRank.OWNER))
             message = replaceColor(message, REPLACE_MAGIC_PATTERN)
-        else
-            message = stripColor(message, VANILLA_MAGIC_PATTERN)
-        if(group.ordinal() >= PermGroup.ADMIN.ordinal())
+        else message = stripColor(message, VANILLA_MAGIC_PATTERN)
+        if(player.hasRank(PermissionRank.ADMIN) || player.hasDonatorRank(DonatorRank.MYTHIC))
             message = replaceColor(message, REPLACE_FORMAT_PATTERN)
-        else
-            message = stripColor(message, VANILLA_MAGIC_PATTERN)
+        else message = stripColor(message, VANILLA_MAGIC_PATTERN)
+
         message
     }
 

@@ -4,7 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.event.player.{AsyncPlayerPreLoginEvent, PlayerKickEvent, PlayerLoginEvent, PlayerQuitEvent}
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
 import org.bukkit.plugin.java.JavaPlugin
-import org.clustermc.lib.player.storage.ClusterPlayer
+import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.data.Punishment
 
 /*

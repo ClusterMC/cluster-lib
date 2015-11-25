@@ -3,8 +3,8 @@ package org.clustermc.lib.punishment.commands.ban
 import java.time.Duration
 
 import org.bukkit.entity.Player
-import org.clustermc.lib.PermGroup
-import org.clustermc.lib.player.storage.ClusterPlayer
+import org.clustermc.lib.enums.PermissionRank
+import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.PunishmentType
 import org.clustermc.lib.punishment.commands.PunishmentCommand
 import org.clustermc.lib.punishment.data.Punishment
@@ -43,7 +43,7 @@ object TimedBanCommand extends PunishmentCommand{
       MsgVar("{PUNISHED}", ppunished.latestName)))
   }
 
-  override val permRequired: PermGroup = PermGroup.ADMIN
+  override val permRequired: PermissionRank = PermissionRank.ADMIN
   override val name: String = "tban"
   override val needsOnline: Boolean = false
 }

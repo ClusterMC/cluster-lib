@@ -4,9 +4,10 @@ import java.util.UUID
 
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.clustermc.lib.player.storage.ClusterPlayer
+import org.clustermc.lib.ClusterLib
+import org.clustermc.lib.enums.PermissionRank
+import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.utils.{CustomConfig, StringUtil}
-import org.clustermc.lib.{ClusterLib, PermGroup}
 
 import scala.collection.JavaConverters._
 
@@ -21,7 +22,7 @@ import scala.collection.JavaConverters._
 
 //TODO: Fix
 
-class Channel(val name: String, val format: String, val sendPerm: PermGroup, val receivePerm: PermGroup)
+class Channel(val name: String, val format: String, val sendPerm: PermissionRank, val receivePerm: PermissionRank)
     extends Ordered[Channel] {
 
     @transient val members = new collection.mutable.LinkedHashSet[UUID]()
@@ -83,8 +84,8 @@ object Channel {
             register(new Channel(
                 key.toLowerCase,
                 section.getString("format"),
-                PermGroup.valueOf(section.getString("send")),
-                PermGroup.valueOf(section.getString("receive")))
+                PermissionRank.valueOf(section.getString("send")),
+                PermissionRank.valueOf(section.getString("receive")))
                 )
         }
     }

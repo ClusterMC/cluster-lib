@@ -3,7 +3,7 @@ package org.clustermc.lib.chat.privatemessage
 import org.bukkit.Bukkit
 import org.clustermc.lib.chat.ColorFilter
 import org.clustermc.lib.command.CommandContext
-import org.clustermc.lib.player.storage.ClusterPlayer
+import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 
@@ -26,7 +26,7 @@ object WhisperCommand {
       if (player != null) {
         if (pplayer.receiveMessages.value.get) {
           if (ClusterPlayer(player.getUniqueId).receiveMessages.value.get) {
-            val sentence = ColorFilter.filter(pplayer.group, context.args.drop(1).mkString(" "))
+            val sentence = ColorFilter.filter(pplayer, context.args.drop(1).mkString(" "))
             player.sendMessage(Messages("message.format.sender",
               MsgVar("{PLAYER", context.sender.getName),
               MsgVar("{MESSAGE}", sentence)))

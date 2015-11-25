@@ -2,7 +2,7 @@ package org.clustermc.lib
 
 import org.bukkit.scheduler.BukkitTask
 import org.clustermc.lib.chat.announcer.Announcer
-import org.clustermc.lib.player.storage.ClusterPlayer
+import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.utils.cooldown.CooldownHandler
 import org.clustermc.lib.utils.database.Mongo
 import org.clustermc.lib.utils.{ClusterServerPlugin, CustomConfig}

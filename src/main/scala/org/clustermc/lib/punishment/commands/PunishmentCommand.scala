@@ -6,11 +6,12 @@ import com.mongodb.client.model.CountOptions
 import org.bson.Document
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.command.CommandContext
-import org.clustermc.lib.player.storage.ClusterPlayer
+import org.clustermc.lib.enums.PermissionRank
+import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.utils.UUIDFetcher
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
-import org.clustermc.lib.{ClusterLib, PermGroup}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -25,7 +26,7 @@ abstract class PunishmentCommand {
   val minArgLength: Int
   val name: String
   val needsOnline: Boolean
-  val permRequired: PermGroup
+  val permRequired: PermissionRank
   val msgPrefix: String = "punishment." + name + "."
 
   def apply(context: CommandContext): Unit ={
@@ -67,11 +68,11 @@ abstract class PunishmentCommand {
   }
 
   def act(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player): Unit ={
-    if(ppunished.hasRank(PermGroup.MOD) && !pplayer.hasRank(PermGroup.NETADMIN)) {
+    if(ppunished.hasRank(PermissionRank.MOD) && !pplayer.hasRank(PermissionRank.NETADMIN)) {
       punisher.sendMessage(Messages(msgPrefix + "error.cantBeBanned"))
       return
     }
-    if(!pplayer.hasRank(PermGroup.NETADMIN)) {
+    if(!pplayer.hasRank(PermissionRank.NETADMIN)) {
       if(ClusterLib.instance.cooldowns.isCooling(ppunished.itemId, "punished")) {
         punisher.sendMessage(Messages(msgPrefix + "error.recentlyPunished",
           MsgVar("{TIME}", ClusterLib.instance.cooldowns.get(ppunished.itemId).timeRemaining("punished"))))
