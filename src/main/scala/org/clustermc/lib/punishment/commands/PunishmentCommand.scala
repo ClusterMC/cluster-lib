@@ -43,21 +43,21 @@ abstract class PunishmentCommand {
         act(ClusterPlayer(punished.getUniqueId), pplayer, context.sender)
         punish(ClusterPlayer(punished.getUniqueId), pplayer, context.sender, punished, reason, online = true, context.args)
       }else if(needsOnline){
-        context.sender.sendMessage(Messages(msgPrefix + "error.notOnline"))
+        context.sender.sendMessage(Messages("punishment.error.notOnline"))
       }else{
         try{
           val uuid = UUIDFetcher.getUUIDOf(context.args(0))
           if(uuid != null && existsInDatabase(uuid)){
             act(ClusterPlayer(uuid), pplayer, context.sender)
             punish(ClusterPlayer(uuid), pplayer, context.sender, punished, reason, online = false, context.args)
-          }else context.sender.sendMessage(Messages(msgPrefix + "error.noExist", playerVar))
+          }else context.sender.sendMessage(Messages("punishment.error.noExist", playerVar))
         }catch{
           case e: Exception =>
-            context.sender.sendMessage(Messages(msgPrefix + "error.noExist", playerVar))
+            context.sender.sendMessage(Messages("punishment.error.noExist", playerVar))
         }
       }
 
-    }else context.sender.sendMessage(Messages("punishment." + name + ".error.noPerms"))
+    }else context.sender.sendMessage(Messages("punishment.error.noPerm"))
   }
 
   def existsInDatabase(uuid: UUID): Boolean ={
@@ -69,12 +69,12 @@ abstract class PunishmentCommand {
 
   def act(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player): Unit ={
     if(ppunished.hasRank(PermissionRank.MOD) && !pplayer.hasRank(PermissionRank.NETADMIN)) {
-      punisher.sendMessage(Messages(msgPrefix + "error.cantBeBanned"))
+      punisher.sendMessage(Messages("punishment.error.cantUseOn"))
       return
     }
     if(!pplayer.hasRank(PermissionRank.NETADMIN)) {
       if(ClusterLib.instance.cooldowns.isCooling(ppunished.itemId, "punished")) {
-        punisher.sendMessage(Messages(msgPrefix + "error.recentlyPunished",
+        punisher.sendMessage(Messages("punishment.error.recentPunished",
           MsgVar("{TIME}", ClusterLib.instance.cooldowns.get(ppunished.itemId).timeRemaining("punished"))))
         return
       }

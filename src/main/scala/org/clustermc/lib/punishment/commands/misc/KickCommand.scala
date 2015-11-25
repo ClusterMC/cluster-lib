@@ -23,17 +23,15 @@ class KickCommand extends PunishmentCommand{
 
   override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
     Punishment.create(PunishmentType.KICK, punished.getUniqueId, punished.getUniqueId, reason)
-    if(online){
-      punished.kickPlayer(Messages(msgPrefix + "kicked",
+    punished.kickPlayer(Messages(msgPrefix + "kicked",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason)))
-    }
     punisher.sendMessage(Messages(msgPrefix + "kicker",
       MsgVar("{REASON}", reason),
       MsgVar("{PUNISHED}", ppunished.latestName)))
   }
 
   override val permRequired: PermissionRank = PermissionRank.MOD
-  override val name: String = "warn"
+  override val name: String = "kick"
   override val needsOnline: Boolean = true
 }
