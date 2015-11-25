@@ -3,6 +3,7 @@ package org.clustermc.lib
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitTask
 import org.clustermc.lib.chat.announcer.Announcer
+import org.clustermc.lib.player.storage.{ClusterPlayer, PlayerCoordinator}
 import org.clustermc.lib.utils.CustomConfig
 import org.clustermc.lib.utils.cooldown.CooldownHandler
 import org.clustermc.lib.utils.database.Mongo
@@ -22,6 +23,8 @@ class ClusterLib extends JavaPlugin {
     private var _cooldowns: CooldownHandler = null
 
     private var cooldownTask: BukkitTask = null
+
+    var smthing: T
 
     def database = _mongoDB
 
@@ -48,6 +51,11 @@ class ClusterLib extends JavaPlugin {
         _mongoDB.getClient.close()
         cooldownTask.cancel()
     }
+
+    def assign[T >: ClusterPlayer](): Unit ={
+        PlayerCoordinator.init[T]()
+    }
+
 }
 
 object ClusterLib {
