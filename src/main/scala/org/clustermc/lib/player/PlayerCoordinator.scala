@@ -35,22 +35,23 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
   override def unload(key: UUID): Unit = {
     if (loaded(key)) {
       beforeUnload(key)
-      apply(key).save(ClusterLib.instance.database.getDatabase(dbName))
+      apply(key).save(collection())
       remove(key)
     }
   }
 
-  override def load(uuid: UUID): Boolean = {
-    var _new = false
+  override def load(uuid: UUID): Unit = {
     if (!loaded(uuid)) {
       val player: T = new T(uuid)
       if (collection().count(new Document(index, uuid.toString), new CountOptions().limit(1)) == 1){
         player.load(collection().find(new Document(index, uuid.toString)).first())
         afterLoad(player)
-      } else { _new = true }
+      } else {
+        afterLoad(player)
+        player.save(collection())
+      }
       set(uuid, player)
     }
-    _new
   }
 
   def collection(): MongoCollection[Document] = {

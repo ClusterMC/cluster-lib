@@ -1,6 +1,4 @@
-package org.clustermc.lib.utils
-
-import org.bukkit.plugin.java.JavaPlugin
+package org.clustermc.lib.player
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -11,8 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * permission of the aforementioned owner.
  */
 
-abstract class ClusterServerPlugin(val server: String) extends JavaPlugin{
-
-//TODO Add stuff
-
+class DV[T](val default: T) {
+  var value: T = default
+  def isDefault: Boolean = default == value
 }

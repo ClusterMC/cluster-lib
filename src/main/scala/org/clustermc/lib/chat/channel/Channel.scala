@@ -20,8 +20,6 @@ import scala.collection.JavaConverters._
  * permission of the aforementioned owner.
  */
 
-//TODO: Fix
-
 class Channel(val name: String, val format: String, val sendPerm: PermissionRank, val receivePerm: PermissionRank)
     extends Ordered[Channel] {
 

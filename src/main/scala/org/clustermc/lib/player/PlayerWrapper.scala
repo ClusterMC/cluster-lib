@@ -2,7 +2,8 @@ package org.clustermc.lib.player
 
 import java.util.UUID
 
-import com.mongodb.client.MongoDatabase
+import com.mongodb.client.MongoCollection
+import org.bson.Document
 import org.bukkit.Bukkit
 import org.clustermc.lib.data.DataItem
 import org.clustermc.lib.utils.database.MongoLoadable
@@ -24,6 +25,5 @@ abstract class PlayerWrapper(playerId: UUID) extends DataItem(playerId) with Mon
 
   def message(string: String): Unit = bukkitPlayer.sendMessage(string)
 
-  def save(database: MongoDatabase)
-
+  def save(database: MongoCollection[Document])
 }

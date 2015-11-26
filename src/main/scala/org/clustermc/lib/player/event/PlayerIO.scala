@@ -3,7 +3,7 @@ package org.clustermc.lib.player.event
 import org.bukkit.Bukkit
 import org.bukkit.event.player.{AsyncPlayerPreLoginEvent, PlayerKickEvent, PlayerLoginEvent, PlayerQuitEvent}
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
-import org.bukkit.plugin.java.JavaPlugin
+import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.data.Punishment
 
@@ -16,9 +16,9 @@ import org.clustermc.lib.punishment.data.Punishment
  * permission of the aforementioned owner.
  */
 
-abstract class PlayerIO extends Listener {
+class PlayerIO extends Listener {
 
-  Bukkit.getServer.getPluginManager.registerEvents(this, JavaPlugin.getProvidingPlugin(this.getClass))
+  Bukkit.getServer.getPluginManager.registerEvents(this, ClusterLib.instance)
 
   @EventHandler(priority = EventPriority.LOWEST)
   def prelogin(event: AsyncPlayerPreLoginEvent): Unit ={

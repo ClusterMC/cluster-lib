@@ -24,8 +24,8 @@ object WhisperCommand {
     if(!pplayer.muted){
       val player = Bukkit.getPlayer(context.args(0))
       if (player != null) {
-        if (pplayer.receiveMessages.value.get) {
-          if (ClusterPlayer(player.getUniqueId).receiveMessages.value.get) {
+        if (pplayer.receiveMessages) {
+          if (ClusterPlayer(player.getUniqueId).receiveMessages) {
             val sentence = ColorFilter.filter(pplayer, context.args.drop(1).mkString(" "))
             player.sendMessage(Messages("message.format.sender",
               MsgVar("{PLAYER", context.sender.getName),

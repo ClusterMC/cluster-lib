@@ -1,7 +1,9 @@
 package org.clustermc.lib.chat.listener
 
+import org.bukkit.Bukkit
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
+import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.chat.ColorFilter
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.player.ClusterPlayer
@@ -17,6 +19,8 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
  * permission of the aforementioned owner.
  */
 class ChatListener extends Listener {
+
+  Bukkit.getServer.getPluginManager.registerEvents(this, ClusterLib.instance)
 
     @EventHandler(priority = EventPriority.HIGHEST)
     def asyncChat(event: AsyncPlayerChatEvent): Unit = {

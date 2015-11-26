@@ -14,17 +14,25 @@ import org.clustermc.lib.punishment.data.Punishment
 
 class PunishmentStorage {
   var _mute, _ban: Option[ObjectId] = None
-  private[storage] def muted: Boolean = {
+
+  private[player] def muted: Boolean = {
     if(_mute.isDefined){
-      val punish = Punishment.load(_mute.get)
-      if(punish.timed && punish.finished){ _mute = None ; return false }
+      val punish = Punishment.timeLeft(_mute.get)
+      if(punish.isEmpty || punish.get.getSeconds == 0){
+        _mute = None
+        return false
+      }
       true
     }else false
   }
-  private[storage] def banned: Boolean = {
+
+  private[player] def banned: Boolean = {
     if(_ban.isDefined){
-      val punish = Punishment.load(_ban.get)
-      if(punish.timed && punish.finished){ _ban = None ; return false }
+      val punish = Punishment.timeLeft(_ban.get)
+      if(punish.isEmpty || punish.get.getSeconds == 0){
+        _ban = None
+        return false
+      }
       true
     }else false
   }

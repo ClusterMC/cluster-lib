@@ -41,7 +41,7 @@ public class TitleAPI{
             }
 
             if (subtitle != null) {
-                subtitle = ChatColor.translateAlternateColorCodes('&', subtitle);;
+                subtitle = ChatColor.translateAlternateColorCodes('&', subtitle);
                 Object enumSubtitle = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("SUBTITLE").get(null);
                 Object chatSubtitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\":\"" + subtitle + "\"}");
                 Constructor<?> subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), int.class, int.class, int.class);

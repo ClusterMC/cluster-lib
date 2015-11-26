@@ -1,9 +1,13 @@
 package org.clustermc.lib.player
 
+import java.time.Instant
 import java.util.UUID
 
+import com.mongodb.client.MongoCollection
+import com.mongodb.client.model.UpdateOptions
+import org.bson.Document
+import org.bson.types.ObjectId
 import org.clustermc.lib.chat.channel.Channel
-import org.clustermc.lib.data.values.mutable.impl.SettingDataValues.BooleanSetting
 import org.clustermc.lib.econ.Bank
 import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
 import org.clustermc.lib.player.storage.{ChannelStorage, PunishmentStorage}
@@ -19,7 +23,7 @@ import org.clustermc.lib.player.storage.{ChannelStorage, PunishmentStorage}
 
 class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
   //----------MISC----------
-  val showPlayers = BooleanSetting(default = true, value = true)
+  var showPlayers: Boolean = true
   lazy val latestName: String = offlineBukkitPlayer.getName
 
   //----------PERMISSIONS----------
@@ -33,16 +37,58 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
   }
 
   //----------ECONOMY----------
-  val bank: Bank = new Bank()
+  var bank: Bank = new Bank()
 
   //----------CHAT----------
   val channelStorage = new ChannelStorage(this.bukkitPlayer)
-  val chatMention, receiveMessages = BooleanSetting(default = true, value = true)
+  var chatMention, receiveMessages: Boolean = true
 
   //----------PUNISHMENTS----------
   val punishments: PunishmentStorage = new PunishmentStorage
   def banned = punishments.banned ; def muted = punishments.muted
 
+  override def save(database: MongoCollection[Document]): Unit = {
+    database.updateOne(new Document(ClusterPlayer.index, uuid), toDocument,
+      new UpdateOptions().upsert(true))
+  }
+  override def toDocument: Document = {
+    new Document()
+      .append("uuid", uuid.toString)
+      .append("name", latestName)
+      .append("groups", new Document()
+        .append("group", group.toString)
+        .append("donator", donator.toString))
+      .append("bank", bank.serialize())
+      .append("settings", new Document()
+        .append("chatMention", chatMention)
+        .append("showPlayers", showPlayers)
+        .append("receiveMessages", receiveMessages))
+      .append("punishments", new Document()
+        .append("ban", if(banned) punishments._ban.get.toString else "none")
+        .append("mute", if(muted) punishments._mute.get.toString else "none"))
+      .append("lastOnline", Instant.now())
+  }
+  override def load(doc: Document): Unit = {
+    group = PermissionRank.valueOf(doc.getString("groups.group"))
+    donator = DonatorRank.valueOf(doc.getString("groups.donator"))
+    bank = new Bank(doc.getString("bank"))
+    chatMention = doc.getBoolean("settings.chatMention")
+    showPlayers = doc.getBoolean("settings.showPlayers")
+    receiveMessages = doc.getBoolean("settings.receiveMessages")
+
+    //load punishments
+    var hexString = doc.getString("punishments.ban")
+    if (hexString != "none") {
+      punishments._ban = Option(new ObjectId(hexString))
+      punishments.banned
+    }
+    hexString = doc.getString("punishments.mute")
+    if (hexString != "none") {
+      punishments._mute = Option(new ObjectId(hexString))
+      punishments.muted
+    }
+
+  }
 }
 
 object ClusterPlayer extends PlayerCoordinator[ClusterPlayer]{

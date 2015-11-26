@@ -73,19 +73,19 @@ object Punishment{
       doc.getObjectId("_id"))
   }
 
-  def timeLeft(objectId: ObjectId): Duration = {
+  def timeLeft(objectId: ObjectId): Option[Duration] = {
     val doc = ClusterLib.instance.database.getDatabase("punishment")
       .getCollection("log").find(Filters.eq("_id", objectId)).first()
     val end = doc.getString("time.end")
     val start = doc.getString("time.start")
     if(end == start){
-      Duration.ZERO
+      None
     }else{
       val endI = Instant.parse(end)
       if(Instant.now().isAfter(endI)){
-        Duration.ZERO
+        Option(Duration.ZERO)
       }else{
-        Duration.between(Instant.now(), endI)
+        Option(Duration.between(Instant.now(), endI))
       }
     }
   }
