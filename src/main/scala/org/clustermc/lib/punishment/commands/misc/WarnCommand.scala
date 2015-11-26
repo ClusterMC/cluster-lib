@@ -18,7 +18,7 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
  * permission of the aforementioned owner.
  */
 
-class WarnCommand extends PunishmentCommand{
+object WarnCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 2
 

@@ -20,7 +20,7 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
  * permission of the aforementioned owner.
  */
 
-class TimedMuteCommand extends PunishmentCommand{
+object TimedMuteCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 3
 

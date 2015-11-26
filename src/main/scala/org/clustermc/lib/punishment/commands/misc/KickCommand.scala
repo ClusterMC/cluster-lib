@@ -17,7 +17,7 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
  * permission of the aforementioned owner.
  */
 
-class KickCommand extends PunishmentCommand{
+object KickCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 2
 

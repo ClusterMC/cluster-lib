@@ -22,7 +22,7 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
  * permission of the aforementioned owner.
  */
 
-abstract class PunishmentCommand {
+trait PunishmentCommand {
   val minArgLength: Int
   val name: String
   val needsOnline: Boolean

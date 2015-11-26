@@ -17,7 +17,7 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
  * permission of the aforementioned owner.
  */
 
-class UnbanCommand extends PunishmentCommand{
+object UnbanCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 2
 
