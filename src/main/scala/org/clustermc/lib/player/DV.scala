@@ -13,3 +13,6 @@ class DV[T](val default: T) {
   var value: T = default
   def isDefault: Boolean = default == value
 }
+object DV{
+  def apply[T](default: T): DV[T] = new DV[T](default)
+}
