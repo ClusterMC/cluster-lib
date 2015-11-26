@@ -29,7 +29,8 @@ object BanCommand extends PunishmentCommand{
       punished.kickPlayer(Messages(msgPrefix + "permBanned",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason)))
-    }
+    }else ClusterPlayer.unload(ppunished.itemId)
+
     punisher.sendMessage(Messages(msgPrefix + "permBanner",
       MsgVar("{REASON}", reason),
       MsgVar("{PUNISHED}", ppunished.latestName)))

@@ -34,11 +34,11 @@ class TimedMuteCommand extends PunishmentCommand{
       Punishment.create(PunishmentType.TEMPMUTE, punished.getUniqueId, punished.getUniqueId, reason, duration)
         .objectId)
     if(online){
-      punished.sendMessage(Messages(msgPrefix + "gotTempMuted",
+      punished.sendMessage(Messages(msgPrefix + "tempMuted",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason)))
     }
-    punisher.sendMessage(Messages(msgPrefix + "youTempMuted",
+    punisher.sendMessage(Messages(msgPrefix + "tempMuter",
       MsgVar("{REASON}", reason),
       MsgVar("{PUNISHED}", ppunished.latestName)))
   }

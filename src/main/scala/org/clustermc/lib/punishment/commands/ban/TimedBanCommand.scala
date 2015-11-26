@@ -33,11 +33,13 @@ object TimedBanCommand extends PunishmentCommand{
     ppunished.punishments._ban = Option(
       Punishment.create(PunishmentType.TEMPBAN, punished.getUniqueId, punished.getUniqueId, reason, duration)
         .objectId)
+
     if(online){
       punished.kickPlayer(Messages(msgPrefix + "tempBanned",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason)))
-    }
+    }else ClusterPlayer.unload(ppunished.itemId)
+
     punisher.sendMessage(Messages(msgPrefix + "tempBanner",
       MsgVar("{REASON}", reason),
       MsgVar("{PUNISHED}", ppunished.latestName)))

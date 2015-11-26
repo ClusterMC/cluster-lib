@@ -24,10 +24,10 @@ class WarnCommand extends PunishmentCommand{
 
   override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
     Punishment.create(PunishmentType.WARN, punished.getUniqueId, punished.getUniqueId, reason)
-    val title = Messages(msgPrefix + "warned.title",
+    val title = Messages(msgPrefix + "title",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason))
-    val subtitle = Messages(msgPrefix + "warned.subtitle",
+    val subtitle = Messages(msgPrefix + "subtitle",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason))
     TitleAPI.sendTitle(punished, int2Integer(5), int2Integer(60), int2Integer(5), title, subtitle)

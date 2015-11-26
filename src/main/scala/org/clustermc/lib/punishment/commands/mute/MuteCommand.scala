@@ -26,11 +26,11 @@ class MuteCommand extends PunishmentCommand{
       Punishment.create(PunishmentType.MUTE, punished.getUniqueId, punished.getUniqueId, reason)
         .objectId)
     if(online){
-      punished.sendMessage(Messages(msgPrefix + "gotPermMuted",
+      punished.sendMessage(Messages(msgPrefix + "permMuted",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason)))
     }
-    punisher.sendMessage(Messages(msgPrefix + "youPermMuted",
+    punisher.sendMessage(Messages(msgPrefix + "permMuter",
       MsgVar("{REASON}", reason),
       MsgVar("{PUNISHED}", ppunished.latestName)))
   }

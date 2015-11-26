@@ -29,13 +29,21 @@ class PlayerIO extends Listener {
     }
   }
 
-  @EventHandler def login(event: PlayerLoginEvent): Unit = {
-    if(!ClusterPlayer.loaded(event.getPlayer.getUniqueId)) ClusterPlayer(event.getPlayer.getUniqueId)
+  @EventHandler(priority = EventPriority.LOWEST)
+  def login(event: PlayerLoginEvent): Unit = {
+    if(!ClusterPlayer.loaded(event.getPlayer.getUniqueId) && !event.getResult.toString.contains("KICK")){
+      ClusterPlayer(event.getPlayer.getUniqueId)
+    }
   }
 
-  @EventHandler def kicked(event: PlayerKickEvent): Unit =
+  @EventHandler(priority = EventPriority.HIGHEST)
+  def kicked(event: PlayerKickEvent): Unit = {
     ClusterPlayer.unload(event.getPlayer.getUniqueId)
+  }
 
-  @EventHandler def disconnected(event: PlayerQuitEvent): Unit =
+  @EventHandler(priority = EventPriority.HIGHEST)
+  def disconnected(event: PlayerQuitEvent): Unit = {
     ClusterPlayer.unload(event.getPlayer.getUniqueId)
+  }
+
 }

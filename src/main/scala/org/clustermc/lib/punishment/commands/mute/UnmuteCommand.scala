@@ -25,7 +25,7 @@ class UnmuteCommand extends PunishmentCommand{
     Punishment.create(PunishmentType.UNMUTE, punished.getUniqueId, punished.getUniqueId, reason)
     ppunished.punishments._mute = None
     if(online){
-      punished.kickPlayer(Messages(msgPrefix + "unMuted",
+      punished.sendMessage(Messages(msgPrefix + "unMuted",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason)))
     }
