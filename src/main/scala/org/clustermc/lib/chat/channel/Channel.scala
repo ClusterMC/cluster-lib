@@ -7,6 +7,7 @@ import org.bukkit.entity.Player
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.enums.PermissionRank
 import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 import org.clustermc.lib.utils.{CustomConfig, StringUtil}
 
 import scala.collection.JavaConverters._
@@ -66,9 +67,9 @@ object Channel {
     }
 
     def serverAlert(message: String): Unit ={
-        Bukkit.getServer.broadcastMessage(StringUtil.colorString("&f&l-------------&c&l< SERVER ALERT >&f&l-------------"))
-        Bukkit.getServer.broadcastMessage(StringUtil.colorString("&c&l>>> " + message))
-        Bukkit.getServer.broadcastMessage(StringUtil.colorString("&f&l-------------&c&l< SERVER ALERT >&f&l-------------"))
+        Bukkit.getServer.broadcastMessage(Messages("channel.alert.header"))
+        Bukkit.getServer.broadcastMessage(Messages("channel.alert.message", MsgVar("{MESSAGE}", message)))
+        Bukkit.getServer.broadcastMessage(Messages("channel.alert.footer"))
     }
 
     def networkAlert(message: String): Unit ={

@@ -3,6 +3,7 @@ package org.clustermc.lib.chat.privatemessage
 import org.bukkit.Bukkit
 import org.clustermc.lib.chat.ColorFilter
 import org.clustermc.lib.command.CommandContext
+import org.clustermc.lib.enums.PermissionRank
 import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
@@ -24,8 +25,8 @@ object WhisperCommand {
     if(!pplayer.muted){
       val player = Bukkit.getPlayer(context.args(0))
       if (player != null) {
-        if (pplayer.receiveMessages) {
-          if (ClusterPlayer(player.getUniqueId).receiveMessages) {
+        if (pplayer.receiveMessages || pplayer.hasRank(PermissionRank.NETADMIN)){
+          if (ClusterPlayer(player.getUniqueId).receiveMessages || pplayer.hasRank(PermissionRank.MOD)){
             val sentence = ColorFilter.filter(pplayer, context.args.drop(1).mkString(" "))
             player.sendMessage(Messages("message.format.sender",
               MsgVar("{PLAYER", context.sender.getName),
