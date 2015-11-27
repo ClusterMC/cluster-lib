@@ -14,6 +14,8 @@ import org.bukkit.event.{EventHandler, Listener}
 
 class DropItemEvent extends Listener {
 
+    //TODO fix for servers that need item drops
+
     @EventHandler
     def onDrop(event: PlayerDropItemEvent): Unit = {
         if(!event.getPlayer.isOp) {

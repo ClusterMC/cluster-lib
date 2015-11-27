@@ -14,6 +14,8 @@ import org.bukkit.event.{EventHandler, Listener}
 
 class MoveItemEvent extends Listener {
 
+    //TODO fix for servers that need to be able to move items
+
     @EventHandler
     def onTryMoveItem(event: InventoryClickEvent): Unit = {
         if(!event.getWhoClicked.isOp) {

@@ -15,6 +15,8 @@ import org.clustermc.lib.gui.hotbar.Hotbar
 
 class InteractEvent extends Listener {
 
+    //TODO fix for servers that need to be able to click
+
     @EventHandler
     def onClick(event: PlayerInteractEvent) {
         if(!event.hasItem || !event.getAction.name.contains("CLICK")) {
