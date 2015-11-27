@@ -66,7 +66,9 @@ object Channel {
     }
 
     def serverAlert(message: String): Unit ={
-        //TODO ADD SERVER-WIDE ALERTS
+        Bukkit.getServer.broadcastMessage(StringUtil.colorString("&f&l-------------&c&l< SERVER ALERT >&f&l-------------"))
+        Bukkit.getServer.broadcastMessage(StringUtil.colorString("&c&l>>> " + message))
+        Bukkit.getServer.broadcastMessage(StringUtil.colorString("&f&l-------------&c&l< SERVER ALERT >&f&l-------------"))
     }
 
     def networkAlert(message: String): Unit ={
