@@ -23,7 +23,7 @@ object Announcer {
     val announcements: ListBuffer[Announcement] = {
         val config = new CustomConfig(ClusterLib.instance.getDataFolder, "announcements")
           .getConfigurationSection("messages")
-        config.getKeys(false).asScala.toList.map(s => Announcement(config.getStringList(s))).to[ListBuffer]
+        config.getKeys(false).asScala.toList.map(s => Announcement(config.getStringList(s))).to[ListBuffer[Announcement]]
     }
 
     def end(): Unit ={

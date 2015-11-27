@@ -10,7 +10,7 @@ import org.bson.types.ObjectId
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.econ.Bank
 import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
-import org.clustermc.lib.player.storage.{ChannelStorage, PunishmentStorage}
+import org.clustermc.lib.player.storage.{AchievementStorage, ChannelStorage, PunishmentStorage}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -35,6 +35,9 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
     if(hasDonatorRank(DonatorRank.SAGA) && !hasRank(PermissionRank.MOD)) donator.strings
     else group.strings
   }
+
+  //----------ACHIEVEMENTS----------
+  val achievements = new AchievementStorage()
 
   //----------ECONOMY----------
   var bank: Bank = new Bank()
@@ -66,15 +69,20 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
       .append("punishments", new Document()
         .append("ban", if(banned) punishments._ban.get.toString else "none")
         .append("mute", if(muted) punishments._mute.get.toString else "none"))
+      .append("achievements", achievements.serialize())
       .append("lastOnline", Instant.now())
   }
   override def load(doc: Document): Unit = {
     group = PermissionRank.valueOf(doc.getString("groups.group"))
     donator = DonatorRank.valueOf(doc.getString("groups.donator"))
+
     bank = new Bank(doc.getString("bank"))
+
     chatMention = doc.getBoolean("settings.chatMention")
     showPlayers = doc.getBoolean("settings.showPlayers")
     receiveMessages = doc.getBoolean("settings.receiveMessages")
+
+    achievements.deserialize(doc.getString("achievements"))
 
     //load punishments
     var hexString = doc.getString("punishments.ban")

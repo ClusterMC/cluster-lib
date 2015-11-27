@@ -1,6 +1,7 @@
 package org.clustermc.lib
 
 import org.bukkit.scheduler.BukkitTask
+import org.clustermc.lib.achievements.LocationAchievementRunnable
 import org.clustermc.lib.chat.announcer.Announcer
 import org.clustermc.lib.chat.listener.ChatListener
 import org.clustermc.lib.player.ClusterPlayer
@@ -39,6 +40,7 @@ class ClusterLib extends ClusterServerPlugin("lib"){
         new ChatListener
         new PlayerIO
         Announcer.start()
+        LocationAchievementRunnable.start()
 
         cooldownTask = getServer.getScheduler.runTaskTimerAsynchronously(this, new Runnable {
             override def run(): Unit = _cooldowns.handleCooldowns()
@@ -46,9 +48,10 @@ class ClusterLib extends ClusterServerPlugin("lib"){
     }
 
     override def onDisable(): Unit = {
+        LocationAchievementRunnable.end()
+        cooldownTask.cancel()
         ClusterPlayer.unloadAll()
         Announcer.end()
-        cooldownTask.cancel()
         ClusterLib._instance = null
         _mongoDB.getClient.close()
     }

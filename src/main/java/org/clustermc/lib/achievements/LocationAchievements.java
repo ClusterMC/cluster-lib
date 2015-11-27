@@ -12,12 +12,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public enum LocationAchievements {
-    BUMBLEBEE(new Location(Bukkit.getWorld("world"), 1, 2, 3),
+    START(new Location(Bukkit.getWorld("world"), 1, 2, 3),
             5,
             "Rich's Happy Place",
             "Why did we do this? No one knows!");
 
-    LocationAchievements(Location world, int radius, String name, String wittysubtitle) {
 
+    Location loc;
+    int radius;
+    String name, witthsubtitle;
+
+    LocationAchievements(Location loc, int radius, String name, String wittysubtitle) {
+        this.loc = loc;
+        this.radius = radius;
+        this.name = name;
+        this.witthsubtitle = wittysubtitle;
     }
 }
