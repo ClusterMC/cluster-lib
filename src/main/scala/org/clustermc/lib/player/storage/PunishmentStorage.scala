@@ -36,4 +36,16 @@ class PunishmentStorage {
       true
     }else false
   }
+
+  def loadMuteAndBan(mute: String, ban: String): Unit ={
+    if (ban != "none") {
+      _ban = Option(new ObjectId(ban))
+      banned
+    }
+    if (mute != "none") {
+      _mute = Option(new ObjectId(mute))
+      muted
+    }
+  }
+
 }

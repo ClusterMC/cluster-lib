@@ -6,7 +6,6 @@ import java.util.UUID
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.UpdateOptions
 import org.bson.Document
-import org.bson.types.ObjectId
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.econ.Bank
 import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
@@ -54,6 +53,7 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
     database.updateOne(new Document(ClusterPlayer.index, uuid), toDocument,
       new UpdateOptions().upsert(true))
   }
+
   override def toDocument: Document = {
     new Document()
       .append("uuid", uuid.toString)
@@ -72,6 +72,7 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
       .append("achievements", achievements.serialize())
       .append("lastOnline", Instant.now())
   }
+
   override def load(doc: Document): Unit = {
     group = PermissionRank.valueOf(doc.getString("groups.group"))
     donator = DonatorRank.valueOf(doc.getString("groups.donator"))
@@ -84,17 +85,8 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
 
     achievements.deserialize(doc.getString("achievements"))
 
-    //load punishments
-    var hexString = doc.getString("punishments.ban")
-    if (hexString != "none") {
-      punishments._ban = Option(new ObjectId(hexString))
-      punishments.banned
-    }
-    hexString = doc.getString("punishments.mute")
-    if (hexString != "none") {
-      punishments._mute = Option(new ObjectId(hexString))
-      punishments.muted
-    }
+    punishments.loadMuteAndBan(doc.getString("punishments.mute"),
+      doc.getString("punishments.ban"))
 
   }
 }
