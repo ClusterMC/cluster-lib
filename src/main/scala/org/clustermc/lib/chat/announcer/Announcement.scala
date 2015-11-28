@@ -24,5 +24,5 @@ case class Announcement(messages: List[String]) {
 }
 
 object Announcement {
-    def apply(msgs: util.List[String]) = Announcement(msgs.asScala.toList)
+    def apply(msgs: util.List[String]): Announcement = Announcement(msgs.asScala.toList)
 }

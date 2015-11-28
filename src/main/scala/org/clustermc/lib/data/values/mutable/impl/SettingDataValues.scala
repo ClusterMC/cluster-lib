@@ -5,17 +5,17 @@ import org.clustermc.lib.data.values.mutable.SettingData
 object SettingDataValues {
 
     sealed class BooleanSetting(private val default: Option[Boolean],
-                                private[this] val _value: Option[Boolean] = Option(false))
-        extends SettingData[Boolean](default, _value, classOf[Boolean]) {
+                                private[this] val value: Option[Boolean] = Option(false))
+        extends SettingData[Boolean](default, value, classOf[Boolean]) {
 
-        def has = _value match {
+        def has = value match {
             case Some(b) => b
             case _ => false
         }
 
-        override def isDefault: Boolean = _value == _default
+        override def isDefault: Boolean = value == _default
 
-        override def deserialize(s: String) = value = s.toBoolean
+        override def deserialize(s: String) = _value = Option(s.toBoolean)
     }
 
     object BooleanSetting {

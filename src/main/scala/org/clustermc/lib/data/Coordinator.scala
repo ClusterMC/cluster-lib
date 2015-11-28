@@ -22,7 +22,7 @@ trait Coordinator[K, V, L] {
 
     def remove(key: K) = if(loaded(key)) coordinatorMap.remove(key)
 
-    def load(load: L): Boolean
+    def load(load: L): Unit
 
     def unloadAll(): Unit
 

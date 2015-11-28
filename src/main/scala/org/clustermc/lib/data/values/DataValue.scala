@@ -20,7 +20,7 @@ trait DataValue[T] {
 
     def deserialize(s: String): Unit = _value = None
 
-    def serialize = if(_value.isDefined) Some(_value.toString) else None
+    def serialize = if(_value.isDefined) Some(_value.get.toString) else None
 
     def appendTo(document: Document) = {
         val serialized = serialize
@@ -42,6 +42,17 @@ class DataValueImpl[T](private[this] val value: Option[T], val innerClass: Class
     override def load(o: Any) = {
         o.getClass match {
             case `innerClass` => _value = Option(innerClass.cast(o))
+            case _ => _value = None
+        }
+    }
+}
+
+class ClassDataValue[T](private[this] val value: Option[Class[T]])
+    extends DataValue[Class[T]] {
+
+    override def load(o: Any): Unit = {
+        o match {
+            case c: Class[T] => _value = Option(c)
             case _ => _value = None
         }
     }

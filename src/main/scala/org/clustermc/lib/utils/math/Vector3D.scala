@@ -22,7 +22,7 @@ case class Vector3D(var x: Double, var y: Double, var z: Double) extends Cloneab
     }
 
     def isOnFace(v1: Vector3D, v2: Vector3D): Boolean = {
-
+        false
     }
 
     override def clone(): Vector3D = {
