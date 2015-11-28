@@ -30,6 +30,8 @@ abstract class Hotbar(val items: Array[HotbarItem]) {
     }
 
     def send(player: Player): Unit = {
+        player.getInventory.clear()
+        player.updateInventory()
         for(i <- 0 to 8) player.getInventory.setItem(i, items(i).stack)
         player.updateInventory()
     }
