@@ -24,6 +24,8 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
   //----------MISC----------
   var showPlayers: Boolean = true
   lazy val latestName: String = offlineBukkitPlayer.getName
+  var itemsDroppable, canInteract, blocksBreakable, itemsDamageable,
+  itemsMovable, playerKillable, playerDamageable: Boolean = false
 
   //----------PERMISSIONS----------
   var group: PermissionRank = PermissionRank.MEMBER

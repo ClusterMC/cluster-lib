@@ -1,7 +1,10 @@
 package org.clustermc.lib.gui.hotbar.events
 
+import org.bukkit.Bukkit
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.{EventHandler, Listener}
+import org.clustermc.lib.ClusterLib
+import org.clustermc.lib.player.ClusterPlayer
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -12,13 +15,13 @@ import org.bukkit.event.{EventHandler, Listener}
  * permission of the aforementioned owner.
  */
 
-class DropItemEvent extends Listener {
+object DropItemEvent extends Listener {
 
-    //TODO fix for servers that need item drops
+    Bukkit.getServer.getPluginManager.registerEvents(this, ClusterLib.instance)
 
     @EventHandler
     def onDrop(event: PlayerDropItemEvent): Unit = {
-        if(!event.getPlayer.isOp) {
+        if(!ClusterPlayer(event.getPlayer.getUniqueId).itemsDroppable) {
             event.setCancelled(true)
         }
     }

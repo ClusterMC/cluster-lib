@@ -1,7 +1,10 @@
 package org.clustermc.lib.gui.hotbar.events
 
+import org.bukkit.Bukkit
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.{EventHandler, Listener}
+import org.bukkit.event.{EventHandler, EventPriority, Listener}
+import org.clustermc.lib.ClusterLib
+import org.clustermc.lib.player.ClusterPlayer
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -12,14 +15,16 @@ import org.bukkit.event.{EventHandler, Listener}
  * permission of the aforementioned owner.
  */
 
-class MoveItemEvent extends Listener {
+object MoveItemEvent extends Listener {
 
-    //TODO fix for servers that need to be able to move items
+    Bukkit.getServer.getPluginManager.registerEvents(this, ClusterLib.instance)
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     def onTryMoveItem(event: InventoryClickEvent): Unit = {
         if(!event.getWhoClicked.isOp) {
-            event.setCancelled(true)
+            if(!ClusterPlayer(event.getWhoClicked.getUniqueId).itemsMovable){
+                event.setCancelled(true)
+            }
         }
     }
 
