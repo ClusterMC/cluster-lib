@@ -12,7 +12,7 @@ import org.clustermc.lib.command.CommandContext
  * permission of the aforementioned owner.
  */
 
-class ChannelCommand {
+object ChannelCommand {
 
   //channel|c|chat|ch|chan -- displays help
     //sub|subscribe|join|listen|view -- lists subscribed channels
@@ -23,9 +23,12 @@ class ChannelCommand {
       //<channel> -- leaves channel
     //help|h|?|what|how|wtf|halp|que -- shows the help
     //<channel> <message> -- quick send
-  val channelBase = (context: CommandContext) => {
+  def apply(context: CommandContext): Unit = {
     val length = context.length
-    if(length == 0) ChannelHelpCommand(context.sender)
+    if(length == 0) {
+      ChannelHelpCommand(context.sender)
+      return
+    }
 
     context.args(0).toLowerCase match {
       case "sub" | "subscribe" | "join" | "listen" | "view" | "j" | "s" =>
