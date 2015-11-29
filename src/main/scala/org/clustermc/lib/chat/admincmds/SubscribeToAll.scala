@@ -21,6 +21,6 @@ object SubscribeToAll {
     val cplayer = ClusterPlayer(context.sender.getUniqueId)
     if(cplayer.hasRank(PermissionRank.MOD)){
       Channel.channels.values.foreach(c => cplayer.channelStorage.subscribe(c))
-    }else context.sender.sendMessage(Messages("channel.subtoall.error.noPerm"))
+    }else context.sender.sendMessage(Messages("general.noPermission"))
   }
 }

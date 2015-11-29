@@ -57,7 +57,7 @@ trait PunishmentCommand {
         }
       }
 
-    }else context.sender.sendMessage(Messages("punishment.error.noPerm"))
+    }else context.sender.sendMessage(Messages("general.noPermission"))
   }
 
   def existsInDatabase(uuid: UUID): Boolean ={

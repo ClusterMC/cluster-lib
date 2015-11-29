@@ -26,7 +26,7 @@ object Alert {
         return
       }
       Channel.serverAlert(context.args.mkString(" "))
-    }else context.sender.sendMessage(Messages("channel.alert.error.noPerm"))
+    }else context.sender.sendMessage(Messages("general.noPermission"))
   }
 
 }
