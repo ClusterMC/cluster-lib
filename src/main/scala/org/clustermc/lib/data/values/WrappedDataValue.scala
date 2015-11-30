@@ -8,7 +8,7 @@ class WrappedDataValueImpl[U, W[V <: U]](key: String, private[this] var _wrapped
                                          val innerClass: Class[U],
                                          val wrappedClass: Class[W[U]])
     extends WrappedDataValue[U, W] {
-    _name = key
+    _key = key
 
     def wrapped = _wrapped
 

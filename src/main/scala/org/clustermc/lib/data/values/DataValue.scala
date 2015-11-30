@@ -3,11 +3,11 @@ package org.clustermc.lib.data.values
 import org.bson.Document
 
 trait DataValue[T] {
-    private[data] var _name = this.getClass.getSimpleName.toLowerCase
+    private[data] var _key = this.getClass.getSimpleName.toLowerCase
 
-    def name = _name
+    def key = _key
 
-    def name_=(s: String) = _name = s
+    def key_=(s: String) = _key = s
 
     private[data] var _value: Option[T] = None
 
@@ -29,7 +29,7 @@ trait DataValue[T] {
     def appendTo(document: Document) = {
         val serialized = serialize
         if(serialized.isDefined) {
-            document.append(name, serialized.get)
+            document.append(key, serialized.get)
         }
     }
 
@@ -42,7 +42,7 @@ trait DataValue[T] {
 
 class DataValueImpl[T](key: String, private[this] val value: Option[T], val innerClass: Class[T])
     extends DataValue[T] {
-    _name = key
+    _key = key
 
     override def load(o: Any) = {
         o.getClass match {
@@ -54,7 +54,7 @@ class DataValueImpl[T](key: String, private[this] val value: Option[T], val inne
 
 class ClassDataValue[T](key: String, private[this] val value: Option[Class[T]])
     extends DataValue[Class[T]] {
-    _name = key
+    _key = key
 
     override def load(o: Any): Unit = {
         o match {
