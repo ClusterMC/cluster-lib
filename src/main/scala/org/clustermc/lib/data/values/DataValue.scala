@@ -9,7 +9,7 @@ trait DataValue[T] {
 
     def key_=(s: String) = _key = s
 
-    private[data] var _value: Option[T] = None
+    protected var _value: Option[T] = None
 
     def value = _value
 
