@@ -43,21 +43,21 @@ trait PunishmentCommand {
         act(ClusterPlayer(punished.getUniqueId), pplayer, context.sender)
         punish(ClusterPlayer(punished.getUniqueId), pplayer, context.sender, punished, reason, online = true, context.args)
       }else if(needsOnline){
-        context.sender.sendMessage(Messages("punishment.error.notOnline"))
+        context.sender.sendMessage(Messages("general.notOnline"))
       }else{
         try{
           val uuid = UUIDFetcher.getUUIDOf(context.args(0))
           if(uuid != null && existsInDatabase(uuid)){
             act(ClusterPlayer(uuid), pplayer, context.sender)
             punish(ClusterPlayer(uuid), pplayer, context.sender, punished, reason, online = false, context.args)
-          }else context.sender.sendMessage(Messages("punishment.error.noExist", playerVar))
+          }else context.sender.sendMessage(Messages("general.playerNoExist", playerVar))
         }catch{
           case e: Exception =>
-            context.sender.sendMessage(Messages("punishment.error.noExist", playerVar))
+            context.sender.sendMessage(Messages("general.playerNoExist", playerVar))
         }
       }
 
-    }else context.sender.sendMessage(Messages("punishment.error.noPerm"))
+    }else context.sender.sendMessage(Messages("general.noPermission"))
   }
 
   def existsInDatabase(uuid: UUID): Boolean ={

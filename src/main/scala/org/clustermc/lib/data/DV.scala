@@ -1,4 +1,4 @@
-package org.clustermc.lib.player
+package org.clustermc.lib.data
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>

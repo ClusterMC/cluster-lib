@@ -23,4 +23,15 @@ public enum PermissionRank {
     PermissionRank(RankStrings rankStrings) {
         this.strings = rankStrings;
     }
+
+    public static boolean contains(String string){
+        return string.equalsIgnoreCase("MEMBER") ||
+                string.equalsIgnoreCase("HELPER") ||
+                string.equalsIgnoreCase("CONTENT") ||
+                string.equalsIgnoreCase("MOD") ||
+                string.equalsIgnoreCase("MOD_PLUS") ||
+                string.equalsIgnoreCase("ADMIN") ||
+                string.equalsIgnoreCase("NETADMIN") ||
+                string.equalsIgnoreCase("OWNER");
+    }
 }

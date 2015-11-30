@@ -19,4 +19,11 @@ public enum DonatorRank {
     DonatorRank(RankStrings rankStrings) {
         this.strings = rankStrings;
     }
+
+    public static boolean contains(String string){
+        return string.equalsIgnoreCase("NONE") ||
+                string.equalsIgnoreCase("SAGA") ||
+                string.equalsIgnoreCase("EPIC") ||
+                string.equalsIgnoreCase("MYTHIC");
+    }
 }

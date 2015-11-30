@@ -1,7 +1,7 @@
 package org.clustermc.lib.gui.hotbar.events
 
 import org.bukkit.Bukkit
-import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.{InventoryClickEvent, InventoryDragEvent}
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.player.ClusterPlayer
@@ -21,6 +21,15 @@ object MoveItemEvent extends Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     def onTryMoveItem(event: InventoryClickEvent): Unit = {
+        if(!event.getWhoClicked.isOp) {
+            if(!ClusterPlayer(event.getWhoClicked.getUniqueId).itemsMovable){
+                event.setCancelled(true)
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    def onTryDrag(event: InventoryDragEvent): Unit = {
         if(!event.getWhoClicked.isOp) {
             if(!ClusterPlayer(event.getWhoClicked.getUniqueId).itemsMovable){
                 event.setCancelled(true)

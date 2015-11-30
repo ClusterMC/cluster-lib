@@ -36,7 +36,7 @@ object WhisperCommand {
               MsgVar("{MESSAGE}", sentence)))
           } else context.sender.sendMessage(Messages("message.error.messagesTurnedOffOther"))
         } else context.sender.sendMessage(Messages("message.error.messagesTurnedOffSelf"))
-      } else context.sender.sendMessage(Messages("player.error.noExist", MsgVar("{PLAYER}", context.args(0))))
+      } else context.sender.sendMessage(Messages("general.playerNoExist", MsgVar("{PLAYER}", context.args(0))))
     }else pplayer.message(Messages("punishment.youremuted", MsgVar("{TIME}", Punishment.timeLeft(pplayer.punishments._mute.get))))
   }
 }
