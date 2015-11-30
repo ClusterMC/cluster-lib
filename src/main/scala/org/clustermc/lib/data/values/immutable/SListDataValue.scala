@@ -17,7 +17,7 @@ class SListDataValue[T](key: String, private[this] val _wrapped: Option[List[T]]
         wrapped = prepend ::: extract
     }
 
-    def diff(difference: T) = {
+    def diff(difference: T): Unit = {
         diff(List(difference))
     }
 
