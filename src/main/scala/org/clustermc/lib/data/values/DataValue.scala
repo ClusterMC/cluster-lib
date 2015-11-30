@@ -3,7 +3,11 @@ package org.clustermc.lib.data.values
 import org.bson.Document
 
 trait DataValue[T] {
-    val name = this.getClass.getSimpleName.toLowerCase
+    private[data] var _name = this.getClass.getSimpleName.toLowerCase
+
+    def name = _name
+
+    def name_=(s: String) = _name = s
 
     private[data] var _value: Option[T] = None
 
@@ -36,8 +40,9 @@ trait DataValue[T] {
     }
 }
 
-class DataValueImpl[T](private[this] val value: Option[T], val innerClass: Class[T])
+class DataValueImpl[T](key: String, private[this] val value: Option[T], val innerClass: Class[T])
     extends DataValue[T] {
+    _name = key
 
     override def load(o: Any) = {
         o.getClass match {
@@ -47,8 +52,9 @@ class DataValueImpl[T](private[this] val value: Option[T], val innerClass: Class
     }
 }
 
-class ClassDataValue[T](private[this] val value: Option[Class[T]])
+class ClassDataValue[T](key: String, private[this] val value: Option[Class[T]])
     extends DataValue[Class[T]] {
+    _name = key
 
     override def load(o: Any): Unit = {
         o match {
