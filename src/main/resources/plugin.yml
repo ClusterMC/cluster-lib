@@ -1,0 +1,4 @@
+name: clusterlib
+main: org.clustermc.lib.ClusterLib
+version: 1.0
+author: Ktar5
