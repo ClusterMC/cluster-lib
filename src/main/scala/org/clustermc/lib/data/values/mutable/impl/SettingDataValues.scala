@@ -4,9 +4,9 @@ import org.clustermc.lib.data.values.mutable.SettingData
 
 object SettingDataValues {
 
-    sealed class BooleanSetting(private val default: Option[Boolean],
+    sealed class BooleanSetting(key: String, private val default: Option[Boolean],
                                 private[this] val value: Option[Boolean] = Option(false))
-        extends SettingData[Boolean](default, value, classOf[Boolean]) {
+        extends SettingData[Boolean](key, default, value, classOf[Boolean]) {
 
         def has = value match {
             case Some(b) => b
@@ -20,12 +20,12 @@ object SettingDataValues {
 
     object BooleanSetting {
 
-        def apply(default: Boolean, value: Boolean = false): BooleanSetting = {
-            apply(Option(default), Option(value))
+        def apply(key: String, default: Boolean, value: Boolean = false): BooleanSetting = {
+            apply(key, Option(default), Option(value))
         }
 
-        def apply(default: Option[Boolean], value: Option[Boolean]) = {
-            new BooleanSetting(default, value)
+        def apply(key:String, default: Option[Boolean], value: Option[Boolean]) = {
+            new BooleanSetting(key, default, value)
         }
     }
 }

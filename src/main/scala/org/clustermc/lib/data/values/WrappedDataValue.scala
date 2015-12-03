@@ -4,18 +4,23 @@ import scala.language.higherKinds
 
 trait WrappedDataValue[U, W[V <: U]] extends DataValue[U]
 
-class WrappedDataValueImpl[U, W[V <: U]](private[this] var _wrapped: Option[W[U]],
+class WrappedDataValueImpl[U, W[V <: U]](key: String, private[this] var _wrapped: Option[W[U]],
                                          val innerClass: Class[U],
                                          val wrappedClass: Class[W[U]])
     extends WrappedDataValue[U, W] {
+    _key = key
 
     def wrapped = _wrapped
 
-    def unwrapOption = {
-        if(wrapped.isEmpty)
-            null
-        else
-            wrapped.get
+    def extract: W[U] = {
+        checkExistence
+        _wrapped.get
+    }
+
+    @throws[NullPointerException]
+    def checkExistence: Boolean = {
+        if(_wrapped.isDefined) true
+        else throw new NullPointerException("Failed to extract Wrapper object. Option is empty.")
     }
 
     def wrapped_=(newWrapped: W[U]) = _wrapped = Option(newWrapped)

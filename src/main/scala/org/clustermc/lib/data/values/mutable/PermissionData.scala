@@ -1,8 +1,8 @@
 package org.clustermc.lib.data.values.mutable
 
 class PermissionData
-(private val _identifier: Option[Symbol] = None, private val _has: Option[Boolean] = None)
-    extends MutableDataValue[Boolean](_has, classOf[Boolean]) {
+(key: String, private val _identifier: Option[Symbol] = None, private val _has: Option[Boolean] = None)
+    extends MutableDataValue[Boolean](key, _has, classOf[Boolean]) {
 
     def permission = _identifier match {
         case Some(s) => s
@@ -31,7 +31,7 @@ class PermissionData
 
 object PermissionData {
 
-    def apply(identifier: Symbol, has: Boolean): PermissionData = apply(Option(identifier), Option(has))
+    def apply(key: String, identifier: Symbol, has: Boolean): PermissionData = apply(key, Option(identifier), Option(has))
 
-    def apply(identifier: Option[Symbol], has: Option[Boolean]) = new PermissionData(identifier, has)
+    def apply(key: String, identifier: Option[Symbol], has: Option[Boolean]) = new PermissionData(key, identifier, has)
 }
