@@ -1,9 +1,16 @@
+plugins {
+    id 'java' // or 'groovy' Must be explicitly applied
+    id 'scala'
+    id 'com.github.johnrengelman.shadow' version '1.2.2'
+}
+
 group 'org.clustermc.lib'
 version '1.0.0'
 
 apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'idea'
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'maven'
 
 sourceCompatibility = 1.8
@@ -18,6 +25,16 @@ repositories {
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
     mavenLocal()
+}
+
+shadowJar {
+    baseName = project.name
+    classifier = ''
+    dependencies {
+        include(dependency('org.mongodb:mongodb-driver:.*'))
+        include(dependency('org.mongodb:mongo-java-driver:.*'))
+        include(dependency('io.mazenmc:menuapi:.*'))
+    }
 }
 
 dependencies {
