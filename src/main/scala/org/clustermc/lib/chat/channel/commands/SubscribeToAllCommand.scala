@@ -1,4 +1,4 @@
-package org.clustermc.lib.chat.admincmds
+package org.clustermc.lib.chat.channel.commands
 
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.command.CommandContext
@@ -15,17 +15,13 @@ import org.clustermc.lib.utils.messages.Messages
  * permission of the aforementioned owner.
  */
 
-object Alert {
+object SubscribeToAllCommand {
 
-  //alert <message>
+  //ch suball
   def apply(context: CommandContext): Unit ={
     val cplayer = ClusterPlayer(context.sender.getUniqueId)
-    if(cplayer.hasRank(PermissionRank.NETADMIN)){
-      if(context.length < 1){
-        context.sender.sendMessage(Messages("channel.alert.error.notEnoughArgs"))
-        return
-      }
-      Channel.serverAlert(context.args.mkString(" "))
+    if(cplayer.hasRank(PermissionRank.MOD)){
+      Channel.channels.values.foreach(c => cplayer.channelStorage.subscribe(c))
     }else context.sender.sendMessage(Messages("general.noPermission"))
   }
 

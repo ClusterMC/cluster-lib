@@ -26,7 +26,7 @@ object RankCommand {
   //rank <player> <rank>
   def apply(context: CommandContext): Unit = {
     val cplayer = ClusterPlayer(context.sender.getUniqueId)
-    if (cplayer.hasRank(PermissionRank.NETADMIN)) {
+    if (cplayer.hasRank(PermissionRank.NETADMIN) || context.sender.isOp) {
       if (context.length != 2) {
         context.sender.sendMessage(Messages("rank.error.wrongArgs"))
         return

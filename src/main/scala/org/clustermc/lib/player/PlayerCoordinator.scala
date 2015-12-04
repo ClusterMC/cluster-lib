@@ -40,7 +40,7 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
 
   override def load(uuid: UUID): Unit = {
     if (!loaded(uuid)) {
-      val player: T = new T(uuid)
+      val player: T = genericInstance(uuid)
       if (collection().count(new Document(index, uuid.toString), new CountOptions().limit(1)) == 1){
         player.load(collection().find(new Document(index, uuid.toString)).first())
         afterLoad(player)
@@ -55,6 +55,8 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
   def collection(): MongoCollection[Document] = {
     ClusterLib.instance.database.getDatabase.getCollection("libplayerdata")
   }
+
+  protected def genericInstance(uuid: UUID): T
 
   protected def beforeUnload(uuid: UUID)
 

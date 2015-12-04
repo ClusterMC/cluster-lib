@@ -29,7 +29,6 @@ object ChannelCommand {
       ChannelHelpCommand(context.sender)
       return
     }
-
     context.args(0).toLowerCase match {
       case "sub" | "subscribe" | "join" | "listen" | "view" | "j" | "s" =>
         if(length == 1) SubscribeCommand(context.sender) else SubscribeCommand(context.sender, context.args(0))
@@ -38,6 +37,8 @@ object ChannelCommand {
       case "leave" | "exit" | "x" | "ex" | "q" | "quit" | "l" | "r" | "remove" =>
         if(length == 1) LeaveCommand(context.sender) else LeaveCommand(context.sender, context.args(0))
       case "help" | "h" | "?" | "what" | "how" | "idk" | "halp" | "que" => ChannelHelpCommand(context.sender)
+      case "suball" | "sall" => SubscribeToAllCommand(context)
+      case "alert" => AlertCommand(context)
       case name => if(Channel.channels.contains(name.toLowerCase)){
         if(length == 2) FocusCommand(context.sender, context.args(0))
         else if(length >= 3) SendCommand(context.sender, context.args(0), context.args.drop(1))

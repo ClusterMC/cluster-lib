@@ -21,7 +21,7 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
  * Hub can not be copied and/or distributed without the express
  * permission of the aforementioned owner.
  */
-
+//todo
 object Info{
 
   def apply(context: CommandContext): Unit ={

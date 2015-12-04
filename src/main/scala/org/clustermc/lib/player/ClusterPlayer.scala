@@ -101,4 +101,6 @@ object ClusterPlayer extends PlayerCoordinator[ClusterPlayer]{
   protected override def afterLoad(player: ClusterPlayer): Unit = {
     player.channelStorage.focus(Channel.get("general").get)
   }
+
+  override protected def genericInstance(uuid: UUID): ClusterPlayer = new ClusterPlayer(uuid)
 }

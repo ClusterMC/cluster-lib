@@ -20,7 +20,7 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 object WhisperCommand {
 
   //whisper|tell|t|w|msg|m|r|re|reply|message <player name> <message>
-  val whisper = (context: CommandContext) => {
+  def apply(context: CommandContext): Unit = {
     val pplayer= ClusterPlayer(context.sender.getUniqueId)
     if(!pplayer.muted){
       val player = Bukkit.getPlayer(context.args(0))

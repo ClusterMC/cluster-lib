@@ -14,7 +14,7 @@ public class Mongo {
 	private String host;
 	private String user;
 	private String password;
-	private String db = "tester123";
+	private String db = "dwasdwas";
 	
 	public Mongo(FileConfiguration file) {
 		port = file.getInt("port");
