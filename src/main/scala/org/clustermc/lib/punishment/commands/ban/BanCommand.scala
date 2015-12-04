@@ -39,4 +39,5 @@ object BanCommand extends PunishmentCommand{
   override val permRequired: PermissionRank = PermissionRank.NETADMIN
   override val name: String = "ban"
   override val needsOnline: Boolean = false
+  override val color: String = "6A332C"
 }

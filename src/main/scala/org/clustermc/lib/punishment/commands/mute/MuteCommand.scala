@@ -38,5 +38,6 @@ object MuteCommand extends PunishmentCommand{
   override val permRequired: PermissionRank = PermissionRank.MOD
   override val name: String = "mute"
   override val needsOnline: Boolean = false
+  override val color: String = "62CCB1"
 }
 

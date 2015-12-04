@@ -69,8 +69,7 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
     Array("rank", "ban", "unban", "mute", "unmute", "tmute", "tban", "kick", "warn", "eco", "whisper", "channel")
       .foreach(s => getCommand(s).setExecutor(this))
 
-
-    override def onCommand(sender: CommandSender, cmd: Command, label: String, args: Array[String]) {
+    override def onCommand(sender: CommandSender, cmd: Command, label: String, args: Array[String]): Boolean ={
         sender match {
             case player: Player =>
                 cmd.getName.toLowerCase match {
@@ -89,6 +88,7 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
                 }
             case _ =>
         }
+    false
     }
 
 }

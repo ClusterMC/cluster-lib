@@ -48,4 +48,5 @@ object TimedBanCommand extends PunishmentCommand{
   override val permRequired: PermissionRank = PermissionRank.ADMIN
   override val name: String = "ban"
   override val needsOnline: Boolean = false
+  override val color: String = "9F5E51"
 }

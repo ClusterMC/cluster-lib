@@ -39,4 +39,5 @@ object WarnCommand extends PunishmentCommand{
   override val permRequired: PermissionRank = PermissionRank.MOD
   override val name: String = "warn"
   override val needsOnline: Boolean = true
+  override val color: String = "E39568"
 }

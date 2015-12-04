@@ -34,4 +34,5 @@ object KickCommand extends PunishmentCommand{
   override val permRequired: PermissionRank = PermissionRank.MOD
   override val name: String = "kick"
   override val needsOnline: Boolean = true
+  override val color: String = "BDC459"
 }

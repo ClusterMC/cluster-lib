@@ -25,6 +25,7 @@ import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 trait PunishmentCommand {
   val minArgLength: Int
   val name: String
+  val color: String
   val needsOnline: Boolean
   val permRequired: PermissionRank
   val msgPrefix: String = "punishment." + name + "."

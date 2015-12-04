@@ -48,6 +48,8 @@ dependencies {
 
     compile group: 'org.spigotmc', name: 'spigot-api', version: '1.8.8-R0.1-SNAPSHOT'
 
+    //compile group: 'net.gpedro.integrations.slack', name: 'slack-webhook', version: '1.4'
+
     //this dependency is found via local maven repo
     compile group: 'org.spigotmc', name: 'spigot', version: '1.8.8-R0.1-SNAPSHOT'
 
