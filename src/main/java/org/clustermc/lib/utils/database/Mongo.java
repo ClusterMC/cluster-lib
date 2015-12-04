@@ -5,17 +5,16 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Mongo {
 	private MongoClient client;
-	private final Map<String, MongoDatabase> databases = new HashMap<>();
+	//private final Map<String, MongoDatabase> databases = new HashMap<>();
+	private MongoDatabase database;
 	
 	private int port;
 	private String host;
 	private String user;
 	private String password;
+	private String db = "tester123";
 	
 	public Mongo(FileConfiguration file) {
 		port = file.getInt("port");
@@ -27,15 +26,19 @@ public class Mongo {
 	public void open() {
 		String path = "mongodb://" + user + ":" + password + "@" + host + ":" + port;
 		client = new MongoClient(new MongoClientURI(path));
+		database = client.getDatabase(db);
 	}
 
     public MongoClient getClient() {return this.client;}
 
-    public MongoDatabase getDatabase(String name) {
+    public MongoDatabase getDatabase() {
+		return database;
+		/*
 		name = name.toLowerCase();
 		if(!databases.containsKey(name)){
 			return databases.put(name, client.getDatabase(name));
 		}
 		return databases.get(name);
+		*/
 	}
 }

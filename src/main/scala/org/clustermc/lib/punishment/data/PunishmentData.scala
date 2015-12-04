@@ -26,7 +26,7 @@ class PunishmentAct(val ptype: PunishmentType, val punisher: UUID, val punished:
   lazy val timed: Boolean = end.isAfter(start)
 
   def save(): Unit ={
-    ClusterLib.instance.database.getDatabase("punishment").getCollection("log").insertOne(toDocument)
+    ClusterLib.instance.database.getDatabase.getCollection("punishmentlog").insertOne(toDocument)
   }
 
   def toDocument: Document = {
@@ -62,8 +62,8 @@ object Punishment{
   }
 
   def load(objectId: ObjectId): PunishmentData ={
-    val doc: Document = ClusterLib.instance.database.getDatabase("punishment")
-      .getCollection("log").find(Filters.eq("_id", objectId)).first()
+    val doc: Document = ClusterLib.instance.database.getDatabase
+      .getCollection("punishmentlog").find(Filters.eq("_id", objectId)).first()
     new PunishmentData(PunishmentType.valueOf(doc.getString("type")),
       UUID.fromString(doc.getString("people.punisher")),
       UUID.fromString(doc.getString("people.punished")),
@@ -74,8 +74,8 @@ object Punishment{
   }
 
   def timeLeft(objectId: ObjectId): Option[Duration] = {
-    val doc = ClusterLib.instance.database.getDatabase("punishment")
-      .getCollection("log").find(Filters.eq("_id", objectId)).first()
+    val doc = ClusterLib.instance.database.getDatabase
+      .getCollection("punishmentlog").find(Filters.eq("_id", objectId)).first()
     val end = doc.getString("time.end")
     val start = doc.getString("time.start")
     if(end == start){
@@ -91,8 +91,8 @@ object Punishment{
   }
 
   def reason(objectId: ObjectId): String = {
-    ClusterLib.instance.database.getDatabase("punishment")
-      .getCollection("log").find(Filters.eq("_id", objectId)).first()
+    ClusterLib.instance.database.getDatabase
+      .getCollection("punishmentlog").find(Filters.eq("_id", objectId)).first()
       .getString("reason")
   }
 

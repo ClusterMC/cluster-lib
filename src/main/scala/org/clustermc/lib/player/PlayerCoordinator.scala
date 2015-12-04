@@ -3,11 +3,10 @@ package org.clustermc.lib.player
 import java.util.UUID
 
 import com.mongodb.client.MongoCollection
+import com.mongodb.client.model.CountOptions
 import org.bson.Document
-import org.bukkit.plugin.java.JavaPlugin
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.data.KeyLoadingCoordinator
-import org.clustermc.lib.utils.ClusterServerPlugin
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -20,7 +19,7 @@ import org.clustermc.lib.utils.ClusterServerPlugin
 
 //apply(key) = this(key) = get(key) = PlayerCoordinator(key)
 abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordinator[UUID, T]{
-  val dbName = JavaPlugin.getProvidingPlugin(this.getClass).asInstanceOf[ClusterServerPlugin].server
+  //val dbName = JavaPlugin.getProvidingPlugin(this.getClass).asInstanceOf[ClusterServerPlugin].server
   val index = "uuid"
 
   override def unloadAll(): Unit = coordinatorMap.keysIterator.foreach(unload)
@@ -42,7 +41,7 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
   override def load(uuid: UUID): Unit = {
     if (!loaded(uuid)) {
       val player: T = new T(uuid)
-      if (collection().count(new Document(index, uuid.toString), new model.CountOptions().limit(1)) == 1){
+      if (collection().count(new Document(index, uuid.toString), new CountOptions().limit(1)) == 1){
         player.load(collection().find(new Document(index, uuid.toString)).first())
         afterLoad(player)
       } else {
@@ -54,7 +53,7 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
   }
 
   def collection(): MongoCollection[Document] = {
-    ClusterLib.instance.database.getDatabase(dbName).getCollection("playerdata")
+    ClusterLib.instance.database.getDatabase.getCollection("libplayerdata")
   }
 
   protected def beforeUnload(uuid: UUID)
