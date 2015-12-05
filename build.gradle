@@ -43,6 +43,8 @@ dependencies {
 
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.6'
 
+    compile group: 'org.json', name: 'json', version: '20151123'
+
     compile group: 'org.mongodb', name: 'mongodb-driver', version: '3.0.4'
     compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.0.4'
 

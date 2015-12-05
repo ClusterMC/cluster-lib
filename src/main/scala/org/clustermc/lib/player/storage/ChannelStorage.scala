@@ -1,7 +1,10 @@
 package org.clustermc.lib.player.storage
 
-import org.bukkit.entity.Player
+import java.util.UUID
+
+import org.bukkit.Bukkit
 import org.clustermc.lib.chat.channel.Channel
+import org.clustermc.lib.utils.messages.Messages
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -12,7 +15,9 @@ import org.clustermc.lib.chat.channel.Channel
  * permission of the aforementioned owner.
  */
 //TODO: Fix the generic typing
-class ChannelStorage(val player: Player) {
+class ChannelStorage(uuid: UUID) {
+    lazy val player = Bukkit.getPlayer(uuid)
+
 
     val subscribedChannels = new collection.mutable.TreeSet[Channel]()
     private var _focusedChannel: Option[Channel] = Option.empty
@@ -29,6 +34,12 @@ class ChannelStorage(val player: Player) {
         }
     }
 
+    def init(): Unit ={
+        _focusedChannel = Channel.get("general")
+        subscribedChannels.add(_focusedChannel.get)
+        _focusedChannel.get.fjoin(uuid)
+    }
+
     def subscribe(channel: Channel) = {
         if(!subscribedChannels.contains(channel)) {
             subscribedChannels.add(channel)
@@ -36,7 +47,7 @@ class ChannelStorage(val player: Player) {
         channel.join(player)
     }
 
-    def unsubscribe(channel: Channel) = {
+    def unsubscribe(channel: Channel): Unit = {
         if(subscribedChannels.contains(channel)) {
             subscribedChannels.remove(channel)
             if(subscribedChannels.isEmpty){
@@ -44,6 +55,10 @@ class ChannelStorage(val player: Player) {
             }
         }
         if(focusedChannel.name == channel.name) {
+            if(subscribedChannels.isEmpty){
+                player.sendMessage(Messages("channel.error.cantLeaveFocusWhenNoSub"))
+                return
+            }
             focus(subscribedChannels.head)
         }
     }

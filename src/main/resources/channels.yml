@@ -1,5 +1,5 @@
 channels:
-  global:
+  general:
     send: MEMBER
     receive: MEMBER
     format: "{PREFIX}&r {PLAYER_COLOR}{PLAYER} {SUFFIX}>&r {MESSAGE_COLOR}{MESSAGE}"

@@ -10,9 +10,9 @@ package org.clustermc.lib.enums;
 
 public enum DonatorRank {
     NONE(new RankStrings("", "", "", "")),
-    SAGA(new RankStrings("&9&lSAGA", "&f", "&9&l", "&7")),
-    EPIC(new RankStrings("&a&lEPIC", "&f", "&a&l", "&7")),
-    MYTHIC(new RankStrings("&6&lMYTHIC", "&f", "&6&l", "&f"));
+    SAGA(new RankStrings("&9&lSAGA", "&o", "&9&l", "&7")),
+    EPIC(new RankStrings("&a&lEPIC", "&o", "&a&l", "&7")),
+    MYTHIC(new RankStrings("&6&lMYTHIC", "&o", "&6&l", "&f"));
 
     public RankStrings strings;
 

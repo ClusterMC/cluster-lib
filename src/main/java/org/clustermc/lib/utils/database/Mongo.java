@@ -14,17 +14,18 @@ public class Mongo {
 	private String host;
 	private String user;
 	private String password;
-	private String db = "dwasdwas";
+	private String db;
 	
 	public Mongo(FileConfiguration file) {
 		port = file.getInt("port");
 		host = file.getString("host");
 		user = file.getString("user");
 		password = file.getString("password");
+		db = file.getString("database");
 	}
 	
 	public void open() {
-		String path = "mongodb://" + user + ":" + password + "@" + host + ":" + port;
+		String path = "mongodb://" + user + ":" + password + "@" + host + ":" + port + "/" + db;
 		client = new MongoClient(new MongoClientURI(path));
 		database = client.getDatabase(db);
 	}
