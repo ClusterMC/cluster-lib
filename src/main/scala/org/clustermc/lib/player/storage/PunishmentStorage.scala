@@ -18,7 +18,7 @@ class PunishmentStorage {
   private[player] def muted: Boolean = {
     if(_mute.isDefined){
       val punish = Punishment.timeLeft(_mute.get)
-      if(punish.isEmpty || punish.get.getSeconds == 0){
+      if(punish.isEmpty){
         _mute = None
         return false
       }
@@ -29,7 +29,8 @@ class PunishmentStorage {
   private[player] def banned: Boolean = {
     if(_ban.isDefined){
       val punish = Punishment.timeLeft(_ban.get)
-      if(punish.isEmpty || punish.get.getSeconds == 0){
+      println(punish)
+      if(punish.isEmpty){
         _ban = None
         return false
       }

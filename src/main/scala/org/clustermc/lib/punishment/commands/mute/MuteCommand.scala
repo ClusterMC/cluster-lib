@@ -23,7 +23,7 @@ object MuteCommand extends PunishmentCommand{
 
   override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
     ppunished.punishments._mute = Option(
-      Punishment.create(PunishmentType.MUTE, punished.getUniqueId, punished.getUniqueId, reason)
+      Punishment.create(PunishmentType.MUTE, punisher.getUniqueId, punished.getUniqueId, reason)
         .objectId)
     if(online){
       punished.sendMessage(Messages(msgPrefix + "permMuted",

@@ -31,7 +31,7 @@ object TimedMuteCommand extends PunishmentCommand{
       return
     }
     ppunished.punishments._mute = Option(
-      Punishment.create(PunishmentType.TEMPMUTE, punished.getUniqueId, punished.getUniqueId, reason, duration)
+      Punishment.create(PunishmentType.TEMPMUTE, punisher.getUniqueId, punished.getUniqueId, reason, duration)
         .objectId)
     if(online){
       punished.sendMessage(Messages(msgPrefix + "tempMuted",

@@ -23,7 +23,7 @@ import org.json.JSONObject
 class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
   //----------MISC----------
   var showPlayers: Boolean = true
-  lazy val latestName: String = offlineBukkitPlayer.getName
+  var latestName: String = "ERROR"
   var itemsDroppable, canInteract, blocksBreakable, itemsDamageable,
   itemsMovable, playerKillable, playerDamageable: Boolean = false
 

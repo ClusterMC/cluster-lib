@@ -25,6 +25,10 @@ class PlayerIO extends Listener {
     val player = ClusterPlayer(event.getUniqueId)
     if(player.banned){
       event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, Punishment.reason(player.punishments._ban.get))
+      val oplayer = Bukkit.getOfflinePlayer(event.getUniqueId)
+      if(oplayer != null && oplayer.getName != "null"){
+        player.latestName = oplayer.getName
+      }
       ClusterPlayer.unload(event.getUniqueId)
     }
   }
@@ -34,6 +38,7 @@ class PlayerIO extends Listener {
     if(!ClusterPlayer.loaded(event.getPlayer.getUniqueId) && !event.getResult.toString.contains("KICK")){
       ClusterPlayer(event.getPlayer.getUniqueId)
     }
+    ClusterPlayer(event.getPlayer.getUniqueId).latestName = event.getPlayer.getName
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)

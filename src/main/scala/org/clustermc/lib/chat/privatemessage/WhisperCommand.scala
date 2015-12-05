@@ -28,7 +28,7 @@ object WhisperCommand {
         if (pplayer.receiveMessages || pplayer.hasRank(PermissionRank.NETADMIN)){
           if (ClusterPlayer(player.getUniqueId).receiveMessages || pplayer.hasRank(PermissionRank.MOD)){
             val sentence = ColorFilter.filter(pplayer, context.args.drop(1).mkString(" "))
-            player.sendMessage(Messages("message.format.sender",
+            context.sender.sendMessage(Messages("message.format.sender",
               MsgVar("{PLAYER", context.sender.getName),
               MsgVar("{MESSAGE}", sentence)))
             player.sendMessage(Messages("message.format.receiver",
