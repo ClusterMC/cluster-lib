@@ -33,6 +33,7 @@ public class ServerTeleport {
                 try {
                     out.writeUTF("Connect");
                     out.writeUTF(server);
+                    //test
                 } catch (IOException e) {e.printStackTrace(); }
                 p.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
             }
