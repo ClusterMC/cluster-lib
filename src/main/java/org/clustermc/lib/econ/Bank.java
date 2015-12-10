@@ -8,23 +8,16 @@ package org.clustermc.lib.econ;
  * permission of the aforementioned owner.
  */
 
-import lombok.Getter;
-import org.bson.Document;
-import org.clustermc.lib.econ.currencies.ShardWallet;
-import org.clustermc.lib.exceptions.InvalidMongoDocException;
 import org.clustermc.lib.econ.currencies.ClusterWallet;
-import org.clustermc.lib.utils.database.MongoLoadable;
+import org.clustermc.lib.econ.currencies.ShardWallet;
 
-public class Bank implements MongoLoadable {
+public class Bank {
 
-    @Getter private ShardWallet shardWallet;
-    @Getter private ClusterWallet clusterWallet;
+    private ShardWallet shardWallet;
+    private ClusterWallet clusterWallet;
 
     public String serialize(){
-        return new StringBuilder().append(shardWallet.getAmount())
-                .append(";")
-                .append(clusterWallet.getAmount())
-                .toString();
+        return shardWallet.getAmount() + ";" + clusterWallet.getAmount();
     }
 
     public Bank(String string){
@@ -39,13 +32,7 @@ public class Bank implements MongoLoadable {
         this.clusterWallet = new ClusterWallet();
     }
 
-    @Override
-    public Document toDocument() {
-        return null;
-    }
+    public ShardWallet getShardWallet() {return this.shardWallet;}
 
-    @Override
-    public void load(Document doc) throws InvalidMongoDocException {
-
-    }
+    public ClusterWallet getClusterWallet() {return this.clusterWallet;}
 }

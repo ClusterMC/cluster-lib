@@ -37,15 +37,15 @@ public class Coolection {
         }
     }
 
-    protected boolean isEmpty(){
+    public boolean isEmpty(){
         return cooldowns.isEmpty();
     }
 
-    protected boolean isCooling(String cooldown){
+    public boolean isCooling(String cooldown){
         return cooldowns.containsKey(cooldown.toLowerCase());
     }
 
-    protected double timeRemaining(String cooldown){
+    public double timeRemaining(String cooldown){
         return handleCooldown(cooldown.toLowerCase());
     }
 

@@ -8,15 +8,12 @@ package org.clustermc.lib.utils.cooldown;
  * permission of the aforementioned owner.
  */
 
-import lombok.Getter;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 
 public class CooldownHandler {
 
-    @Getter
     private HashMap<UUID, Coolection> cooldownPlayers;
 
     public CooldownHandler() {
@@ -41,6 +38,10 @@ public class CooldownHandler {
         cooldownPlayers.get(player).add(ability.toLowerCase(), seconds);
     }
 
+    public Coolection get(UUID uuid){
+        return cooldownPlayers.getOrDefault(uuid, null);
+    }
+
     public boolean isCooling(UUID player, String ability) {
         Coolection cool = cooldownPlayers.get(player);
         return cool != null && cool.isCooling(ability);
@@ -58,4 +59,5 @@ public class CooldownHandler {
         }
     }
 
+    public HashMap<UUID, Coolection> getCooldownPlayers() {return this.cooldownPlayers;}
 }

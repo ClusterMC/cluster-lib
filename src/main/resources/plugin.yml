@@ -1,0 +1,21 @@
+name: clusterlib
+main: org.clustermc.lib.ClusterLib
+version: 1.0
+author: Ktar5
+depend: [Scala-Loader]
+commands:
+  rank:
+  ban:
+  unban:
+  mute:
+  unmute:
+  tmute:
+  info:
+  tban:
+  kick:
+  warn:
+  eco:
+  whisper:
+    aliases: [tell, t, w, msg, m, r, re, reply, message]
+  channel:
+    aliases: [channel, c, chat, ch, chan]

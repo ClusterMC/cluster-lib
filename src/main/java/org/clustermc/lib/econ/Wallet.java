@@ -8,9 +8,7 @@ package org.clustermc.lib.econ;
  * permission of the aforementioned owner.
  */
 
-import lombok.Getter;
-
-public @Getter
+public
 abstract class Wallet<C extends Currency> {
 
     private C currency;
@@ -61,8 +59,8 @@ abstract class Wallet<C extends Currency> {
      * @param amount The amount.
      * @return False if the amount is not allowed, and true otherwise.
      */
-    public boolean withdraw(double amount){
-        return setAmount(getAmount()-amount);
+    public boolean withdraw(double amount) {
+        return getAmount() - amount >= 0 && setAmount(getAmount() - amount);
     }
 
     /**
@@ -73,4 +71,7 @@ abstract class Wallet<C extends Currency> {
         return amount >= getAmount();
     }
 
+    public C getCurrency() {return this.currency;}
+
+    public double getAmount() {return this.amount;}
 }

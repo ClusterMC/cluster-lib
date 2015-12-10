@@ -8,6 +8,7 @@ package org.clustermc.lib.utils.database;
  * permission of the aforementioned owner.
  */
 
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
 import org.clustermc.lib.exceptions.FailedSaveException;
 
@@ -15,12 +16,8 @@ import static com.mongodb.client.model.Filters.eq;
 
 public interface MongoObject extends MongoLoadable {
 
-    /**
-     *
-     * save toDocument() to the database
-     */
-    default void save(final MongoDB database) throws FailedSaveException {
-        database.getPlayerdata().getCollection(getCollection()).updateOne(
+    default void save(MongoDatabase database) throws FailedSaveException {
+        database.getCollection(getCollection()).updateOne(
                 eq(getIndex(), getID()),
                 toDocument(),
                 new UpdateOptions().upsert(true)

@@ -8,7 +8,6 @@ package org.clustermc.lib.utils.cooldown;
  * permission of the aforementioned owner.
  */
 
-import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -16,9 +15,7 @@ import java.util.UUID;
 
 public class CooldownFinishEvent extends Event {
 
-    @Getter
     private UUID player;
-    @Getter
     private String ability;
 
     public CooldownFinishEvent(UUID player, String ability) {
@@ -30,4 +27,8 @@ public class CooldownFinishEvent extends Event {
     public HandlerList getHandlers() {
         return null;
     }
+
+    public UUID getPlayer() {return this.player;}
+
+    public String getAbility() {return this.ability;}
 }

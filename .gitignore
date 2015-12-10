@@ -12,6 +12,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
+settings.gradle
 .gradle
 build/
 gradle-app.setting
