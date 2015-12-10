@@ -17,7 +17,7 @@ object MsgVal {
 
 
     val test = MsgVal("lol")
-    val test1 = MsgVal("san")
+    val test1 = MsgVal("s")
     val test2 = MsgVal("knj")
 
     def main(args: Array[String]) = {
