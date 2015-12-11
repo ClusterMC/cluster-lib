@@ -31,7 +31,7 @@ object TimedBanCommand extends PunishmentCommand{
       return
     }
     ppunished.punishments._ban = Option(
-      Punishment.create(PunishmentType.TEMPBAN, punished.getUniqueId, punished.getUniqueId, reason, duration)
+      Punishment.create(PunishmentType.TEMPBAN, punisher.getUniqueId, punished.getUniqueId, reason, duration)
         .objectId)
 
     if(online){

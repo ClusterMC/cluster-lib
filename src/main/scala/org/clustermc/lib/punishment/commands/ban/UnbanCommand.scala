@@ -22,7 +22,7 @@ object UnbanCommand extends PunishmentCommand{
   override val minArgLength: Int = 2
 
   override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
-    Punishment.create(PunishmentType.UNBAN, punished.getUniqueId, punished.getUniqueId, reason)
+    Punishment.create(PunishmentType.UNBAN, punisher.getUniqueId, punished.getUniqueId, reason)
     ppunished.punishments._ban = None
     if(!online){
       ClusterPlayer.unload(ppunished.itemId)

@@ -16,6 +16,6 @@ commands:
   warn:
   eco:
   whisper:
-    aliases: [whisper, tell, t, w, msg, m, r, re, reply, message]
+    aliases: [tell, t, w, msg, m, r, re, reply, message]
   channel:
     aliases: [channel, c, chat, ch, chan]

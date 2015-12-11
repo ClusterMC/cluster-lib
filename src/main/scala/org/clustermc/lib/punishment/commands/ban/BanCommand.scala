@@ -23,7 +23,7 @@ object BanCommand extends PunishmentCommand{
 
   override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
     ppunished.punishments._ban = Option(
-      Punishment.create(PunishmentType.BAN, punished.getUniqueId, punished.getUniqueId, reason)
+      Punishment.create(PunishmentType.BAN, punisher.getUniqueId, punished.getUniqueId, reason)
         .objectId)
     if(online){
       punished.kickPlayer(Messages(msgPrefix + "permBanned",

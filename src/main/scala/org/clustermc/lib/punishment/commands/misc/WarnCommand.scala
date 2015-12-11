@@ -23,7 +23,7 @@ object WarnCommand extends PunishmentCommand{
   override val minArgLength: Int = 2
 
   override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
-    Punishment.create(PunishmentType.WARN, punished.getUniqueId, punished.getUniqueId, reason)
+    Punishment.create(PunishmentType.WARN, punisher.getUniqueId, punished.getUniqueId, reason)
     val title = Messages(msgPrefix + "title",
         MsgVar("{PUNISHER}", punisher.getName),
         MsgVar("{REASON}", reason))

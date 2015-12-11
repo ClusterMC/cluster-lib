@@ -3,7 +3,7 @@ package org.clustermc.lib.player
 import java.util.UUID
 
 import com.mongodb.client.MongoCollection
-import com.mongodb.client.model.{CountOptions, Filters}
+import com.mongodb.client.model.{Filters, CountOptions}
 import org.bson.Document
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.data.KeyLoadingCoordinator

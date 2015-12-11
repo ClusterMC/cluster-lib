@@ -13,5 +13,5 @@ class MsgVar(val identifier: String, val variable: Any) {
   def replace(input: String) = input.replace(identifier, String.valueOf(variable))
 }
 object MsgVar{
-  def apply(identifier: String, variable: Any): MsgVar = new MsgVar(identifier, variable)
+  def apply(identifier: String, variable: Any): MsgVar = new MsgVar("{" + identifier.toUpperCase + "}", variable)
 }
