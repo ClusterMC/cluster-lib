@@ -9,8 +9,8 @@ package org.clustermc.lib.utils.messages
  * permission of the aforementioned owner.
  */
 
-class MsgVar(val identifier: String, val variable: Any) {
-  def replace(input: String) = input.replace(identifier, String.valueOf(variable))
+final case class MsgVar(identifier: String, variable: Any) {
+  def replace(input: String): String = input.replace(identifier, String.valueOf(variable))
 }
 object MsgVar{
   def apply(identifier: String, variable: Any): MsgVar = new MsgVar("{" + identifier.toUpperCase + "}", variable)

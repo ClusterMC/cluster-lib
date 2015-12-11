@@ -29,13 +29,9 @@ trait PunishmentCommand {
   val needsOnline: Boolean
   val permRequired: PermissionRank
 
-  def msgPrefix: String ={
-    "punishment." + name + "."
-  }
-
   def apply(context: CommandContext): Unit ={
     if(context.length < minArgLength){
-      context.sender.sendMessage(Messages(msgPrefix + "error.notEnoughArgs"))
+      context.sender.sendMessage(Messages("punishment.error.notEnoughArgs"))
       return
     }
     val playerVar = MsgVar("{PLAYER}", context.args(0))
