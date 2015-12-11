@@ -3,7 +3,7 @@ package org.clustermc.lib.player
 import java.util.UUID
 
 import com.mongodb.client.MongoCollection
-import com.mongodb.client.model.CountOptions
+import com.mongodb.client.model.{CountOptions, Filters}
 import org.bson.Document
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.data.KeyLoadingCoordinator
@@ -42,13 +42,14 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
     if (!loaded(uuid)) {
       val player: T = genericInstance(uuid)
       if (collection().count(new Document(index, uuid.toString), new CountOptions().limit(1)) == 1){
-        player.load(collection().find(new Document(index, uuid.toString)).first())
-        afterLoad(player)
+        player.load(collection().find(Filters.eq(index, uuid.toString)).first())
+        set(uuid, player)
+        afterLoad(uuid)
       } else {
-        afterLoad(player)
+        set(uuid, player)
+        afterLoad(uuid)
         player.save(collection())
       }
-      set(uuid, player)
     }
   }
 
@@ -60,6 +61,6 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
 
   protected def beforeUnload(uuid: UUID)
 
-  protected def afterLoad(player: T)
+  protected def afterLoad(uuid: UUID)
 
 }

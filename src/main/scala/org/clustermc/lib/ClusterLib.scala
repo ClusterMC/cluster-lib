@@ -14,6 +14,7 @@ import org.clustermc.lib.player.commands.econ.EconomyCommand
 import org.clustermc.lib.player.commands.rank.RankCommand
 import org.clustermc.lib.player.event.PlayerIO
 import org.clustermc.lib.punishment.commands.ban.{BanCommand, TimedBanCommand, UnbanCommand}
+import org.clustermc.lib.punishment.commands.info.InfoCommand
 import org.clustermc.lib.punishment.commands.misc.{KickCommand, WarnCommand}
 import org.clustermc.lib.punishment.commands.mute.{MuteCommand, TimedMuteCommand, UnmuteCommand}
 import org.clustermc.lib.utils.cooldown.CooldownHandler
@@ -52,6 +53,9 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
         Announcer.start()
         LocationAchievementRunnable.start()
 
+        Array("rank", "ban", "unban", "mute", "unmute", "tmute", "info", "tban", "kick", "warn", "eco", "whisper", "channel")
+          .foreach(s => getCommand(s).setExecutor(this))
+
         cooldownTask = getServer.getScheduler.runTaskTimerAsynchronously(this, new Runnable {
             override def run(): Unit = _cooldowns.handleCooldowns()
         }, 20L, 5L)
@@ -66,25 +70,24 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
         _mongoDB.getClient.close()
     }
 
-    Array("rank", "ban", "unban", "mute", "unmute", "tmute", "tban", "kick", "warn", "eco", "whisper", "channel")
-      .foreach(s => getCommand(s).setExecutor(this))
-
     override def onCommand(sender: CommandSender, cmd: Command, label: String, args: Array[String]): Boolean ={
         sender match {
             case player: Player =>
+                val context = new CommandContext(player, cmd.getName.toLowerCase, args)
                 cmd.getName.toLowerCase match {
-                    case "rank" => RankCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "ban" => BanCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "unban" => UnbanCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "mute" => MuteCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "unmute" => UnmuteCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "tmute" => TimedMuteCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "tban" => TimedBanCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "kick" => KickCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "warn" => WarnCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "eco" => EconomyCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "whisper"|"tell"|"t"|"w"|"msg"|"m"|"r"|"re"|"reply"|"message" => WhisperCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
-                    case "channel"|"c"|"chat"|"ch"|"chan" => ChannelCommand(new CommandContext(player, cmd.getName.toLowerCase, args))
+                    case "rank" => RankCommand(context)
+                    case "ban" => BanCommand(context)
+                    case "unban" => UnbanCommand(context)
+                    case "mute" => MuteCommand(context)
+                    case "unmute" => UnmuteCommand(context)
+                    case "tmute" => TimedMuteCommand(context)
+                    case "tban" => TimedBanCommand(context)
+                    case "info" => InfoCommand(context)
+                    case "kick" => KickCommand(context)
+                    case "warn" => WarnCommand(context)
+                    case "eco" => EconomyCommand(context)
+                    case "whisper"|"tell"|"t"|"w"|"msg"|"m"|"r"|"re"|"reply"|"message" => WhisperCommand(context)
+                    case "channel"|"c"|"chat"|"ch"|"chan" => ChannelCommand(context)
                 }
             case _ =>
         }

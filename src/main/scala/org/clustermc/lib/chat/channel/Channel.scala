@@ -5,7 +5,6 @@ import java.util.UUID
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.clustermc.lib.ClusterLib
-import org.clustermc.lib.enums.PermissionRank
 import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 import org.clustermc.lib.utils.{CustomConfig, StringUtil}
@@ -21,13 +20,19 @@ import scala.collection.JavaConverters._
  * permission of the aforementioned owner.
  */
 
-class Channel(val name: String, val format: String, val sendPerm: PermissionRank, val receivePerm: PermissionRank)
+class Channel(val name: String, val format: String, val sendPerm: String, val receivePerm: String)
     extends Ordered[Channel] {
 
     @transient val members = new collection.mutable.LinkedHashSet[UUID]()
 
     def canFocus(player: Player) = canSend(player)
-    def canSend(player: Player): Boolean = ClusterPlayer(player.getUniqueId).hasRank(sendPerm)
+    def canSend(player: Player): Boolean ={
+        println(ClusterPlayer(player.getUniqueId).hasRank(sendPerm))
+        println(sendPerm)
+        println(ClusterPlayer(player.getUniqueId).group)
+        println(ClusterPlayer(player.getUniqueId).group.ordinal())
+        ClusterPlayer(player.getUniqueId).hasRank(sendPerm)
+    }
 
     def canSubscribe(player: Player) = canReceive(player)
     def canReceive(player: Player): Boolean = ClusterPlayer(player.getUniqueId).hasRank(receivePerm)
@@ -35,6 +40,12 @@ class Channel(val name: String, val format: String, val sendPerm: PermissionRank
     def join(player: Player) = {
         if(canSubscribe(player) && !members.contains(player.getUniqueId))
             members.add(player.getUniqueId)
+    }
+
+    def fjoin(uuid: UUID): Unit ={
+        if(!members.contains(uuid)){
+            members.add(uuid)
+        }
     }
 
     def leave(uuid: UUID) = {
@@ -85,10 +96,12 @@ object Channel {
             register(new Channel(
                 key.toLowerCase,
                 section.getString("format"),
-                PermissionRank.valueOf(section.getString("send")),
-                PermissionRank.valueOf(section.getString("receive")))
+                section.getString("send"),
+                section.getString("receive"))
                 )
+          println(key)
         }
+        channels.keySet.foreach(key => println("done + " + key))
     }
 
     def register(c: Channel) = channels.put(c.name.toLowerCase, c)

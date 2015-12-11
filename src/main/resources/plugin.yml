@@ -2,6 +2,7 @@ name: clusterlib
 main: org.clustermc.lib.ClusterLib
 version: 1.0
 author: Ktar5
+depend: [Scala-Loader]
 commands:
   rank:
   ban:
@@ -9,6 +10,7 @@ commands:
   mute:
   unmute:
   tmute:
+  info:
   tban:
   kick:
   warn:

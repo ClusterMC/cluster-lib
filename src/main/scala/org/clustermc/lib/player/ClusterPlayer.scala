@@ -4,12 +4,12 @@ import java.time.Instant
 import java.util.UUID
 
 import com.mongodb.client.MongoCollection
-import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.{Filters, UpdateOptions}
 import org.bson.Document
-import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.econ.Bank
 import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
 import org.clustermc.lib.player.storage.{AchievementStorage, ChannelStorage, PunishmentStorage}
+import org.json.JSONObject
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -32,6 +32,14 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
   var donator: DonatorRank = DonatorRank.NONE
   def hasRank(permGroup: PermissionRank): Boolean = group.ordinal() >= permGroup.ordinal()
   def hasDonatorRank(permGroup: DonatorRank): Boolean = donator.ordinal() >= permGroup.ordinal()
+  def hasRank(string: String): Boolean = {
+    if(PermissionRank.contains(string)){
+      return hasRank(PermissionRank.valueOf(string.toUpperCase))
+    } else if(DonatorRank.contains(string)){
+      return hasDonatorRank(DonatorRank.valueOf(string.toUpperCase))
+    }
+    false
+  }
   def chatRank = {
     if(hasDonatorRank(DonatorRank.SAGA) && !hasRank(PermissionRank.MOD)) donator.strings
     else group.strings
@@ -44,7 +52,7 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
   var bank: Bank = new Bank()
 
   //----------CHAT----------
-  val channelStorage = new ChannelStorage(this.bukkitPlayer)
+  lazy val channelStorage = new ChannelStorage(this.uuid)
   var chatMention, receiveMessages: Boolean = true
 
   //----------PUNISHMENTS----------
@@ -52,7 +60,9 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
   def banned = punishments.banned ; def muted = punishments.muted
 
   override def save(database: MongoCollection[Document]): Unit = {
-    database.updateOne(new Document(ClusterPlayer.index, uuid), toDocument,
+    database.updateOne(
+      Filters.eq(ClusterPlayer.index, uuid.toString),
+      new Document("$set", toDocument),
       new UpdateOptions().upsert(true))
   }
 
@@ -72,23 +82,28 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
         .append("ban", if(banned) punishments._ban.get.toString else "none")
         .append("mute", if(muted) punishments._mute.get.toString else "none"))
       .append("achievements", achievements.serialize())
-      .append("lastOnline", Instant.now())
+      .append("lastOnline", Instant.now().toString)
   }
 
   override def load(doc: Document): Unit = {
-    group = PermissionRank.valueOf(doc.getString("groups.group"))
-    donator = DonatorRank.valueOf(doc.getString("groups.donator"))
+    val obj = new JSONObject(doc.toJson)
+    group = PermissionRank.valueOf(obj.getJSONObject("groups").getString("group"))
+    donator = DonatorRank.valueOf(obj.getJSONObject("groups").getString("donator"))
 
-    bank = new Bank(doc.getString("bank"))
+    println(group)
+    println(donator)
+    println(obj.getJSONObject("groups").getString("group"))
 
-    chatMention = doc.getBoolean("settings.chatMention")
-    showPlayers = doc.getBoolean("settings.showPlayers")
-    receiveMessages = doc.getBoolean("settings.receiveMessages")
+    bank = new Bank(obj.getString("bank"))
 
-    achievements.deserialize(doc.getString("achievements"))
+    chatMention = obj.getJSONObject("settings").getBoolean("chatMention")
+    showPlayers = obj.getJSONObject("settings").getBoolean("showPlayers")
+    receiveMessages = obj.getJSONObject("settings").getBoolean("receiveMessages")
 
-    punishments.loadMuteAndBan(doc.getString("punishments.mute"),
-      doc.getString("punishments.ban"))
+    achievements.deserialize(obj.getString("achievements"))
+
+    punishments.loadMuteAndBan(obj.getJSONObject("punishments").getString("ban"),
+      obj.getJSONObject("punishments").getString("mute"))
 
   }
 }
@@ -98,8 +113,8 @@ object ClusterPlayer extends PlayerCoordinator[ClusterPlayer]{
     apply(uuid).channelStorage.subscribedChannels.foreach(c => c.leave(uuid))
   }
 
-  protected override def afterLoad(player: ClusterPlayer): Unit = {
-    player.channelStorage.focus(Channel.get("general").get)
+  protected override def afterLoad(uuid: UUID): Unit = {
+    this(uuid).channelStorage.init()
   }
 
   override protected def genericInstance(uuid: UUID): ClusterPlayer = new ClusterPlayer(uuid)

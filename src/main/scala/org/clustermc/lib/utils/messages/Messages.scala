@@ -49,8 +49,10 @@ object Messages {
       generate(key, Option(values.toArray[MsgVar]))
       "Generated default for " + key
     } else {
-      val s: String = messages.get(key).get
-      values.toArray[MsgVar].foreach(vari => s.replace(vari.identifier, String.valueOf(vari.variable)))
+      var s: String = messages.get(key).get
+      for(x <- values.toArray[MsgVar]){
+        s = s.replace(x.identifier, String.valueOf(x.variable))
+      }
       s
     }
   }

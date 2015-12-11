@@ -28,7 +28,10 @@ trait PunishmentCommand {
   val color: String
   val needsOnline: Boolean
   val permRequired: PermissionRank
-  val msgPrefix: String = "punishment." + name + "."
+
+  def msgPrefix: String ={
+    "punishment." + name + "."
+  }
 
   def apply(context: CommandContext): Unit ={
     if(context.length < minArgLength){

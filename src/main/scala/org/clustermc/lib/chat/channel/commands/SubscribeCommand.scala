@@ -29,7 +29,8 @@ object SubscribeCommand {
     if(channel.isDefined){
       val stuff = ClusterPlayer(player.getUniqueId).channelStorage
       if(stuff.isSubscribed(channel.get)){
-        player.sendMessage(Messages("channel.sub.error.alreadySubscribed", MsgVar("{NAME}", name.toLowerCase)))
+        stuff.unsubscribe(channel.get)
+        player.sendMessage(Messages("channel.sub.unsubSuccess", MsgVar("{NAME}", name.toLowerCase)))
       }else{
         if(channel.get.canSubscribe(player)){
           player.sendMessage(Messages("channel.sub.success", MsgVar("{NAME}", name.toLowerCase)))

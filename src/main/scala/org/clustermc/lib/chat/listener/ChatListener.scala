@@ -8,6 +8,7 @@ import org.clustermc.lib.chat.ColorFilter
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.data.Punishment
+import org.clustermc.lib.utils.StringUtil
 import org.clustermc.lib.utils.messages.{Messages, MsgVar}
 
 /*
@@ -50,13 +51,13 @@ class ChatListener extends Listener {
 
         event.setMessage(ColorFilter.filter(pplayer, event.getMessage))
 
-        event.setFormat(focused.format
+        event.setFormat(StringUtil.colorString(focused.format
           .replace("{PLAYER}", "%1$s")
           .replace("{PLAYER_COLOR}", group.player)
           .replace("{PREFIX}", group.prefix)
           .replace("{SUFFIX}", group.suffix)
           .replace("{MESSAGE_COLOR}", group.chat)
-          .replace("{MESSAGE}", "%2$s"))
+          .replace("{MESSAGE}", "%2$s")))
 
         //strip players
         val iter = event.getRecipients.iterator()

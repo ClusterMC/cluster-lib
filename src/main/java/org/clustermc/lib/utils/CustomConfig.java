@@ -31,6 +31,9 @@ public class CustomConfig {
     private File configFile;
 
     public CustomConfig(File folder, String fileName) {
+        if (!fileName.endsWith(".yml")) {
+            fileName += ".yml";
+        }
         this.fileName = fileName;
         configFile = new File(folder, fileName);
         reloadConfig();

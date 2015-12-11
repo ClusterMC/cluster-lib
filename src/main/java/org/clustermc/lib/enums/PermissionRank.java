@@ -9,8 +9,8 @@ package org.clustermc.lib.enums;
  */
 
 public enum PermissionRank {
-    MEMBER(new RankStrings("", "&7", "&e&l", "&7")),
-    HELPER(new RankStrings("&a*", "&7", "&e&l", "&7")),
+    MEMBER(new RankStrings("", "&7", "&f&l", "&7")),
+    HELPER(new RankStrings("&a@&l@", "&7", "&f&l", "&7")),
     CONTENT(new RankStrings("&2&lCONTENT", "&7", "&2&l", "&7")),
     MOD(new RankStrings("&3&lMOD", "&f", "&3&l", "&f")),
     MOD_PLUS(new RankStrings("&b&lMOD", "&f", "&b&l", "&f")),
