@@ -6,7 +6,7 @@ import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.PunishmentType
 import org.clustermc.lib.punishment.commands.PunishmentCommand
 import org.clustermc.lib.punishment.data.Punishment
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.PunishmentMsg.{punishmentBanPermBanned, punishmentBanPermBanner}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -26,18 +26,12 @@ object BanCommand extends PunishmentCommand{
       Punishment.create(PunishmentType.BAN, punisher.getUniqueId, punished.getUniqueId, reason)
         .objectId)
     if(online){
-      punished.kickPlayer(Messages(msgPrefix + "permBanned",
-        MsgVar("{PUNISHER}", punisher.getName),
-        MsgVar("{REASON}", reason)))
+      punished.kickPlayer(punishmentBanPermBanned(punisher.getName, reason).get)
     }else ClusterPlayer.unload(ppunished.itemId)
-
-    punisher.sendMessage(Messages(msgPrefix + "permBanner",
-      MsgVar("{REASON}", reason),
-      MsgVar("{PUNISHED}", ppunished.latestName)))
+    punisher.sendMessage(punishmentBanPermBanner(punished.getName, reason).get)
   }
 
   override val permRequired: PermissionRank = PermissionRank.NETADMIN
-  override val name: String = "ban"
   override val needsOnline: Boolean = false
   override val color: String = "6A332C"
 }

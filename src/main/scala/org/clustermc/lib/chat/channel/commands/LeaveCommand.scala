@@ -3,7 +3,7 @@ package org.clustermc.lib.chat.channel.commands
 import org.bukkit.entity.Player
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.player.ClusterPlayer
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.ChannelMsg.{channelCantLeaveFocusWhenNoSub, channelLeaveErrorNotSubscribed, channelLeaveSuccess, channelNoExist}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -21,12 +21,11 @@ object LeaveCommand {
   def apply(player: Player): Unit ={
     val storage = ClusterPlayer(player.getUniqueId).channelStorage
     if(storage.focusedChannel.name.equalsIgnoreCase("general")){
-      player.sendMessage(Messages("channel.leave.error.cantLeaveGeneralWhenFocused"))
+      player.sendMessage(channelCantLeaveFocusWhenNoSub().get)
     }else{
       val left = storage.focusedChannel.name
       storage.unsubscribe(storage.focusedChannel)
-      player.sendMessage(Messages("channel.leave.success",
-        MsgVar("{LEFT}", left), MsgVar("{NEW}", storage.focusedChannel.name)))
+      player.sendMessage(channelLeaveSuccess(left, storage.focusedChannel.name).get)
     }
   }
 
@@ -36,11 +35,9 @@ object LeaveCommand {
       val storage = ClusterPlayer(player.getUniqueId).channelStorage
       if(storage.isSubscribed(channel.get)){
         storage.unsubscribe(channel.get)
-        player.sendMessage(Messages("channel.leave.success",
-          MsgVar("{LEFT}", channel.get.name),
-          MsgVar("{NEW}", storage.focusedChannel.name)))
-      }else player.sendMessage(Messages("channel.leave.error.notSubscribed", MsgVar("{NAME}", name.toLowerCase)))
-    }else player.sendMessage(Messages("channel.focus.error.noExist", MsgVar("{NAME}", name.toLowerCase)))
+        player.sendMessage(channelLeaveSuccess(channel.get.name, storage.focusedChannel.name).get)
+      }else player.sendMessage(channelLeaveErrorNotSubscribed(channel.get.name).get)
+    }else player.sendMessage(channelNoExist(name.toLowerCase).get)
   }
 
 }

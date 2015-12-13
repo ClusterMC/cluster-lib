@@ -17,7 +17,8 @@ import scala.collection.mutable
  * cluster-lib can not be copied and/or distributed without the express
  * permission of the aforementioned owner.
  */
-object Messages_Old {
+@Deprecated
+class /*object*/ Messages_Old {
 
   private val messages: mutable.HashMap[String, String] = mutable.HashMap()
   private val config = new CustomConfig(ClusterLib.instance.getDataFolder, "lang")

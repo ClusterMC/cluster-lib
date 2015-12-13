@@ -10,7 +10,8 @@ import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
 import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.utils.UUIDFetcher
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.GeneralMsg.{generalNoPermission, generalPlayerNoExist}
+import org.clustermc.lib.utils.messages.vals.RankMsg.{rankErrorArgs, rankErrorInvalidRank, rankSuccess}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -28,7 +29,7 @@ object RankCommand {
     val cplayer = ClusterPlayer(context.sender.getUniqueId)
     if (cplayer.hasRank(PermissionRank.NETADMIN) || context.sender.isOp) {
       if (context.length != 2) {
-        context.sender.sendMessage(Messages("rank.error.wrongArgs"))
+        context.sender.sendMessage(rankErrorArgs().get)
         return
       }
       val punished = Bukkit.getPlayer(context.args(0))
@@ -39,13 +40,13 @@ object RankCommand {
           val uuid = UUIDFetcher.getUUIDOf(context.args(0))
           if (uuid != null && existsInDatabase(uuid)) {
             command(context.sender, punished.getUniqueId, context.args(1), online = false)
-          } else context.sender.sendMessage(Messages("general.playerNoExist", MsgVar("{PLAYER}", context.args(0))))
+          } else context.sender.sendMessage(generalPlayerNoExist(context.args(0).toLowerCase).get)
         } catch {
           case e: Exception =>
-            context.sender.sendMessage(Messages("general.playerNoExist", MsgVar("{PLAYER}", context.args(0))))
+            context.sender.sendMessage(generalPlayerNoExist(context.args(0).toLowerCase).get)
         }
       }
-    } else context.sender.sendMessage(Messages("general.noPermission"))
+    } else context.sender.sendMessage(generalNoPermission().get)
   }
 
   def command(player: Player, uuid: UUID, rankString: String, online: Boolean): Unit ={
@@ -55,10 +56,10 @@ object RankCommand {
     }else if(PermissionRank.contains(rankString)){
       cplayer.group = PermissionRank.valueOf(rankString.toUpperCase)
     }else{
-      player.sendMessage(Messages("rank.error.invalidRank", MsgVar("{INPUT}", rankString.toUpperCase)))
+      player.sendMessage(rankErrorInvalidRank(rankString.toUpperCase).get)
       return
     }
-    player.sendMessage(Messages("rank.success", MsgVar("{PLAYER}", cplayer.latestName)))
+    player.sendMessage(rankSuccess(rankString.toUpperCase).get)
     if(!online) ClusterPlayer.unload(uuid)
   }
 

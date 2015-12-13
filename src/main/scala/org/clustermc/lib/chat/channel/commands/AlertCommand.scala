@@ -4,7 +4,8 @@ import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.enums.PermissionRank
 import org.clustermc.lib.player.ClusterPlayer
-import org.clustermc.lib.utils.messages.Messages
+import org.clustermc.lib.utils.messages.vals.ChannelMsg.channelAlertErrorArgs
+import org.clustermc.lib.utils.messages.vals.GeneralMsg.generalNoPermission
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -22,11 +23,11 @@ object AlertCommand {
     val cplayer = ClusterPlayer(context.sender.getUniqueId)
     if(cplayer.hasRank(PermissionRank.NETADMIN)){
       if(context.length < 2){
-        context.sender.sendMessage(Messages("channel.alert.error.notEnoughArgs"))
+        context.sender.sendMessage(channelAlertErrorArgs().get)
         return
       }
       Channel.serverAlert(context.args.drop(0).mkString(" "))
-    }else context.sender.sendMessage(Messages("general.noPermission"))
+    }else context.sender.sendMessage(generalNoPermission().get)
   }
 
 }

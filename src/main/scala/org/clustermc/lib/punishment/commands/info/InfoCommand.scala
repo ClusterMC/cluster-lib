@@ -11,7 +11,8 @@ import org.clustermc.lib.enums.PermissionRank
 import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.UUIDFetcher
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.GeneralMsg.{generalNoPermission, generalPlayerNoExist}
+import org.clustermc.lib.utils.messages.vals.PunishmentMsg._
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -25,10 +26,9 @@ object InfoCommand{
 
   def apply(context: CommandContext): Unit ={
     if(context.length != 1){
-      context.sender.sendMessage(Messages("punishment.error.notEnoughArgs"))
+      context.sender.sendMessage(punishmentErrorArgs().get)
       return
     }
-    val playerVar = MsgVar("{PLAYER}", context.args(0))
     val pplayer = ClusterPlayer(context.sender.getUniqueId)
     if(pplayer.hasRank(PermissionRank.MOD)){
       val punished: Player = Bukkit.getPlayer(context.args(0))
@@ -39,13 +39,13 @@ object InfoCommand{
           val uuid = UUIDFetcher.getUUIDOf(context.args(0))
           if(uuid != null && existsInDatabase(uuid)){
             showTo(context.sender, ClusterPlayer(uuid), false)
-          }else context.sender.sendMessage(Messages("punishment.error.noExist", playerVar))
+          }else context.sender.sendMessage(generalPlayerNoExist(context.args(0).toLowerCase).get)
         }catch{
           case e: Exception =>
-            context.sender.sendMessage(Messages("punishment.error.noExist", playerVar))
+            context.sender.sendMessage(generalPlayerNoExist(context.args(0).toLowerCase).get)
         }
       }
-    }else context.sender.sendMessage(Messages("punishment.error.noPerm"))
+    }else context.sender.sendMessage(generalNoPermission().get)
   }
 
   def existsInDatabase(uuid: UUID): Boolean ={
@@ -56,28 +56,20 @@ object InfoCommand{
   }
 
   def showTo(sender: Player, punished: ClusterPlayer, online: Boolean): Unit ={
-    sender.sendMessage(Messages("punishment.info.header", MsgVar("{PLAYER}", punished.latestName)))
-    sender.sendMessage(Messages("punishment.info.nameAndOnline",
-      MsgVar("{PLAYER}", punished.latestName),
-      MsgVar("{ONLINE}", online.toString),
-      MsgVar("{DONATOR}", punished.donator.toString),
-      MsgVar("{PERM}", punished.group.toString)))
+    sender.sendMessage(punishmentInfoHeader(punished.latestName).get)
+    sender.sendMessage(punishmentInfoNameOnline(punished.latestName, online).get)
+    sender.sendMessage(punishmentInfoRank(punished.donator.name(), punished.group.name()).get)
     if(punished.banned){
       val ban = Punishment.load(punished.punishments._ban.get)
-      sender.sendMessage(Messages("punishment.info.ban",
-        MsgVar("{ID}", ban.objectId.toString),
-        MsgVar("{REASON}", ban.reason),
-        MsgVar("{TIME}", if(!ban.timed){"Indefinite"}else{Punishment.timeLeft(ban.objectId).toString} )))
-    }else{sender.sendMessage(Messages("punishment.info.notBanned"))}
+      sender.sendMessage(punishmentInfoBanned(ban.reason,
+        if(!ban.timed) "Indefinite" else Punishment.timeLeft(ban.objectId).get.toString).get)
+    }else{sender.sendMessage(punishmentInfoNotBanned().get)}
     if(punished.muted){
       val mute = Punishment.load(punished.punishments._mute.get)
-      sender.sendMessage(Messages("punishment.info.mute",
-        MsgVar("{ID}", mute.objectId.toString),
-        MsgVar("{REASON}", mute.reason),
-        MsgVar("{TIME}", if(!mute.timed){"Indefinite"}else{Punishment.timeLeft(mute.objectId).toString} )))
-    }else{sender.sendMessage(Messages("punishment.info.notMuted"))}
-    sender.sendMessage(Messages("punishment.info.footer"))
+      sender.sendMessage(punishmentInfoMuted(mute.reason,
+        if(!mute.timed) "Indefinite" else Punishment.timeLeft(mute.objectId).get.toString).get)
+    }else{sender.sendMessage(punishmentInfoNotMuted().get)}
+    sender.sendMessage(punishmentInfoFooter().get)
   }
-
 
 }

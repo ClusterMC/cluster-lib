@@ -3,7 +3,7 @@ package org.clustermc.lib.chat.channel.commands
 import org.bukkit.entity.Player
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.player.ClusterPlayer
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.ChannelMsg._
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -19,8 +19,7 @@ object FocusCommand {
   //focus|f|talk|t -- lists name of channel youre talking in
   //<channel> -- subscribes to and focuses on channel
   def apply(player: Player): Unit ={
-      player.sendMessage(Messages("channel.focus.current",
-        MsgVar("{NAME}", ClusterPlayer(player.getUniqueId).channelStorage.focusedChannel.name)))
+    player.sendMessage(channelFocusCurrent(ClusterPlayer(player.getUniqueId).channelStorage.focusedChannel.name).get)
   }
 
   def apply(player: Player, name: String): Unit ={
@@ -28,14 +27,14 @@ object FocusCommand {
     if(channel.isDefined){
       val storage = ClusterPlayer(player.getUniqueId).channelStorage
       if(storage.focusedChannel.name == name.toLowerCase){
-        player.sendMessage(Messages("channel.focus.error.alreadyFocused", MsgVar("{NAME}", name.toLowerCase)))
+        player.sendMessage(channelFocusErrorAlreadyFocused(name.toLowerCase).get)
       }else{
         if(channel.get.canFocus(player)){
-          player.sendMessage(Messages("channel.focus.success", MsgVar("{NAME}", name.toLowerCase)))
+          player.sendMessage(channelFocusSuccess(name.toLowerCase).get)
           storage.focus(channel.get)
-        }else player.sendMessage(Messages("channel.focus.error.noPermission", MsgVar("{NAME}", name.toLowerCase)))
+        }else player.sendMessage(channelNoPermission(name.toLowerCase).get)
       }
-    }else player.sendMessage(Messages("channel.focus.error.noExist", MsgVar("{NAME}", name.toLowerCase)))
+    }else player.sendMessage(channelNoExist(name.toLowerCase).get)
   }
 
 }

@@ -3,7 +3,7 @@ package org.clustermc.lib.chat.channel.commands
 import org.bukkit.entity.Player
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.player.ClusterPlayer
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.ChannelMsg._
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -19,9 +19,9 @@ object SubscribeCommand {
   //sub|subscribe|join|listen|view -- lists subscribed channels
   //<channel> -- subscribes to that channel
   def apply(player: Player): Unit ={
-    player.sendMessage(Messages("channel.sub.list.header"))
+    player.sendMessage(channelSubListHeader().get)
     ClusterPlayer(player.getUniqueId).channelStorage.subscribedChannels
-      .foreach(chan => player.sendMessage(Messages("channel.sub.list.item", MsgVar("{NAME}", chan.name))))
+      .foreach(chan => player.sendMessage(channelSubListItem(chan.name).get))
   }
 
   def apply(player: Player, name: String): Unit ={
@@ -30,13 +30,13 @@ object SubscribeCommand {
       val stuff = ClusterPlayer(player.getUniqueId).channelStorage
       if(stuff.isSubscribed(channel.get)){
         stuff.unsubscribe(channel.get)
-        player.sendMessage(Messages("channel.sub.unsubSuccess", MsgVar("{NAME}", name.toLowerCase)))
+        player.sendMessage(channelUnsubSuccess(name.toLowerCase).get)
       }else{
         if(channel.get.canSubscribe(player)){
-          player.sendMessage(Messages("channel.sub.success", MsgVar("{NAME}", name.toLowerCase)))
+          player.sendMessage(channelSubSuccess(name.toLowerCase).get)
           stuff.subscribe(channel.get)
-        }else player.sendMessage(Messages("channel.sub.error.noPermission", MsgVar("{NAME}", name.toLowerCase)))
+        }else player.sendMessage(channelNoPermission(name.toLowerCase).get)
       }
-    }else player.sendMessage(Messages("channel.sub.error.noExist", MsgVar("{NAME}", name.toLowerCase)))
+    }else player.sendMessage(channelNoExist(name.toLowerCase).get)
   }
 }

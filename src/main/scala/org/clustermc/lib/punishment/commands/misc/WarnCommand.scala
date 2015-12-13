@@ -7,7 +7,7 @@ import org.clustermc.lib.punishment.PunishmentType
 import org.clustermc.lib.punishment.commands.PunishmentCommand
 import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.TitleAPI
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.PunishmentMsg.{punishmentWarnSubtitle, punishmentWarnTitle, punishmentWarnWarner}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -24,20 +24,13 @@ object WarnCommand extends PunishmentCommand{
 
   override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
     Punishment.create(PunishmentType.WARN, punisher.getUniqueId, punished.getUniqueId, reason)
-    val title = Messages(msgPrefix + "title",
-        MsgVar("{PUNISHER}", punisher.getName),
-        MsgVar("{REASON}", reason))
-    val subtitle = Messages(msgPrefix + "subtitle",
-        MsgVar("{PUNISHER}", punisher.getName),
-        MsgVar("{REASON}", reason))
+    val title = punishmentWarnTitle(punisher.getName, reason).get
+    val subtitle = punishmentWarnSubtitle(punished.getName, reason).get
     TitleAPI.sendTitle(punished, int2Integer(5), int2Integer(60), int2Integer(5), title, subtitle)
-    punisher.sendMessage(Messages(msgPrefix + "warner",
-      MsgVar("{REASON}", reason),
-      MsgVar("{PUNISHED}", ppunished.latestName)))
+    punisher.sendMessage(punishmentWarnWarner(punished.getName, reason).get)
   }
 
   override val permRequired: PermissionRank = PermissionRank.MOD
-  override val name: String = "warn"
   override val needsOnline: Boolean = true
   override val color: String = "E39568"
 }

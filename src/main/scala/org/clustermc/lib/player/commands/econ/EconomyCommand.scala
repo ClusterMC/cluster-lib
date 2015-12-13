@@ -10,7 +10,8 @@ import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.enums.PermissionRank
 import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.utils.UUIDFetcher
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.EconMsg.{econErrorArgs, econErrorInvalidAmount, econErrorInvalidCurrency, econSuccess}
+import org.clustermc.lib.utils.messages.vals.GeneralMsg.{generalNoPermission, generalPlayerNoExist}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -30,10 +31,9 @@ object EconomyCommand {
     val cplayer = ClusterPlayer(context.sender.getUniqueId)
     if (cplayer.hasRank(PermissionRank.NETADMIN)) {
       if (context.length != 4) {
-        context.sender.sendMessage(Messages("econ.error.wrongArgs"))
+        context.sender.sendMessage(econErrorArgs().get)
         return
       }
-      val playerVar = MsgVar("{PLAYER}", context.args(2))
       val punished = Bukkit.getPlayer(context.args(2))
       if (punished != null) {
         command(context.sender, punished.getUniqueId, context.args(1), context.args(2), context.args(3).toInt, true)
@@ -42,22 +42,22 @@ object EconomyCommand {
           val uuid = UUIDFetcher.getUUIDOf(context.args(2))
           if (uuid != null && existsInDatabase(uuid)) {
             command(context.sender, uuid, context.args(1), context.args(2), context.args(3).toInt, false)
-          } else context.sender.sendMessage(Messages("general.playerNoExist", playerVar))
+          } else context.sender.sendMessage(generalPlayerNoExist(context.args(2).toLowerCase).get)
         } catch {
           case e: Exception =>
-            context.sender.sendMessage(Messages("general.playerNoExist", playerVar))
+            context.sender.sendMessage(generalPlayerNoExist(context.args(2).toLowerCase).get)
         }
       }
-    } else context.sender.sendMessage(Messages("general.noPermission"))
+    } else context.sender.sendMessage(generalNoPermission().get)
   }
 
   def command(player: Player, uuid: UUID, subcommand: String, currency: String, amount: Int, online: Boolean): Unit ={
     if(currency != "c" && currency != "s"){
-      player.sendMessage(Messages("econ.error.invalidCurrency"))
+      player.sendMessage(econErrorInvalidCurrency().get)
       return
     }
     if(amount <= 0 || amount >= 999999999){
-      player.sendMessage(Messages("econ.error.invalidAmount"))
+      player.sendMessage(econErrorInvalidAmount().get)
       return
     }
 
@@ -76,10 +76,7 @@ object EconomyCommand {
       case test => exist = false
     }
     if(exist){
-      player.sendMessage(Messages("econ.success." + subcommand.toLowerCase,
-        MsgVar("{PLAYER}", cplayer.latestName),
-        MsgVar("{AMOUNT}", amount),
-        MsgVar("{BALANCE}", cplayer.bank.serialize())))
+      player.sendMessage(econSuccess(subcommand.toLowerCase, cplayer.latestName, amount, cplayer.bank.serialize()).get)
       if(!online) ClusterPlayer.unload(cplayer.itemId)
     }
 

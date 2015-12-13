@@ -1,10 +1,7 @@
 package org.clustermc.lib.utils.messages
 
-import java.util.regex.Pattern
-
-import net.md_5.bungee.api.ChatColor
+import org.bson.Document
 import org.clustermc.lib.ClusterLib
-import org.clustermc.lib.utils.CustomConfig
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -21,12 +18,9 @@ import scala.collection.mutable
 object Messages {
   private val cache: mutable.HashMap[String, String] = mutable.HashMap()
 
-  for (key <- config.getKeys(true)) {
-    messages.put(key, ChatColor.translateAlternateColorCodes('&', config.getConfig.getString(key)))
-  }
-
   def load(): Unit ={
-
+    ClusterLib.instance.database.getDatabase.getCollection("lang").find().foreach(doc=>
+      cache.put(doc.getString("key"), doc.getString("message")))
   }
 
   private def generate(key: String, values: Option[Array[MsgVar]]): String = {
@@ -34,8 +28,9 @@ object Messages {
     if(values.isDefined){
       values.get.foreach(msg => s.append("_").append(msg.identifier))
     }
+    ClusterLib.instance.database.getDatabase.getCollection("lang")
+      .insertOne(new Document().append("key", key).append("message", s.toString()))
     cache.put(key, s.toString())
-
     "GENERATED: " + key
   }
 
@@ -46,7 +41,7 @@ object Messages {
     cache.get(key).get
   }
 
-  def apply(key: String, values: MsgVar*): String = {
+  def apply(key: String, values: List[MsgVar]): String = {
     if (!cache.containsKey(key)) {
       generate(key, Option(values.toArray[MsgVar]))
     } else {

@@ -9,7 +9,7 @@ import org.clustermc.lib.punishment.PunishmentType
 import org.clustermc.lib.punishment.commands.PunishmentCommand
 import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.TimeParser
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.PunishmentMsg.{punishmentErrorInvalidDuration, punishmentMuteTempMuted, punishmentMuteTempMuter}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -27,24 +27,19 @@ object TimedMuteCommand extends PunishmentCommand{
   override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
     val duration = TimeParser(args(1).toLowerCase)
     if(duration == Duration.ZERO){
-      punisher.sendMessage(Messages(msgPrefix + "invalidDuration", MsgVar("{ATTEMPT}", args(1).toLowerCase)))
+      punisher.sendMessage(punishmentErrorInvalidDuration(args(1).toLowerCase).get)
       return
     }
     ppunished.punishments._mute = Option(
       Punishment.create(PunishmentType.TEMPMUTE, punisher.getUniqueId, punished.getUniqueId, reason, duration)
         .objectId)
     if(online){
-      punished.sendMessage(Messages(msgPrefix + "tempMuted",
-        MsgVar("{PUNISHER}", punisher.getName),
-        MsgVar("{REASON}", reason)))
+      punished.sendMessage(punishmentMuteTempMuted(punisher.getName, args(1).toLowerCase, reason).get)
     }
-    punisher.sendMessage(Messages(msgPrefix + "tempMuter",
-      MsgVar("{REASON}", reason),
-      MsgVar("{PUNISHED}", ppunished.latestName)))
+    punisher.sendMessage(punishmentMuteTempMuter(punished.getName, args(1).toLowerCase, reason).get)
   }
 
   override val permRequired: PermissionRank = PermissionRank.MOD
-  override val name: String = "mute"
   override val needsOnline: Boolean = false
   override val color: String = "C7FFF1"
 }

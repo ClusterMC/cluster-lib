@@ -6,8 +6,8 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.player.ClusterPlayer
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
-import org.clustermc.lib.utils.{CustomConfig, StringUtil}
+import org.clustermc.lib.utils.CustomConfig
+import org.clustermc.lib.utils.messages.vals.ChannelMsg.{channelAlertFooter, channelAlertHeader, channelAlertMessage}
 
 import scala.collection.JavaConverters._
 
@@ -26,13 +26,7 @@ class Channel(val name: String, val format: String, val sendPerm: String, val re
     @transient val members = new collection.mutable.LinkedHashSet[UUID]()
 
     def canFocus(player: Player) = canSend(player)
-    def canSend(player: Player): Boolean ={
-        println(ClusterPlayer(player.getUniqueId).hasRank(sendPerm))
-        println(sendPerm)
-        println(ClusterPlayer(player.getUniqueId).group)
-        println(ClusterPlayer(player.getUniqueId).group.ordinal())
-        ClusterPlayer(player.getUniqueId).hasRank(sendPerm)
-    }
+    def canSend(player: Player): Boolean = ClusterPlayer(player.getUniqueId).hasRank(sendPerm)
 
     def canSubscribe(player: Player) = canReceive(player)
     def canReceive(player: Player): Boolean = ClusterPlayer(player.getUniqueId).hasRank(receivePerm)
@@ -52,13 +46,15 @@ class Channel(val name: String, val format: String, val sendPerm: String, val re
         if(members.contains(uuid)) members.remove(uuid)
     }
 
-    def message(message: String) = {
+    def forceSend(message: String) = {
         val iter = members.iterator
         while(iter.hasNext){
             val uuid = iter.next()
             val p = Bukkit.getPlayer(uuid)
-            if(p != null && p.isOnline) p.sendMessage(StringUtil.colorString(message))
-            else members.remove(uuid)
+            if(p != null && p.isOnline)
+                p.sendMessage(message)
+            else
+                members.remove(uuid)
         }
     }
 
@@ -78,9 +74,9 @@ object Channel {
     }
 
     def serverAlert(message: String): Unit ={
-        Bukkit.getServer.broadcastMessage(Messages("channel.alert.header"))
-        Bukkit.getServer.broadcastMessage(Messages("channel.alert.message", MsgVar("{MESSAGE}", message)))
-        Bukkit.getServer.broadcastMessage(Messages("channel.alert.footer"))
+        Bukkit.getServer.broadcastMessage(channelAlertHeader().get)
+        Bukkit.getServer.broadcastMessage(channelAlertMessage(message).get)
+        Bukkit.getServer.broadcastMessage(channelAlertFooter().get)
     }
 
     def networkAlert(message: String): Unit ={
@@ -99,7 +95,6 @@ object Channel {
                 section.getString("send"),
                 section.getString("receive"))
                 )
-          println(key)
         }
         channels.keySet.foreach(key => println("done + " + key))
     }

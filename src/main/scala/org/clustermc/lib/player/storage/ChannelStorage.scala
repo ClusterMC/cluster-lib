@@ -4,7 +4,7 @@ import java.util.UUID
 
 import org.bukkit.Bukkit
 import org.clustermc.lib.chat.channel.Channel
-import org.clustermc.lib.utils.messages.Messages
+import org.clustermc.lib.utils.messages.vals.ChannelMsg.channelCantLeaveFocusWhenNoSub
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -56,7 +56,7 @@ class ChannelStorage(uuid: UUID) {
         }
         if(focusedChannel.name == channel.name) {
             if(subscribedChannels.isEmpty){
-                player.sendMessage(Messages("channel.error.cantLeaveFocusWhenNoSub"))
+                player.sendMessage(channelCantLeaveFocusWhenNoSub().get)
                 return
             }
             focus(subscribedChannels.head)

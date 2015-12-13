@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitTask
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.utils.TitleAPI
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.AchievementMsg.{achievementTitleSubtitle, achievementTitleTitle}
 
 import scala.collection.JavaConverters._
 
@@ -34,8 +34,7 @@ object LocationAchievementRunnable {
       pl.foreach{ p =>
         if(ClusterPlayer(p.getUniqueId).achievements.unlock(x)){
           TitleAPI.sendTitle(Bukkit.getPlayer(p.getUniqueId), int2Integer(5), int2Integer(60), int2Integer(5),
-            Messages("achievement.title.title", MsgVar("{NAME}", x.name)),
-            Messages("achievement.title.subtitle", MsgVar("{DESCRIPTION}", x.witthsubtitle)))
+          new achievementTitleTitle(x.name).get, new achievementTitleSubtitle(x.witthsubtitle).get)
         }
       }
     }

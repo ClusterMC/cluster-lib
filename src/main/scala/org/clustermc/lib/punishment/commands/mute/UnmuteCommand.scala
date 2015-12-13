@@ -6,7 +6,7 @@ import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.PunishmentType
 import org.clustermc.lib.punishment.commands.PunishmentCommand
 import org.clustermc.lib.punishment.data.Punishment
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.PunishmentMsg.{punishmentMuteUnmuted, punishmentMuteUnmuter}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -25,17 +25,12 @@ object UnmuteCommand extends PunishmentCommand{
     Punishment.create(PunishmentType.UNMUTE, punisher.getUniqueId, punished.getUniqueId, reason)
     ppunished.punishments._mute = None
     if(online){
-      punished.sendMessage(Messages(msgPrefix + "unMuted",
-        MsgVar("{PUNISHER}", punisher.getName),
-        MsgVar("{REASON}", reason)))
+      punished.sendMessage(punishmentMuteUnmuted(punisher.getName, reason).get)
     }
-    punisher.sendMessage(Messages(msgPrefix + "unMuter",
-      MsgVar("{REASON}", reason),
-      MsgVar("{PUNISHED}", ppunished.latestName)))
+    punisher.sendMessage(punishmentMuteUnmuter(punished.getName, reason).get)
   }
 
   override val permRequired: PermissionRank = PermissionRank.MOD_PLUS
-  override val name: String = "mute"
   override val needsOnline: Boolean = false
   override val color: String = "7BFFDD"
 }

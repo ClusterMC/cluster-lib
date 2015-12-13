@@ -6,7 +6,9 @@ import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.enums.PermissionRank
 import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.data.Punishment
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.GeneralMsg.generalPlayerNoExist
+import org.clustermc.lib.utils.messages.vals.PunishmentMsg.punishmentYouAreMuted
+import org.clustermc.lib.utils.messages.vals.WhisperMsg.{whisperErrorTurnOffOther, whisperErrorTurnOffSelf, whisperFormatReceiver, whisperFormatSender}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -28,15 +30,11 @@ object WhisperCommand {
         if (pplayer.receiveMessages || pplayer.hasRank(PermissionRank.NETADMIN)){
           if (ClusterPlayer(player.getUniqueId).receiveMessages || pplayer.hasRank(PermissionRank.MOD)){
             val sentence = ColorFilter.filter(pplayer, context.args.drop(1).mkString(" "))
-            context.sender.sendMessage(Messages("message.format.sender",
-              MsgVar("{PLAYER", context.sender.getName),
-              MsgVar("{MESSAGE}", sentence)))
-            player.sendMessage(Messages("message.format.receiver",
-              MsgVar("{PLAYER", context.sender.getName),
-              MsgVar("{MESSAGE}", sentence)))
-          } else context.sender.sendMessage(Messages("message.error.messagesTurnedOffOther"))
-        } else context.sender.sendMessage(Messages("message.error.messagesTurnedOffSelf"))
-      } else context.sender.sendMessage(Messages("general.playerNoExist", MsgVar("{PLAYER}", context.args(0))))
-    }else pplayer.message(Messages("punishment.youremuted", MsgVar("{TIME}", Punishment.timeLeft(pplayer.punishments._mute.get))))
+            context.sender.sendMessage(whisperFormatSender(player.getName, sentence).get)
+            player.sendMessage(whisperFormatReceiver(context.sender.getName, sentence).get)
+          } else context.sender.sendMessage(whisperErrorTurnOffOther().get)
+        } else context.sender.sendMessage(whisperErrorTurnOffSelf().get)
+      } else context.sender.sendMessage(generalPlayerNoExist(context.args(0).toLowerCase).get)
+    }else pplayer.message(punishmentYouAreMuted(Punishment.timeLeft(pplayer.punishments._mute.get).get.toString).get)
   }
 }

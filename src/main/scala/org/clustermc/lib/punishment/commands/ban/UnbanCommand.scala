@@ -6,7 +6,7 @@ import org.clustermc.lib.player.ClusterPlayer
 import org.clustermc.lib.punishment.PunishmentType
 import org.clustermc.lib.punishment.commands.PunishmentCommand
 import org.clustermc.lib.punishment.data.Punishment
-import org.clustermc.lib.utils.messages.{Messages, MsgVar}
+import org.clustermc.lib.utils.messages.vals.PunishmentMsg.punishmentBanUnban
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -27,13 +27,10 @@ object UnbanCommand extends PunishmentCommand{
     if(!online){
       ClusterPlayer.unload(ppunished.itemId)
     }
-    punisher.sendMessage(Messages(msgPrefix + "unBan",
-      MsgVar("{REASON}", reason),
-      MsgVar("{PUNISHED}", ppunished.latestName)))
+    punisher.sendMessage(punishmentBanUnban(ppunished.latestName, reason).get)
   }
 
   override val permRequired: PermissionRank = PermissionRank.ADMIN
-  override val name: String = "ban"
   override val needsOnline: Boolean = false
   override val color: String = "FF7A73"
 }
