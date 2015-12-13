@@ -1,6 +1,7 @@
-package org.clustermc.lib.utils
+package org.clustermc.lib.command
 
-import org.bukkit.plugin.java.JavaPlugin
+import org.clustermc.lib.command.args.Arg
+import org.clustermc.lib.enums.PermissionRank
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -11,8 +12,9 @@ import org.bukkit.plugin.java.JavaPlugin
  * permission of the aforementioned owner.
  */
 
-abstract class ClusterServerPlugin(val server: String) extends JavaPlugin{
+abstract class Command(args: Arg*) {
 
-  def serverName: String = this.getServer.getServerName
+  val permission: PermissionRank
+  val needsPlayer: Boolean
 
 }

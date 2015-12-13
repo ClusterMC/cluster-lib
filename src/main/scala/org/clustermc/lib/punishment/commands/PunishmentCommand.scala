@@ -55,7 +55,6 @@ trait PunishmentCommand {
             context.sender.sendMessage(generalPlayerNoExist(context.args(0).toLowerCase).get)
         }
       }
-
     }else context.sender.sendMessage(generalNoPermission().get)
   }
 

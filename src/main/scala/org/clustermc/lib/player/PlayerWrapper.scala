@@ -17,7 +17,7 @@ import org.clustermc.lib.utils.database.MongoLoadable
  * permission of the aforementioned owner.
  */
 
-abstract class PlayerWrapper(playerId: UUID) extends DataItem(playerId) with MongoLoadable{
+abstract class PlayerWrapper[C <: PlayerWrapper[C]](playerId: UUID) extends DataItem(playerId) with MongoLoadable{
 
   def bukkitPlayer = Bukkit.getPlayer(playerId)
   

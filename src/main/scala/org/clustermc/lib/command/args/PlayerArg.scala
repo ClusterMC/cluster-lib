@@ -1,6 +1,6 @@
-package org.clustermc.lib.utils
+package org.clustermc.lib.command.args
 
-import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.entity.Player
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -11,8 +11,8 @@ import org.bukkit.plugin.java.JavaPlugin
  * permission of the aforementioned owner.
  */
 
-abstract class ClusterServerPlugin(val server: String) extends JavaPlugin{
-
-  def serverName: String = this.getServer.getServerName
-
+class PlayerArg extends Arg[Player] {
+  override def convert(input: String): Option[Player] = {
+    //TODO
+  }
 }

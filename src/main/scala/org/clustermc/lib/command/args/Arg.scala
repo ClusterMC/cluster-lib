@@ -1,6 +1,4 @@
-package org.clustermc.lib.utils
-
-import org.bukkit.plugin.java.JavaPlugin
+package org.clustermc.lib.command.args
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -11,8 +9,8 @@ import org.bukkit.plugin.java.JavaPlugin
  * permission of the aforementioned owner.
  */
 
-abstract class ClusterServerPlugin(val server: String) extends JavaPlugin{
+abstract class Arg[T] {
 
-  def serverName: String = this.getServer.getServerName
+  def convert(input: String): Option[T]
 
 }

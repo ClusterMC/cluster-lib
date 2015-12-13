@@ -106,6 +106,7 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
       obj.getJSONObject("punishments").getString("mute"))
 
   }
+
 }
 
 object ClusterPlayer extends PlayerCoordinator[ClusterPlayer]{

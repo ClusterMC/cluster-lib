@@ -1,5 +1,6 @@
 package org.clustermc.lib.player.event
 
+import org.bson.Document
 import org.bukkit.Bukkit
 import org.bukkit.event.player.{AsyncPlayerPreLoginEvent, PlayerKickEvent, PlayerLoginEvent, PlayerQuitEvent}
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
@@ -25,10 +26,6 @@ class PlayerIO extends Listener {
     val player = ClusterPlayer(event.getUniqueId)
     if(player.banned){
       event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, Punishment.reason(player.punishments._ban.get))
-      val oplayer = Bukkit.getOfflinePlayer(event.getUniqueId)
-      if(oplayer != null && oplayer.getName != "null"){
-        player.latestName = oplayer.getName
-      }
       ClusterPlayer.unload(event.getUniqueId)
     }
   }
@@ -36,18 +33,22 @@ class PlayerIO extends Listener {
   @EventHandler(priority = EventPriority.LOWEST)
   def login(event: PlayerLoginEvent): Unit = {
     if(!ClusterPlayer.loaded(event.getPlayer.getUniqueId) && !event.getResult.toString.contains("KICK")){
-      ClusterPlayer(event.getPlayer.getUniqueId)
+      val p = ClusterPlayer(event.getPlayer.getUniqueId)
+      p.latestName = event.getPlayer.getName
+      ClusterLib.instance.database.getDatabase.getCollection("online").insertOne(
+        new Document().append("uuid", p.itemId.toString).append("server", ClusterLib.instance.serverName))
     }
-    ClusterPlayer(event.getPlayer.getUniqueId).latestName = event.getPlayer.getName
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
   def kicked(event: PlayerKickEvent): Unit = {
+    ClusterPlayer(event.getPlayer.getUniqueId).latestName = event.getPlayer.getName
     ClusterPlayer.unload(event.getPlayer.getUniqueId)
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
   def disconnected(event: PlayerQuitEvent): Unit = {
+    ClusterPlayer(event.getPlayer.getUniqueId).latestName = event.getPlayer.getName
     ClusterPlayer.unload(event.getPlayer.getUniqueId)
   }
 

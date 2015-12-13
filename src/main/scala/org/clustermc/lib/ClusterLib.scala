@@ -1,5 +1,6 @@
 package org.clustermc.lib
 
+import org.bson.Document
 import org.bukkit.command.{Command, CommandExecutor, CommandSender}
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitTask
@@ -48,6 +49,8 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
         _mongoDB = new Mongo(new CustomConfig(this.getDataFolder, "db").getConfig)
         _mongoDB.open()
 
+        ClusterLib.instance.database.getDatabase.getCollection("online").deleteMany(new Document("server", this.serverName))
+
         new ChatListener
         new PlayerIO
         Announcer.start()
@@ -66,6 +69,7 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
         cooldownTask.cancel()
         ClusterPlayer.unloadAll()
         Announcer.end()
+        ClusterLib.instance.database.getDatabase.getCollection("online").deleteMany(new Document("server", this.serverName))
         ClusterLib._instance = null
         _mongoDB.getClient.close()
     }
