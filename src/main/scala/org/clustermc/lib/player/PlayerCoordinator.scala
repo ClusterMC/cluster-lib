@@ -138,9 +138,21 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
 
 object ActionResult extends Enumeration {
   type ActionResult = Value
+  //Player doesn't exist in the database
   val NO_EXIST = Value("NO_EXIST")
+
+  //Player is online on another server, and has had the
+  //Action applied to them through that server
   val ONLINE_OTHER_APPLIED = Value("ONLINE_OTHER_APPLIED")
+
+  //Player is online on the current server and has
+  //Had the action applied to them
   val ONLINE_CURRENT_APPLIED = Value("ONLINE_CURRENT_APPLIED")
+
+  //Player is not online on any servers and has
+  //Had the action applied to their database entry
   val OFFLINE_APPLIED = Value("OFFLINE_APPLIED")
+
+  //Player has not had the action applied to them
   val NOT_APPLIED = Value("NOT_APPLIED")
 }
