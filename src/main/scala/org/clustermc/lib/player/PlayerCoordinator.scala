@@ -44,6 +44,9 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
     * This method lets us provide safe checks for the "action(s)" to be applied to the player, each action
     * has a check done before it to make sure the player data doesnt get messed up by cross-server or nonexistence
     *
+    * Note: We only /need/ to use this when the player in question has a possibility of being offline/on another server.
+    *       Otherwise, we can just use apply()
+    *
     * @param uuid The uuid of the player we are attempting to apply the action to
     * @param allowOtherServer Whether we should allow an action to be applied to them on other servers
     * @param action The function of actions that shall be applied to the player, regardless of
@@ -53,23 +56,25 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
     * @tparam U The return type of the "action" function, never used.
     * @return The ActionResult of the action we are trying to perform, see ActionResult.scala
     */
-  def act[U](uuid: UUID, action: T => U, allowOffline: Boolean = false, allowOtherServer: Boolean = false): ActionResult ={
+  def act[U](uuid: UUID, action: T => U, allowOffline: Boolean = false, allowOtherServer: Boolean = false): (ActionResult, Option[U]) ={
     if(loaded(uuid)){
-      action.apply(apply(uuid))
-      ActionResult.ONLINE_CURRENT_APPLIED
+      val ret = action.apply(apply(uuid))
+      (ActionResult.ONLINE_CURRENT_APPLIED, Option(ret))
     }else if(allowOtherServer && isOnline(uuid).isDefined){
 
-      ActionResult.ONLINE_OTHER_APPLIED
+      return (ActionResult.ONLINE_OTHER_APPLIED, todo)
     }else if(allowOffline){
       val doc = exists(uuid)
       if(doc.isDefined){
-        action.apply(apply(uuid))
+        //Shouldnt really use this return type, but it is here in case it is needed
+        //PLEASE AVOID
+        val ret = action.apply(apply(uuid))
         unload(uuid)
-        return ActionResult.OFFLINE_APPLIED
+        return (ActionResult.OFFLINE_APPLIED, Option(ret))
       }
-      ActionResult.NO_EXIST
+      return (ActionResult.NO_EXIST, None)
     }else{
-      ActionResult.NOT_APPLIED
+      return (ActionResult.NOT_APPLIED, None)
     }
   }
 
