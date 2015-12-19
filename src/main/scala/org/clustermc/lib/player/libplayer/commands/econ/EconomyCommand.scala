@@ -1,4 +1,4 @@
-package org.clustermc.lib.player.commands.econ
+package org.clustermc.lib.player.libplayer.commands.econ
 
 import java.util.UUID
 
@@ -8,7 +8,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.utils.UUIDFetcher
 import org.clustermc.lib.utils.messages.vals.EconMsg.{econErrorArgs, econErrorInvalidAmount, econErrorInvalidCurrency, econSuccess}
 import org.clustermc.lib.utils.messages.vals.GeneralMsg.{generalNoPermission, generalPlayerNoExist}
@@ -28,7 +28,7 @@ object EconomyCommand {
   //eco give c/s <player> <amount>
   //eco take c/s <player> <amount>
   def apply(context: CommandContext): Unit = {
-    val cplayer = ClusterPlayer(context.sender.getUniqueId)
+    val cplayer = LibPlayer(context.sender.getUniqueId)
     if (cplayer.hasRank(PermissionRank.NETADMIN)) {
       if (context.length != 4) {
         context.sender.sendMessage(econErrorArgs().get)
@@ -62,7 +62,7 @@ object EconomyCommand {
     }
 
     var exist = true
-    val cplayer = ClusterPlayer(uuid)
+    val cplayer = LibPlayer(uuid)
     subcommand.toLowerCase match {
       case "set" =>
         if(currency == "c"){ cplayer.bank.getClusterWallet.setAmount(amount)}
@@ -77,14 +77,14 @@ object EconomyCommand {
     }
     if(exist){
       player.sendMessage(econSuccess(subcommand.toLowerCase, cplayer.latestName, amount, cplayer.bank.serialize()).get)
-      if(!online) ClusterPlayer.unload(cplayer.itemId)
+      if(!online) LibPlayer.unload(cplayer.itemId)
     }
 
   }
 
   def existsInDatabase(uuid: UUID): Boolean = {
-    val amount = ClusterPlayer.collection().count(
-      new Document(ClusterPlayer.index, uuid.toString),
+    val amount = LibPlayer.collection().count(
+      new Document(LibPlayer.index, uuid.toString),
       new CountOptions().limit(1))
     amount == 1
   }

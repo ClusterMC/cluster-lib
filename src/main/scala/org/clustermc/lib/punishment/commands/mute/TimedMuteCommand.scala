@@ -4,7 +4,7 @@ import java.time.Duration
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.punishment.PunishmentType
 import org.clustermc.lib.punishment.commands.PunishmentCommand
 import org.clustermc.lib.punishment.data.Punishment
@@ -24,7 +24,7 @@ object TimedMuteCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 3
 
-  override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
+  override def punish(ppunished: LibPlayer, pplayer: LibPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
     val duration = TimeParser(args(1).toLowerCase)
     if(duration == Duration.ZERO){
       punisher.sendMessage(punishmentErrorInvalidDuration(args(1).toLowerCase).get)

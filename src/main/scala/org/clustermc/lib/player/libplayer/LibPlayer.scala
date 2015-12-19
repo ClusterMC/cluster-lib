@@ -1,4 +1,4 @@
-package org.clustermc.lib.player
+package org.clustermc.lib.player.libplayer
 
 import java.time.Instant
 import java.util.UUID
@@ -8,7 +8,8 @@ import com.mongodb.client.model.{Filters, UpdateOptions}
 import org.bson.Document
 import org.clustermc.lib.econ.Bank
 import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
-import org.clustermc.lib.player.storage.{AchievementStorage, ChannelStorage, PunishmentStorage}
+import org.clustermc.lib.player.libplayer.storage.{AchievementStorage, ChannelStorage, PunishmentStorage}
+import org.clustermc.lib.player.{PlayerCoordinator, PlayerWrapper}
 import org.json.JSONObject
 
 /*
@@ -20,12 +21,13 @@ import org.json.JSONObject
  * permission of the aforementioned owner.
  */
 
-class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
+class LibPlayer(uuid: UUID) extends PlayerWrapper(uuid){
   //----------MISC----------
   var showPlayers: Boolean = true
   var latestName: String = "ERROR"
   var itemsDroppable, canInteract, blocksBreakable, itemsDamageable,
   itemsMovable, playerKillable, playerDamageable: Boolean = false
+  var loginServer: String = "Hub"
 
   //----------PERMISSIONS----------
   var group: PermissionRank = PermissionRank.MEMBER
@@ -61,7 +63,7 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
 
   override def save(database: MongoCollection[Document]): Unit = {
     database.updateOne(
-      Filters.eq(ClusterPlayer.index, uuid.toString),
+      Filters.eq(LibPlayer.index, uuid.toString),
       new Document("$set", toDocument),
       new UpdateOptions().upsert(true))
   }
@@ -75,6 +77,7 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
         .append("donator", donator.toString))
       .append("bank", bank.serialize())
       .append("settings", new Document()
+        .append("loginServer", loginServer)
         .append("chatMention", chatMention)
         .append("showPlayers", showPlayers)
         .append("receiveMessages", receiveMessages))
@@ -96,6 +99,7 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
 
     bank = new Bank(obj.getString("bank"))
 
+    loginServer = obj.getJSONObject("settings").getString("loginServer")
     chatMention = obj.getJSONObject("settings").getBoolean("chatMention")
     showPlayers = obj.getJSONObject("settings").getBoolean("showPlayers")
     receiveMessages = obj.getJSONObject("settings").getBoolean("receiveMessages")
@@ -109,7 +113,7 @@ class ClusterPlayer(uuid: UUID) extends PlayerWrapper(uuid){
 
 }
 
-object ClusterPlayer extends PlayerCoordinator[ClusterPlayer]{
+object LibPlayer extends PlayerCoordinator[LibPlayer]{
   protected override def beforeUnload(uuid: UUID): Unit = {
     apply(uuid).channelStorage.subscribedChannels.foreach(c => c.leave(uuid))
   }
@@ -118,5 +122,5 @@ object ClusterPlayer extends PlayerCoordinator[ClusterPlayer]{
     this(uuid).channelStorage.init()
   }
 
-  override protected def genericInstance(uuid: UUID): ClusterPlayer = new ClusterPlayer(uuid)
+  override protected def genericInstance(uuid: UUID): LibPlayer = new LibPlayer(uuid)
 }

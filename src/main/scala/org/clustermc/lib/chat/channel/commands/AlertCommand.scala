@@ -3,7 +3,7 @@ package org.clustermc.lib.chat.channel.commands
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.utils.messages.vals.ChannelMsg.channelAlertErrorArgs
 import org.clustermc.lib.utils.messages.vals.GeneralMsg.generalNoPermission
 
@@ -20,7 +20,7 @@ object AlertCommand {
 
   //ch alert <message>
   def apply(context: CommandContext): Unit ={
-    val cplayer = ClusterPlayer(context.sender.getUniqueId)
+    val cplayer = LibPlayer(context.sender.getUniqueId)
     if(cplayer.hasRank(PermissionRank.NETADMIN)){
       if(context.length < 2){
         context.sender.sendMessage(channelAlertErrorArgs().get)

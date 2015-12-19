@@ -1,4 +1,4 @@
-package org.clustermc.lib.player.commands.rank
+package org.clustermc.lib.player.libplayer.commands.rank
 
 import java.util.UUID
 
@@ -8,7 +8,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.utils.UUIDFetcher
 import org.clustermc.lib.utils.messages.vals.GeneralMsg.{generalNoPermission, generalPlayerNoExist}
 import org.clustermc.lib.utils.messages.vals.RankMsg.{rankErrorArgs, rankErrorInvalidRank, rankSuccess}
@@ -26,7 +26,7 @@ object RankCommand {
 
   //rank <player> <rank>
   def apply(context: CommandContext): Unit = {
-    val cplayer = ClusterPlayer(context.sender.getUniqueId)
+    val cplayer = LibPlayer(context.sender.getUniqueId)
     if (cplayer.hasRank(PermissionRank.NETADMIN) || context.sender.isOp) {
       if (context.length != 2) {
         context.sender.sendMessage(rankErrorArgs().get)
@@ -50,7 +50,7 @@ object RankCommand {
   }
 
   def command(player: Player, uuid: UUID, rankString: String, online: Boolean): Unit ={
-    val cplayer = ClusterPlayer(uuid)
+    val cplayer = LibPlayer(uuid)
     if(DonatorRank.contains(rankString)){
       cplayer.donator = DonatorRank.valueOf(rankString.toUpperCase)
     }else if(PermissionRank.contains(rankString)){
@@ -60,12 +60,12 @@ object RankCommand {
       return
     }
     player.sendMessage(rankSuccess(rankString.toUpperCase).get)
-    if(!online) ClusterPlayer.unload(uuid)
+    if(!online) LibPlayer.unload(uuid)
   }
 
   def existsInDatabase(uuid: UUID): Boolean = {
-    val amount = ClusterPlayer.collection().count(
-      new Document(ClusterPlayer.index, uuid.toString),
+    val amount = LibPlayer.collection().count(
+      new Document(LibPlayer.index, uuid.toString),
       new CountOptions().limit(1))
     amount == 1
   }

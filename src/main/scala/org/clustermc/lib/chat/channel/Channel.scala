@@ -5,7 +5,7 @@ import java.util.UUID
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.clustermc.lib.ClusterLib
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.utils.CustomConfig
 import org.clustermc.lib.utils.messages.vals.ChannelMsg.{channelAlertFooter, channelAlertHeader, channelAlertMessage}
 
@@ -26,10 +26,10 @@ class Channel(val name: String, val format: String, val sendPerm: String, val re
     @transient val members = new collection.mutable.LinkedHashSet[UUID]()
 
     def canFocus(player: Player) = canSend(player)
-    def canSend(player: Player): Boolean = ClusterPlayer(player.getUniqueId).hasRank(sendPerm)
+    def canSend(player: Player): Boolean = LibPlayer(player.getUniqueId).hasRank(sendPerm)
 
     def canSubscribe(player: Player) = canReceive(player)
-    def canReceive(player: Player): Boolean = ClusterPlayer(player.getUniqueId).hasRank(receivePerm)
+    def canReceive(player: Player): Boolean = LibPlayer(player.getUniqueId).hasRank(receivePerm)
 
     def join(player: Player) = {
         if(canSubscribe(player) && !members.contains(player.getUniqueId))

@@ -2,7 +2,7 @@ package org.clustermc.lib.punishment.commands.misc
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.punishment.PunishmentType
 import org.clustermc.lib.punishment.commands.PunishmentCommand
 import org.clustermc.lib.punishment.data.Punishment
@@ -22,7 +22,7 @@ object WarnCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 2
 
-  override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
+  override def punish(ppunished: LibPlayer, pplayer: LibPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
     Punishment.create(PunishmentType.WARN, punisher.getUniqueId, punished.getUniqueId, reason)
     val title = punishmentWarnTitle(punisher.getName, reason).get
     val subtitle = punishmentWarnSubtitle(punished.getName, reason).get

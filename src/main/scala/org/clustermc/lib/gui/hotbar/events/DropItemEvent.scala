@@ -4,7 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.{EventHandler, Listener}
 import org.clustermc.lib.ClusterLib
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -21,7 +21,7 @@ object DropItemEvent extends Listener {
 
     @EventHandler
     def onDrop(event: PlayerDropItemEvent): Unit = {
-        if(!ClusterPlayer(event.getPlayer.getUniqueId).itemsDroppable) {
+        if(!LibPlayer(event.getPlayer.getUniqueId).itemsDroppable) {
             event.setCancelled(true)
         }
     }

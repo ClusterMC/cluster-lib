@@ -4,7 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitTask
 import org.clustermc.lib.ClusterLib
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.utils.TitleAPI
 import org.clustermc.lib.utils.messages.vals.AchievementMsg.{achievementTitleSubtitle, achievementTitleTitle}
 
@@ -32,7 +32,7 @@ object LocationAchievementRunnable {
     for(x <- LocationAchievements.values()){
       val pl = x.loc.getWorld.getNearbyEntities(x.loc,  x.radius, x.radius, x.radius).asScala.filter(e => e.isInstanceOf[Player])
       pl.foreach{ p =>
-        if(ClusterPlayer(p.getUniqueId).achievements.unlock(x)){
+        if(LibPlayer(p.getUniqueId).achievements.unlock(x)){
           TitleAPI.sendTitle(Bukkit.getPlayer(p.getUniqueId), int2Integer(5), int2Integer(60), int2Integer(5),
           new achievementTitleTitle(x.name).get, new achievementTitleSubtitle(x.witthsubtitle).get)
         }

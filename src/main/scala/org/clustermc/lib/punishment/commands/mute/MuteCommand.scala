@@ -2,7 +2,7 @@ package org.clustermc.lib.punishment.commands.mute
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.punishment.PunishmentType
 import org.clustermc.lib.punishment.commands.PunishmentCommand
 import org.clustermc.lib.punishment.data.Punishment
@@ -21,7 +21,7 @@ object MuteCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 2
 
-  override def punish(ppunished: ClusterPlayer, pplayer: ClusterPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
+  override def punish(ppunished: LibPlayer, pplayer: LibPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
     ppunished.punishments._mute = Option(
       Punishment.create(PunishmentType.MUTE, punisher.getUniqueId, punished.getUniqueId, reason)
         .objectId)

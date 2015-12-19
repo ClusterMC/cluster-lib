@@ -3,7 +3,7 @@ package org.clustermc.lib.chat
 import java.util.regex.Pattern
 
 import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 
 /**
   * Used from Essentials
@@ -22,7 +22,7 @@ object ColorFilter {
     val REPLACE_FORMAT_PATTERN = Pattern.compile("(?<!&)&([l-orL-OR])")
     val REPLACE_PATTERN = Pattern.compile("&&(?=[0-9a-fk-orA-FK-OR])")
 
-    def filter(player: ClusterPlayer, input: String): String = {
+    def filter(player: LibPlayer, input: String): String = {
         if(input == null) return ""
         var message: String = input
 

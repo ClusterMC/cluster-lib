@@ -5,7 +5,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
 import org.clustermc.lib.ClusterLib
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -23,7 +23,7 @@ object PlayerDamage extends Listener{
   @EventHandler(priority = EventPriority.LOWEST)
   def onPlayerDamage(event: EntityDamageEvent): Unit ={
     if(event.getEntity.isInstanceOf[Player]){
-      if(!ClusterPlayer(event.getEntity.getUniqueId).playerDamageable){
+      if(!LibPlayer(event.getEntity.getUniqueId).playerDamageable){
         event.setCancelled(true)
       }
     }

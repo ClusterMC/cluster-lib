@@ -8,7 +8,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.UUIDFetcher
 import org.clustermc.lib.utils.messages.vals.GeneralMsg.{generalNoPermission, generalPlayerNoExist}
@@ -29,16 +29,16 @@ object InfoCommand{
       context.sender.sendMessage(punishmentErrorArgs().get)
       return
     }
-    val pplayer = ClusterPlayer(context.sender.getUniqueId)
+    val pplayer = LibPlayer(context.sender.getUniqueId)
     if(pplayer.hasRank(PermissionRank.MOD)){
       val punished: Player = Bukkit.getPlayer(context.args(0))
       if(punished != null){
-        showTo(context.sender, ClusterPlayer(punished.getUniqueId), true)
+        showTo(context.sender, LibPlayer(punished.getUniqueId), true)
       }else{
         try{
           val uuid = UUIDFetcher.getUUIDOf(context.args(0))
           if(uuid != null && existsInDatabase(uuid)){
-            showTo(context.sender, ClusterPlayer(uuid), false)
+            showTo(context.sender, LibPlayer(uuid), false)
           }else context.sender.sendMessage(generalPlayerNoExist(context.args(0).toLowerCase).get)
         }catch{
           case e: Exception =>
@@ -49,13 +49,13 @@ object InfoCommand{
   }
 
   def existsInDatabase(uuid: UUID): Boolean ={
-    val amount = ClusterPlayer.collection().count(
-      new Document(ClusterPlayer.index, uuid.toString),
+    val amount = LibPlayer.collection().count(
+      new Document(LibPlayer.index, uuid.toString),
       new CountOptions().limit(1))
     amount == 1
   }
 
-  def showTo(sender: Player, punished: ClusterPlayer, online: Boolean): Unit ={
+  def showTo(sender: Player, punished: LibPlayer, online: Boolean): Unit ={
     sender.sendMessage(punishmentInfoHeader(punished.latestName).get)
     sender.sendMessage(punishmentInfoNameOnline(punished.latestName, online).get)
     sender.sendMessage(punishmentInfoRank(punished.donator.name(), punished.group.name()).get)

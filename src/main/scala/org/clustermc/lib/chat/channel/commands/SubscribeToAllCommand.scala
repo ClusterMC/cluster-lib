@@ -3,7 +3,7 @@ package org.clustermc.lib.chat.channel.commands
 import org.clustermc.lib.chat.channel.Channel
 import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.utils.messages.vals.GeneralMsg.generalNoPermission
 
 /*
@@ -19,7 +19,7 @@ object SubscribeToAllCommand {
 
   //ch suball
   def apply(context: CommandContext): Unit ={
-    val cplayer = ClusterPlayer(context.sender.getUniqueId)
+    val cplayer = LibPlayer(context.sender.getUniqueId)
     if(cplayer.hasRank(PermissionRank.MOD)){
       Channel.channels.values.foreach(c => cplayer.channelStorage.subscribe(c))
     }else context.sender.sendMessage(generalNoPermission().get)

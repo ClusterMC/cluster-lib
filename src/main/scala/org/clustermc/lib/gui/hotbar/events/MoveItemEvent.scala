@@ -4,7 +4,7 @@ import org.bukkit.Bukkit
 import org.bukkit.event.inventory.{InventoryClickEvent, InventoryDragEvent}
 import org.bukkit.event.{EventHandler, EventPriority, Listener}
 import org.clustermc.lib.ClusterLib
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -22,7 +22,7 @@ object MoveItemEvent extends Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     def onTryMoveItem(event: InventoryClickEvent): Unit = {
         if(!event.getWhoClicked.isOp) {
-            if(!ClusterPlayer(event.getWhoClicked.getUniqueId).itemsMovable){
+            if(!LibPlayer(event.getWhoClicked.getUniqueId).itemsMovable){
                 event.setCancelled(true)
             }
         }
@@ -31,7 +31,7 @@ object MoveItemEvent extends Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     def onTryDrag(event: InventoryDragEvent): Unit = {
         if(!event.getWhoClicked.isOp) {
-            if(!ClusterPlayer(event.getWhoClicked.getUniqueId).itemsMovable){
+            if(!LibPlayer(event.getWhoClicked.getUniqueId).itemsMovable){
                 event.setCancelled(true)
             }
         }

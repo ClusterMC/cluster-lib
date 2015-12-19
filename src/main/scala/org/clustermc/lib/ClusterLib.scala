@@ -10,10 +10,10 @@ import org.clustermc.lib.chat.channel.commands.ChannelCommand
 import org.clustermc.lib.chat.listener.ChatListener
 import org.clustermc.lib.chat.privatemessage.WhisperCommand
 import org.clustermc.lib.command.CommandContext
-import org.clustermc.lib.player.ClusterPlayer
-import org.clustermc.lib.player.commands.econ.EconomyCommand
-import org.clustermc.lib.player.commands.rank.RankCommand
 import org.clustermc.lib.player.event.PlayerIO
+import org.clustermc.lib.player.libplayer.LibPlayer
+import org.clustermc.lib.player.libplayer.commands.econ.EconomyCommand
+import org.clustermc.lib.player.libplayer.commands.rank.RankCommand
 import org.clustermc.lib.punishment.commands.ban.{BanCommand, TimedBanCommand, UnbanCommand}
 import org.clustermc.lib.punishment.commands.info.InfoCommand
 import org.clustermc.lib.punishment.commands.misc.{KickCommand, WarnCommand}
@@ -67,7 +67,7 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
     override def onDisable(): Unit = {
         LocationAchievementRunnable.end()
         cooldownTask.cancel()
-        ClusterPlayer.unloadAll()
+        LibPlayer.unloadAll()
         Announcer.end()
         ClusterLib.instance.database.getDatabase.getCollection("online").deleteMany(new Document("server", this.serverName))
         ClusterLib._instance = null

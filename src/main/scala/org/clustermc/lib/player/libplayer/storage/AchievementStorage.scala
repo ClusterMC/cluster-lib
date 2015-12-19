@@ -1,4 +1,4 @@
-package org.clustermc.lib.player.storage
+package org.clustermc.lib.player.libplayer.storage
 
 import org.clustermc.lib.achievements.LocationAchievements
 

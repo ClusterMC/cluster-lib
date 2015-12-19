@@ -4,7 +4,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.{Event, HandlerList}
 import org.clustermc.lib.chat.ColorFilter
 import org.clustermc.lib.chat.channel.Channel
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.StringUtil
 import org.clustermc.lib.utils.messages.vals.ChannelMsg.{channelErrorNoFocusPermAnymore, channelErrorNoSubPermAnymore, channelNoPermission}
@@ -27,7 +27,7 @@ object CPlayerChatEvent{
   private val handlers: HandlerList = new HandlerList()
 
   def processChat(player: Player, message: String, channel: Channel): Boolean ={
-    val pplayer = ClusterPlayer(player.getUniqueId)
+    val pplayer = LibPlayer(player.getUniqueId)
     if(pplayer.muted){
       player.sendMessage(punishmentYouAreMuted(Punishment.timeLeft(pplayer.punishments._mute.get).get.toString).get)
       return false
@@ -58,7 +58,7 @@ object CPlayerChatEvent{
   }
 
   def processChat(player: Player, message: String): Boolean ={
-    processChat(player, message, ClusterPlayer(player.getUniqueId).channelStorage.focusedChannel)
+    processChat(player, message, LibPlayer(player.getUniqueId).channelStorage.focusedChannel)
   }
 
 }

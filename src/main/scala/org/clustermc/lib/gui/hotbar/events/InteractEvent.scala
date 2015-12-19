@@ -5,7 +5,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.{EventHandler, Listener}
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.gui.hotbar.Hotbar
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -22,10 +22,10 @@ object InteractEvent extends Listener {
 
   @EventHandler
   def onClick(event: PlayerInteractEvent) {
-    if (event.hasBlock && !ClusterPlayer(event.getPlayer.getUniqueId).blocksBreakable) {
+    if (event.hasBlock && !LibPlayer(event.getPlayer.getUniqueId).blocksBreakable) {
       event.setCancelled(true)
     }
-    if (event.hasItem && !ClusterPlayer(event.getPlayer.getUniqueId).canInteract) {
+    if (event.hasItem && !LibPlayer(event.getPlayer.getUniqueId).canInteract) {
       event.setCancelled(true)
       val name: String = event.getPlayer.getMetadata("inventory").get(0).asString
       if (name != null && !(name == "")) {

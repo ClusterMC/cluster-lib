@@ -4,7 +4,7 @@ import org.bukkit.Bukkit
 import org.clustermc.lib.chat.ColorFilter
 import org.clustermc.lib.command.CommandContext
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.ClusterPlayer
+import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.messages.vals.GeneralMsg.generalPlayerNoExist
 import org.clustermc.lib.utils.messages.vals.PunishmentMsg.punishmentYouAreMuted
@@ -23,12 +23,12 @@ object WhisperCommand {
 
   //whisper|tell|t|w|msg|m|r|re|reply|message <player name> <message>
   def apply(context: CommandContext): Unit = {
-    val pplayer= ClusterPlayer(context.sender.getUniqueId)
+    val pplayer= LibPlayer(context.sender.getUniqueId)
     if(!pplayer.muted){
       val player = Bukkit.getPlayer(context.args(0))
       if (player != null) {
         if (pplayer.receiveMessages || pplayer.hasRank(PermissionRank.NETADMIN)){
-          if (ClusterPlayer(player.getUniqueId).receiveMessages || pplayer.hasRank(PermissionRank.MOD)){
+          if (LibPlayer(player.getUniqueId).receiveMessages || pplayer.hasRank(PermissionRank.MOD)){
             val sentence = ColorFilter.filter(pplayer, context.args.drop(1).mkString(" "))
             context.sender.sendMessage(whisperFormatSender(player.getName, sentence).get)
             player.sendMessage(whisperFormatReceiver(context.sender.getName, sentence).get)
