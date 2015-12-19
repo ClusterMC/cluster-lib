@@ -21,6 +21,8 @@ import org.clustermc.lib.punishment.commands.mute.{MuteCommand, TimedMuteCommand
 import org.clustermc.lib.utils.cooldown.CooldownHandler
 import org.clustermc.lib.utils.database.Mongo
 import org.clustermc.lib.utils.{ClusterServerPlugin, CustomConfig}
+import org.clustermc.lib.xserver.MainMessageReceive
+import slack.api.SlackApiClient
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -35,6 +37,9 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
 
     private var _mongoDB: Mongo = null
     private var _cooldowns: CooldownHandler = null
+
+    //todo
+    val slackClient = SlackApiClient("token")
 
     private var cooldownTask: BukkitTask = null
 
@@ -55,6 +60,9 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
         new PlayerIO
         Announcer.start()
         LocationAchievementRunnable.start()
+
+        getServer.getMessenger.registerOutgoingPluginChannel(this, "BungeeCord")
+        getServer.getMessenger.registerIncomingPluginChannel(this, "BungeeCord", MainMessageReceive)
 
         Array("rank", "ban", "unban", "mute", "unmute", "tmute", "info", "tban", "kick", "warn", "eco", "whisper", "channel")
           .foreach(s => getCommand(s).setExecutor(this))
