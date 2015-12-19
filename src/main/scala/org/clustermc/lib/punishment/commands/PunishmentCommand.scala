@@ -7,7 +7,7 @@ import org.bson.Document
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.clustermc.lib.ClusterLib
-import org.clustermc.lib.command.CommandContext
+import org.clustermc.lib.command.PlayerCommandContext
 import org.clustermc.lib.enums.PermissionRank
 import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.utils.UUIDFetcher
@@ -29,7 +29,10 @@ trait PunishmentCommand {
   val needsOnline: Boolean
   val permRequired: PermissionRank
 
-  def apply(context: CommandContext): Unit ={
+
+  def apply()
+
+  def apply(context: PlayerCommandContext): Unit ={
     if(context.length < minArgLength){
       context.sender.sendMessage(punishmentErrorArgs().get)
       return

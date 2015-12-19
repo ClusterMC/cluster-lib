@@ -1,7 +1,7 @@
 package org.clustermc.lib.chat.channel.commands
 
 import org.clustermc.lib.chat.channel.Channel
-import org.clustermc.lib.command.CommandContext
+import org.clustermc.lib.command.PlayerCommandContext
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -23,7 +23,7 @@ object ChannelCommand {
       //<channel> -- leaves channel
     //help|h|?|what|how|wtf|halp|que -- shows the help
     //<channel> <message> -- quick send
-  def apply(context: CommandContext): Unit = {
+  def apply(context: PlayerCommandContext): Unit = {
     val length = context.length
     if(length == 0) {
       ChannelHelpCommand(context.sender)

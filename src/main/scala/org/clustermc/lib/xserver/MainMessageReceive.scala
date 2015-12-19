@@ -3,6 +3,7 @@ package org.clustermc.lib.xserver
 import java.io.{ByteArrayInputStream, DataInputStream}
 
 import com.google.common.io.ByteStreams
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.messaging.PluginMessageListener
 
@@ -29,7 +30,7 @@ object MainMessageReceive extends PluginMessageListener{
     val data = new DataInputStream(new ByteArrayInputStream(msgbytes)).readUTF()
 
     subChannel.toLowerCase match {
-      case "command" =>
+      case "command" => Bukkit.dispatchCommand(Bukkit.getConsoleSender, data)
     }
 
   }

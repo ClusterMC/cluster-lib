@@ -6,7 +6,7 @@ import com.mongodb.client.model.CountOptions
 import org.bson.Document
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.clustermc.lib.command.CommandContext
+import org.clustermc.lib.command.PlayerCommandContext
 import org.clustermc.lib.enums.{DonatorRank, PermissionRank}
 import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.utils.UUIDFetcher
@@ -25,7 +25,7 @@ import org.clustermc.lib.utils.messages.vals.RankMsg.{rankErrorArgs, rankErrorIn
 object RankCommand {
 
   //rank <player> <rank>
-  def apply(context: CommandContext): Unit = {
+  def apply(context: PlayerCommandContext): Unit = {
     val cplayer = LibPlayer(context.sender.getUniqueId)
     if (cplayer.hasRank(PermissionRank.NETADMIN) || context.sender.isOp) {
       if (context.length != 2) {

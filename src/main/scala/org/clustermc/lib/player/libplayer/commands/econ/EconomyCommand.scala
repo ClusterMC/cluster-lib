@@ -6,7 +6,7 @@ import com.mongodb.client.model.CountOptions
 import org.bson.Document
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.clustermc.lib.command.CommandContext
+import org.clustermc.lib.command.PlayerCommandContext
 import org.clustermc.lib.enums.PermissionRank
 import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.utils.UUIDFetcher
@@ -27,7 +27,7 @@ object EconomyCommand {
   //eco set c/s <player> <amount>
   //eco give c/s <player> <amount>
   //eco take c/s <player> <amount>
-  def apply(context: CommandContext): Unit = {
+  def apply(context: PlayerCommandContext): Unit = {
     val cplayer = LibPlayer(context.sender.getUniqueId)
     if (cplayer.hasRank(PermissionRank.NETADMIN)) {
       if (context.length != 4) {

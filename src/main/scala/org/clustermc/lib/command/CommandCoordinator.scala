@@ -16,7 +16,7 @@ sealed class CommandCoordinator private(plugin: Plugin) extends Listener {
         val command = split(0)
         var args: Array[String] = Array()
         if(split.length >= 2) args = split.slice(1, split.length - 1)
-        val context = CommandContext(event.getPlayer, command, args)
+        val context = PlayerCommandContext(event.getPlayer, command, args)
 
 
 

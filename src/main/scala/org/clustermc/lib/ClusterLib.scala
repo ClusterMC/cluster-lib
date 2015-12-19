@@ -9,7 +9,7 @@ import org.clustermc.lib.chat.announcer.Announcer
 import org.clustermc.lib.chat.channel.commands.ChannelCommand
 import org.clustermc.lib.chat.listener.ChatListener
 import org.clustermc.lib.chat.privatemessage.WhisperCommand
-import org.clustermc.lib.command.CommandContext
+import org.clustermc.lib.command.PlayerCommandContext
 import org.clustermc.lib.player.event.PlayerIO
 import org.clustermc.lib.player.libplayer.LibPlayer
 import org.clustermc.lib.player.libplayer.commands.econ.EconomyCommand
@@ -85,7 +85,7 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
     override def onCommand(sender: CommandSender, cmd: Command, label: String, args: Array[String]): Boolean ={
         sender match {
             case player: Player =>
-                val context = new CommandContext(player, cmd.getName.toLowerCase, args)
+                val context = new PlayerCommandContext(player, cmd.getName.toLowerCase, args)
                 cmd.getName.toLowerCase match {
                     case "rank" => RankCommand(context)
                     case "ban" => BanCommand(context)
