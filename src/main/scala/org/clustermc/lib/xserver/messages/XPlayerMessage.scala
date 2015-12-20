@@ -1,5 +1,7 @@
 package org.clustermc.lib.xserver.messages
 
+import org.clustermc.lib.xserver.XMessageIdentifier
+
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
  * 
@@ -9,6 +11,10 @@ package org.clustermc.lib.xserver.messages
  * permission of the aforementioned owner.
  */
 
-object XPlayerMessage extends XMessage{
+class XPlayerMessage(player: String, identifier: XMessageIdentifier, data: String) extends XMessage{
   override val action: String = "ForwardToPlayer"
+
+  override def send(): Unit = {
+    send(player, identifier, data)
+  }
 }

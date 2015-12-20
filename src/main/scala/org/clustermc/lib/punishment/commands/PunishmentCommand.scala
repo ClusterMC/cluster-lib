@@ -29,9 +29,6 @@ trait PunishmentCommand {
   val needsOnline: Boolean
   val permRequired: PermissionRank
 
-
-  def apply()
-
   def apply(context: PlayerCommandContext): Unit ={
     if(context.length < minArgLength){
       context.sender.sendMessage(punishmentErrorArgs().get)

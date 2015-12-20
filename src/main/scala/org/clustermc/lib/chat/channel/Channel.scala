@@ -73,14 +73,13 @@ object Channel {
         else None
     }
 
-    def serverAlert(message: String): Unit ={
+    def serverAlert(message: String, receivedMessage: Boolean = false): Unit ={
+        if(receivedMessage){
+            //todo
+        }
         Bukkit.getServer.broadcastMessage(channelAlertHeader().get)
         Bukkit.getServer.broadcastMessage(channelAlertMessage(message).get)
         Bukkit.getServer.broadcastMessage(channelAlertFooter().get)
-    }
-
-    def networkAlert(message: String): Unit ={
-        //TODO ADD NETWORK-WIDE ALERTS
     }
 
     //TODO allowed groups

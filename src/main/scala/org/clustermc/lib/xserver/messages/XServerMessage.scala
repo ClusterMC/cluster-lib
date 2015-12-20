@@ -1,5 +1,7 @@
 package org.clustermc.lib.xserver.messages
 
+import org.clustermc.lib.xserver.XMessageIdentifier
+
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
  * 
@@ -9,11 +11,11 @@ package org.clustermc.lib.xserver.messages
  * permission of the aforementioned owner.
  */
 
-object XServerMessage extends XMessage{
-  override val action: String = _
+class XServerMessage(identifier: XMessageIdentifier, data: String, online: Boolean = true) extends XMessage{
+  override val action: String = "Forward"
 
-  def send(lineTwo: String, data: String, online: Boolean = true): Unit ={
-    send(lineTwo, if(online) "ONLINE" else "ALL", data)
+  override def send(): Unit ={
+    send(if(online) "ONLINE" else "ALL", identifier, data)
   }
 
 }

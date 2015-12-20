@@ -7,6 +7,7 @@ import org.bson.Document
 import org.clustermc.lib.ClusterLib
 import org.clustermc.lib.data.KeyLoadingCoordinator
 import org.clustermc.lib.player.ActionResult.ActionResult
+import org.clustermc.lib.xserver.messages.XPlayerMessage
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -52,7 +53,7 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
     *       Otherwise, we can just use apply()
     *
     * @param uuid The uuid of the player we are attempting to apply the action to
-    * @param allowOtherServer Whether we should allow an action to be applied to them on other servers
+    * @param xPlayerAction Whether we should allow an action to be applied to them on other servers
     * @param action The function of actions that shall be applied to the player, regardless of
     *               what server they are on
     * @param allowOffline Whether we should allow this action to apply to an
@@ -60,13 +61,13 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
     * @tparam U The return type of the "action" function, never used.
     * @return The ActionResult of the action we are trying to perform, see ActionResult.scala
     */
-  def act[U](uuid: UUID, action: T => U, allowOffline: Boolean = false, allowOtherServer: Boolean = false): (ActionResult, Option[U]) ={
+  def act[U](uuid: UUID, action: T => U, allowOffline: Boolean = false, xPlayerAction: Option[XPlayerMessage] = None): (ActionResult, Option[U]) ={
     if(loaded(uuid)){
       val ret = action.apply(apply(uuid))
       (ActionResult.ONLINE_CURRENT_APPLIED, Option(ret))
-    }else if(allowOtherServer && isOnline(uuid).isDefined){
-
-      return (ActionResult.ONLINE_OTHER_APPLIED, todo)
+    }else if(xPlayerAction.isDefined && isOnline(uuid).isDefined){
+      xPlayerAction.get.send()
+      return (ActionResult.ONLINE_OTHER_APPLIED, None)
     }else if(allowOffline){
       val doc = exists(uuid)
       if(doc.isDefined){

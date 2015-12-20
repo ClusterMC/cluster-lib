@@ -9,6 +9,6 @@ package org.clustermc.lib.xserver
  * permission of the aforementioned owner.
  */
 
-trait XServerDataReceiver {
-
+trait XMessageReceiver {
+  def receive(identifier: String, message: String)
 }
