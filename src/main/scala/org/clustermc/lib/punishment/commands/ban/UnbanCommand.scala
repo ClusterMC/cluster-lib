@@ -2,10 +2,8 @@ package org.clustermc.lib.punishment.commands.ban
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.libplayer.LibPlayer
-import org.clustermc.lib.punishment.PunishmentType
+import org.clustermc.lib.punishment.PunishmentManager
 import org.clustermc.lib.punishment.commands.PunishmentCommand
-import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.messages.vals.PunishmentMsg.punishmentBanUnban
 
 /*
@@ -21,13 +19,9 @@ object UnbanCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 2
 
-  override def punish(ppunished: LibPlayer, pplayer: LibPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
-    Punishment.create(PunishmentType.UNBAN, punisher.getUniqueId, punished.getUniqueId, reason)
-    ppunished.punishments._ban = None
-    if(!online){
-      LibPlayer.unload(ppunished.itemId)
-    }
-    punisher.sendMessage(punishmentBanUnban(ppunished.latestName, reason).get)
+  override def punish(punisher: Player, punished: Player, reason: String, duration: String): Unit = {
+    PunishmentManager.unban(punisher.getName, punisher.getUniqueId, punished.getUniqueId, reason)
+    punisher.sendMessage(punishmentBanUnban(punished.getName, reason).get)
   }
 
   override val permRequired: PermissionRank = PermissionRank.ADMIN

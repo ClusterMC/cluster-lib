@@ -4,12 +4,10 @@ import java.time.Duration
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.libplayer.LibPlayer
-import org.clustermc.lib.punishment.PunishmentType
+import org.clustermc.lib.punishment.PunishmentManager
 import org.clustermc.lib.punishment.commands.PunishmentCommand
-import org.clustermc.lib.punishment.data.Punishment
 import org.clustermc.lib.utils.TimeParser
-import org.clustermc.lib.utils.messages.vals.PunishmentMsg.{punishmentBanTempBanned, punishmentBanTempBanner, punishmentErrorInvalidDuration}
+import org.clustermc.lib.utils.messages.vals.PunishmentMsg.{punishmentBanTempBanner, punishmentErrorInvalidDuration}
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -24,21 +22,14 @@ object TimedBanCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 3
 
-  override def punish(ppunished: LibPlayer, pplayer: LibPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
-    val duration = TimeParser(args(1).toLowerCase)
-    if(duration == Duration.ZERO){
-      punisher.sendMessage(punishmentErrorInvalidDuration(args(1).toLowerCase).get)
+  override def punish(punisher: Player, punished: Player, reason: String, duration: String): Unit = {
+    val time = TimeParser(duration)
+    if(time == Duration.ZERO){
+      punisher.sendMessage(punishmentErrorInvalidDuration(duration).get)
       return
     }
-    ppunished.punishments._ban = Option(
-      Punishment.create(PunishmentType.TEMPBAN, punisher.getUniqueId, punished.getUniqueId, reason, duration)
-        .objectId)
-
-    if(online){
-      punished.kickPlayer(punishmentBanTempBanned(punisher.getName, args(1).toLowerCase, reason).get)
-    }else LibPlayer.unload(ppunished.itemId)
-
-    punisher.sendMessage(punishmentBanTempBanner(punisher.getName, args(1).toLowerCase, reason).get)
+    PunishmentManager.tempban(time, punisher.getName, punisher.getUniqueId, punished.getUniqueId, reason)
+    punisher.sendMessage(punishmentBanTempBanner(punisher.getName, duration, reason).get)
   }
 
   override val permRequired: PermissionRank = PermissionRank.ADMIN

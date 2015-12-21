@@ -22,7 +22,8 @@ import org.clustermc.lib.utils.messages.vals.PunishmentMsg.{punishmentErrorArgs,
  * Hub can not be copied and/or distributed without the express
  * permission of the aforementioned owner.
  */
-
+//TODO fix the cross-server communication system as well as the punishment system to better support
+//TODO players being online on another server
 trait PunishmentCommand {
   val minArgLength: Int
   val color: String
@@ -40,7 +41,7 @@ trait PunishmentCommand {
       val punished: Player = Bukkit.getPlayer(context.args(0))
       if(punished != null){
         act(LibPlayer(punished.getUniqueId), pplayer, context.sender)
-        punish(LibPlayer(punished.getUniqueId), pplayer, context.sender, punished, reason, online = true, context.args)
+        punish(context.sender, punished, reason, context.args(1).toLowerCase)
       }else if(needsOnline){
         context.sender.sendMessage(generalNotOnline().get)
       }else{
@@ -48,7 +49,7 @@ trait PunishmentCommand {
           val uuid = UUIDFetcher.getUUIDOf(context.args(0))
           if(uuid != null && existsInDatabase(uuid)){
             act(LibPlayer(uuid), pplayer, context.sender)
-            punish(LibPlayer(uuid), pplayer, context.sender, punished, reason, online = false, context.args)
+            punish(context.sender, punished, reason, context.args(1).toLowerCase)
           }else context.sender.sendMessage(generalPlayerNoExist(context.args(0).toLowerCase).get)
         }catch{
           case e: Exception =>
@@ -65,6 +66,7 @@ trait PunishmentCommand {
     amount == 1
   }
 
+  //TODO getting a libplayer from here doesn't work for players online on a different node
   def act(ppunished: LibPlayer, pplayer: LibPlayer, punisher: Player): Unit ={
     if(ppunished.hasRank(PermissionRank.MOD) && !pplayer.hasRank(PermissionRank.NETADMIN)) {
       punisher.sendMessage(punishmentErrorCantUseOn().get)
@@ -80,7 +82,13 @@ trait PunishmentCommand {
     ClusterLib.instance.cooldowns.add(ppunished.itemId, "punished", 10)
   }
 
-  def punish(ppunished: LibPlayer, pplayer: LibPlayer, punisher: Player,
-             punished: Player, reason: String, online: Boolean, args: Array[String]): Unit
+  /**
+    *
+    * @param punisher
+    * @param punished
+    * @param reason
+    * @param duration only if it is used
+    */
+  def punish(punisher: Player, punished: Player, reason: String, duration: String): Unit
 
 }

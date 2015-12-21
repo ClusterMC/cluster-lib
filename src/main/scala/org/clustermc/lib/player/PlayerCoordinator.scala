@@ -62,17 +62,17 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
     * @return The ActionResult of the action we are trying to perform, see ActionResult.scala
     */
   def act[U](uuid: UUID, action: T => U, allowOffline: Boolean = false, xPlayerAction: Option[XPlayerMessage] = None): (ActionResult, Option[U]) ={
+    val data = isOnline(uuid)
     if(loaded(uuid)){
       val ret = action.apply(apply(uuid))
       (ActionResult.ONLINE_CURRENT_APPLIED, Option(ret))
-    }else if(xPlayerAction.isDefined && isOnline(uuid).isDefined){
-      xPlayerAction.get.send()
-      return (ActionResult.ONLINE_OTHER_APPLIED, None)
+    }else if(xPlayerAction.isDefined && data.isDefined){
+        xPlayerAction.get.copy(player = data.get._2).send()
+        return (ActionResult.ONLINE_OTHER_APPLIED, None)
     }else if(allowOffline){
       val doc = exists(uuid)
       if(doc.isDefined){
-        //Shouldnt really use this return type, but it is here in case it is needed
-        //PLEASE AVOID
+        //Shouldn't really use this return type, but it is here in case it is needed
         val ret = action.apply(apply(uuid))
         unload(uuid)
         return (ActionResult.OFFLINE_APPLIED, Option(ret))
@@ -110,13 +110,13 @@ abstract class PlayerCoordinator[T <: PlayerWrapper]() extends KeyLoadingCoordin
     * @param uuid the uuid of the player we are checking for
     * @return None if player is not online, UUID/String tuple if online
     */
-  def isOnline(uuid: UUID): Option[(UUID, String)] ={
+  def isOnline(uuid: UUID): Option[(UUID, String, String)] ={
     val doc = ClusterLib.instance.database.getDatabase.getCollection("online")
       .find(new Document(index, uuid.toString)).first()
     if(doc == null){
       None
     }else{
-      Option(UUID.fromString(doc.getString("uuid")), doc.getString("server"))
+      Option(UUID.fromString(doc.getString("uuid")), doc.getString("name"), doc.getString("server"))
     }
   }
 

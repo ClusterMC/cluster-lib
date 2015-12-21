@@ -36,7 +36,7 @@ class PlayerIO extends Listener {
       val p = LibPlayer(event.getPlayer.getUniqueId)
       p.latestName = event.getPlayer.getName
       ClusterLib.instance.database.getDatabase.getCollection("online").insertOne(
-        new Document().append("uuid", p.itemId.toString).append("server", ClusterLib.instance.serverName))
+        new Document().append("uuid", p.itemId.toString).append("name", event.getPlayer.getName).append("server", ClusterLib.instance.serverName))
     }
   }
 

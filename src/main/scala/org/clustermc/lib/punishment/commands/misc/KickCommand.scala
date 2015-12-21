@@ -2,11 +2,9 @@ package org.clustermc.lib.punishment.commands.misc
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.libplayer.LibPlayer
-import org.clustermc.lib.punishment.PunishmentType
+import org.clustermc.lib.punishment.PunishmentManager
 import org.clustermc.lib.punishment.commands.PunishmentCommand
-import org.clustermc.lib.punishment.data.Punishment
-import org.clustermc.lib.utils.messages.vals.PunishmentMsg.{punishmentKickKicked, punishmentKickKicker}
+import org.clustermc.lib.utils.messages.vals.PunishmentMsg.punishmentKickKicker
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -21,9 +19,8 @@ object KickCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 2
 
-  override def punish(ppunished: LibPlayer, pplayer: LibPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
-    Punishment.create(PunishmentType.KICK, punisher.getUniqueId, punished.getUniqueId, reason)
-    punished.kickPlayer(punishmentKickKicked(punisher.getName, reason).get)
+  override def punish(punisher: Player, punished: Player, reason: String, duration: String): Unit = {
+    PunishmentManager.kick(punisher.getName, punisher.getUniqueId, punished.getUniqueId, reason)
     punisher.sendMessage(punishmentKickKicker(punished.getName, reason).get)
   }
 

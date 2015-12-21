@@ -5,6 +5,8 @@ import java.io.{ByteArrayInputStream, DataInputStream}
 import com.google.common.io.ByteStreams
 import org.bukkit.entity.Player
 import org.bukkit.plugin.messaging.PluginMessageListener
+import org.clustermc.lib.player.ActionResult._
+import org.clustermc.lib.xserver.XMessageIdentifier._
 import org.clustermc.lib.xserver.receivers.{AlertReceiver, CommandReceiver, PunishmentReceiver}
 
 /*
@@ -32,15 +34,18 @@ object MainMessageReceive extends PluginMessageListener{
     val data = new DataInputStream(new ByteArrayInputStream(msgbytes)).readUTF()
 
     subChannel.toUpperCase match {
-      case COMMAND.name => COMMAND.receiver.receive(_, data)
-      case msg if msg.contains(PUNISHMENT.name) => PUNISHMENT.receiver.receive(_, data)
-      case ALERT.name => ALERT.receiver.receive(_, data)
+      case COMMAND.toString => CommandReceiver.receive(_, data)
+      case msg if msg.contains(PUNISHMENT.toString) => PunishmentReceiver.receive(_, data)
+      case ALERT.toString => AlertReceiver.receive(_, data)
     }
 
   }
 }
 
-sealed abstract class XMessageIdentifier(val name: String, val receiver: XMessageReceiver)
-case object COMMAND extends XMessageIdentifier("COMMAND", CommandReceiver)
-case object PUNISHMENT extends XMessageIdentifier("PUNISHMENT", PunishmentReceiver)
-case object ALERT extends XMessageIdentifier("ALERT", AlertReceiver)
+object XMessageIdentifier extends Enumeration {
+  type XMessageIdentifier = Value
+
+  val COMMAND = Value("COMMAND")
+  val PUNISHMENT = Value("PUNISHMENT")
+  val ALERT = Value("ALERT")
+}

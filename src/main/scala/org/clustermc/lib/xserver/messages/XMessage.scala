@@ -3,7 +3,7 @@ package org.clustermc.lib.xserver.messages
 import java.io.{ByteArrayOutputStream, DataOutputStream}
 
 import com.google.common.io.ByteStreams
-import org.clustermc.lib.xserver.XMessageIdentifier
+import org.clustermc.lib.xserver.XMessageIdentifier.XMessageIdentifier
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -42,7 +42,7 @@ trait XMessage{
      * But since the only plugins on this server /are/ ours,
      * We can use this field to specify a syntax for what
      * To do with the data */
-    output.writeUTF(identifier.name)
+    output.writeUTF(identifier.toString)
 
     //To store the data as bytes so we can write it out into a byte array
     val mByteOut = new ByteArrayOutputStream()

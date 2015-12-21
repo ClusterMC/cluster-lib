@@ -2,11 +2,9 @@ package org.clustermc.lib.punishment.commands.mute
 
 import org.bukkit.entity.Player
 import org.clustermc.lib.enums.PermissionRank
-import org.clustermc.lib.player.libplayer.LibPlayer
-import org.clustermc.lib.punishment.PunishmentType
+import org.clustermc.lib.punishment.PunishmentManager
 import org.clustermc.lib.punishment.commands.PunishmentCommand
-import org.clustermc.lib.punishment.data.Punishment
-import org.clustermc.lib.utils.messages.vals.PunishmentMsg.{punishmentMuteUnmuted, punishmentMuteUnmuter}
+import org.clustermc.lib.utils.messages.vals.PunishmentMsg.punishmentMuteUnmuter
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -21,12 +19,8 @@ object UnmuteCommand extends PunishmentCommand{
 
   override val minArgLength: Int = 2
 
-  override def punish(ppunished: LibPlayer, pplayer: LibPlayer, punisher: Player, punished: Player, reason: String, online: Boolean, args: Array[String]): Unit = {
-    Punishment.create(PunishmentType.UNMUTE, punisher.getUniqueId, punished.getUniqueId, reason)
-    ppunished.punishments._mute = None
-    if(online){
-      punished.sendMessage(punishmentMuteUnmuted(punisher.getName, reason).get)
-    }
+  override def punish(punisher: Player, punished: Player, reason: String, duration: String): Unit = {
+    PunishmentManager.unmute(punisher.getName, punisher.getUniqueId, punished.getUniqueId, reason)
     punisher.sendMessage(punishmentMuteUnmuter(punished.getName, reason).get)
   }
 
