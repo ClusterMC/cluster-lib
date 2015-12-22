@@ -1,5 +1,6 @@
 package org.clustermc.lib.utils
 
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 
 /*
@@ -14,5 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin
 abstract class ClusterServerPlugin(val server: String) extends JavaPlugin{
 
   def serverName: String = this.getServer.getServerName
+
+    def registerEventListeners(listeners: Listener*) = listeners.foreach(this.getServer.getPluginManager.registerEvents(_, this))
 
 }

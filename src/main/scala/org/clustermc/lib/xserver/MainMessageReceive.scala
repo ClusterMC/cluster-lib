@@ -18,34 +18,47 @@ import org.clustermc.lib.xserver.receivers.{AlertReceiver, CommandReceiver, Puni
  * permission of the aforementioned owner.
  */
 
-object MainMessageReceive extends PluginMessageListener{
+object MainMessageReceive extends PluginMessageListener {
 
-  //TODO
-  override def onPluginMessageReceived(channel: String, player: Player, message: Array[Byte]): Unit = {
-    if (!channel.equals("BungeeCord")){
-      return
+    //TODO
+    override def onPluginMessageReceived(channel: String, player: Player, message: Array[Byte]): Unit = {
+        if(!channel.equals("BungeeCord")) {
+            return
+        }
+
+        val in = ByteStreams.newDataInput(message)
+        val subChannel = in.readUTF()
+
+        val msgbytes = new Array[Byte](in.readShort().toInt)
+        in.readFully(msgbytes)
+        val data = new DataInputStream(new ByteArrayInputStream(msgbytes)).readUTF()
+
+        subChannel.toUpperCase match {
+            case COMMAND.toString => CommandReceiver.receive(_, data)
+            case msg if msg.contains(PUNISHMENT.toString) => PunishmentReceiver.receive(_, data)
+            case ALERT.toString => AlertReceiver.receive(_, data)
+        }
+
     }
-
-    val in = ByteStreams.newDataInput(message)
-    val subChannel = in.readUTF()
-
-    val msgbytes = new Array[Byte](in.readShort().toInt)
-    in.readFully(msgbytes)
-    val data = new DataInputStream(new ByteArrayInputStream(msgbytes)).readUTF()
-
-    subChannel.toUpperCase match {
-      case COMMAND.toString => CommandReceiver.receive(_, data)
-      case msg if msg.contains(PUNISHMENT.toString) => PunishmentReceiver.receive(_, data)
-      case ALERT.toString => AlertReceiver.receive(_, data)
-    }
-
-  }
 }
 
 object XMessageIdentifier extends Enumeration {
-  type XMessageIdentifier = Value
+    type XMessageIdentifier = Value
 
-  val COMMAND = Value("COMMAND")
-  val PUNISHMENT = Value("PUNISHMENT")
-  val ALERT = Value("ALERT")
+    val COMMAND = Value("COMMAND")
+    val PUNISHMENT = Value("PUNISHMENT")
+    val ALERT = Value("ALERT")
 }
+
+/*
+sealed trait MessageId { def id: String }
+case object CommandId extends MessageId { val id = "COMMAND" }
+case object PunishmentId extends MessageId { val id = "PUNISHMENT" }
+case object AlertId extends MessageId { val id = "ALERT" }
+
+subChannel.toUpperCase match {
+    case c if c == CommandId.id => CommandReceiver.receive(c, data)
+    case a if a == AlertId.id => AlertReceiver.receive(a, data)
+    case msg if msg.contains(PunishmentId.id) => PunishmentReceiver.receive(msg, data)
+}
+ */
