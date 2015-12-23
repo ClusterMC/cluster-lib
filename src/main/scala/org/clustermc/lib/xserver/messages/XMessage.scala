@@ -3,7 +3,7 @@ package org.clustermc.lib.xserver.messages
 import java.io.{ByteArrayOutputStream, DataOutputStream}
 
 import com.google.common.io.ByteStreams
-import org.clustermc.lib.xserver.XMessageIdentifier.XMessageIdentifier
+import org.clustermc.lib.xserver.MessageId
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -30,7 +30,7 @@ trait XMessage{
     *                   ex: "BAN" "KICK" or "CHAT_DONATOR"
     * @param data Data is the main instruction sent over the server
     */
-  def send(specifier: String, identifier: XMessageIdentifier, data: String): Unit ={
+  def send(specifier: String, identifier: MessageId, data: String): Unit ={
     //The output that will be sent cross-server
     val output = ByteStreams.newDataOutput()
     //Write the channel to distinguish what will be happening to this data
@@ -59,16 +59,5 @@ trait XMessage{
 
   def send(): Unit
 
-}
-
-object XMessage extends Enumeration {
-  /*
-  type ActionResult = Value
-  /**
-    * Player doesn't exist in the database
-    */
-  val NO_EXIST = Value("NO_EXIST")
-  */
-  //TODO totally forgot what I was going to use this for.
 }
 

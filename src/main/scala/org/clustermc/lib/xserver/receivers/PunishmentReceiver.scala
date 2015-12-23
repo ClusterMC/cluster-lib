@@ -14,8 +14,7 @@ import org.clustermc.lib.xserver.XMessageReceiver
 object PunishmentReceiver extends XMessageReceiver{
   /**
     *
-    * @param identifier We will use identifier to identify the type of punishment used here
     * @param message This holds the data that we will need to extract
     */
-  override def receive(identifier: String, message: String): Unit = ???
+  override def receive(message: String): Unit = ???
 }

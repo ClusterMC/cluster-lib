@@ -13,7 +13,7 @@ import org.clustermc.lib.xserver.XMessageReceiver
  */
 
 object CommandReceiver extends XMessageReceiver{
-  override def receive(identifier: String, message: String): Unit = {
+  override def receive(message: String): Unit = {
     Bukkit.dispatchCommand(Bukkit.getConsoleSender, message)
   }
 }

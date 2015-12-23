@@ -1,4 +1,6 @@
-package org.clustermc.lib.xserver
+package org.clustermc.lib.gui.menu.purchase
+
+import io.mazenmc.menuapi.menu.Menu
 
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
@@ -9,6 +11,6 @@ package org.clustermc.lib.xserver
  * permission of the aforementioned owner.
  */
 
-trait XMessageReceiver {
-  def receive(message: String)
+class PurchaseMenu(title: String, size: Int) extends Menu(title, size){
+
 }

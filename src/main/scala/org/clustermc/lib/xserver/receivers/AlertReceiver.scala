@@ -13,7 +13,7 @@ import org.clustermc.lib.xserver.XMessageReceiver
  */
 
 object AlertReceiver extends XMessageReceiver{
-  override def receive(identifier: String, message: String): Unit = {
+  override def receive(message: String): Unit = {
     Channel.serverAlert(message, receivedMessage = true)
   }
 }

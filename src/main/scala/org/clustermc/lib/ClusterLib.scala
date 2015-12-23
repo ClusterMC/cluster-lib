@@ -21,7 +21,7 @@ import org.clustermc.lib.punishment.commands.mute.{MuteCommand, TimedMuteCommand
 import org.clustermc.lib.utils.cooldown.CooldownHandler
 import org.clustermc.lib.utils.database.Mongo
 import org.clustermc.lib.utils.{ClusterServerPlugin, CustomConfig}
-import org.clustermc.lib.xserver.MainMessageReceive
+import org.clustermc.lib.xserver.XMessageReceive
 import slack.api.SlackApiClient
 
 /*
@@ -62,7 +62,7 @@ class ClusterLib extends ClusterServerPlugin("lib") with CommandExecutor{
         LocationAchievementRunnable.start()
 
         getServer.getMessenger.registerOutgoingPluginChannel(this, "BungeeCord")
-        getServer.getMessenger.registerIncomingPluginChannel(this, "BungeeCord", MainMessageReceive)
+        getServer.getMessenger.registerIncomingPluginChannel(this, "BungeeCord", XMessageReceive)
 
         Array("rank", "ban", "unban", "mute", "unmute", "tmute", "info", "tban", "kick", "warn", "eco", "whisper", "channel")
           .foreach(s => getCommand(s).setExecutor(this))
