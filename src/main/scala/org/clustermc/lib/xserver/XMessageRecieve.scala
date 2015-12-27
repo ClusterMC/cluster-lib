@@ -32,10 +32,11 @@ object XMessageReceive extends PluginMessageListener {
         val data = new DataInputStream(new ByteArrayInputStream(msgbytes)).readUTF()
 
         subChannel.toUpperCase match {
-            case c if c == CommandId.id => CommandReceiver.receive(data)
-            case a if a == AlertId.id => AlertReceiver.receive(data)
-            case s if s == SaveId.id => SaveReceiver.receive(data)
+            case CommandId.id => CommandReceiver.receive(data)
+            case AlertId.id => AlertReceiver.receive(data)
+            case SaveId.id => SaveReceiver.receive(data)
             case msg if msg.contains(PunishmentId.id) => PunishmentReceiver.receive(data)
+            case _ => //don't know if we'll use this but w/e
         }
 
     }
